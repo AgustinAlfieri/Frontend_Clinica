@@ -1,0 +1,35 @@
+
+.header-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #cfffe2;
+  border-left: 2px solid #111;
+  border-bottom: 2px solid #111;
+  border-right: 2px solid #111;
+  padding: 24px 32px;
+  min-height: 100px;
+}
+
+.header-logo, .header-user {
+  width: 180px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #111;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.header-title {
+  flex: 1;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  letter-spacing: 2px;
+}
