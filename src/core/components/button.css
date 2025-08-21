@@ -1,12 +1,4 @@
+
 .button {
-    padding: 10px 24px;
-    background-color: #4fc08d;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    background-color: rgb(213, 25, 22); 
 }

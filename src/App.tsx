@@ -4,15 +4,16 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Header from  './core/templates/Header'
 import './index.css'
+import Body from './core/templates/Body'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <Header clinicName="Portal Clinica Sana" />
+      <Body />
     </>
   )
 }
 
 export default App
+
