@@ -5,23 +5,25 @@
   align-items: center;
   position: relative;
   justify-content: space-between;
-  background: #cfffe2;
+  background: #dcfceb;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 24px 32px;
-  min-height: 100px;
+  min-height: 147px;
 }
 
-.header-logo{
+.header-logo,
+.header-user {
   width: 180px;
   height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #111;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   border-radius: 99px;
-  background: #fff;
+  background: #e9fff6;
   font-size: 1.2rem;
   font-weight: 500;
+  margin: 0 40px;
+  padding: 0;
 }
 
 .header-logo img{
@@ -30,19 +32,7 @@
   object-fit: contain;
 }
 
-.header-user{
-  margin-right: 60px;
-  width: 180px;
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid #111;
-  border-radius: 8px;
-  background: #fff;
-  font-size: 1.2rem;
-  font-weight: 500;
-}
+
 
 .header-title {
   flex: 1;
@@ -54,41 +44,47 @@
 }
 
 
-.header-button {
-  padding: 12px 16px;
-  border: none;
-  border-radius: 8px;
-  background: #4caf50;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
 
 .header-button:hover {
   background: #45a049;
 }
 
 .button {
-  padding: 10px 24px;
-  width:100%;
-  height: 100%;
-  background-color: #03e07d;
+  background-color: #23c483;
+  padding: 14px 40px;
   color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+  border: 2px solid #00BFA6;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: .4s;
+  z-index: 2;
+  min-height: 100%;
+  min-width: 100%;
+}
+
+.button span:last-child {
+  display: none;
+}
+
+.button:hover {
+  transition: .4s;
+  border: 2px solid #00BFA6;
+  background-color: #fff;
+  color: #00BFA6;
+}
+
+.button:active {
+  background-color: #87dbd0;
 }
 .header-cart {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 149px;
+  top: 147px;
   /* igual a min-height del header */
   width: 600px;
   /* ajusta el ancho según tu diseño */
@@ -97,6 +93,7 @@
   background: #fff;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
+  border: 1px solid #000;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-top: none;
   z-index: 10;

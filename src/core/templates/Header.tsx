@@ -8,7 +8,7 @@ interface HeaderProps {
   clinicName?: string;
 }
 
-const isLogin = false;
+const isLogin = true;
 
 const Header: React.FC<HeaderProps> = ({ clinicName = 'NOMBRE_CLINICA' }) => {
   return (
