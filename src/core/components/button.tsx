@@ -1,12 +1,11 @@
 interface buttonProps{
     label: string;
-    buttonFunction:() => void;
-    class_name_button: string;
+    buttonFunction: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const Button: React.FC<buttonProps> = ({label,buttonFunction,class_name_button}) => {
+const Button: React.FC<buttonProps> = ({label,buttonFunction,}) => {
     return(
-        <button onClick={buttonFunction} className={`button${class_name_button ? class_name_button:''}`}>
+        <button onClick={buttonFunction} className="button">
             {label}
         </button>
     )

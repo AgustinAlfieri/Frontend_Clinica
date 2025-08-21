@@ -8,18 +8,23 @@ interface HeaderProps {
   clinicName?: string;
 }
 
-const isLogin = false;
+const isLogin = true;
 
 const Header: React.FC<HeaderProps> = ({ clinicName = 'NOMBRE_CLINICA' }) => {
   return (
     <header className="header-container">
       <div className="header-logo">
-        custom_Logo
+        <img src="src/assets/logo-clinica.png" alt="Logo Clínica" />
       </div>
       <div className="header-title">{clinicName}</div>
       <div className="header-user">
-        {isLogin ? <UserCard nombre="John" apellido="Doe" dni="12345678" /> : <Button label="Iniciar Sesión" buttonFunction={() => {}} class_name_button="header-button" />}
+        {isLogin ? <UserCard nombre="John" apellido="Doe" dni="12345678" /> : <Button label="Iniciar Sesión" buttonFunction={() => {}} />}
       </div>
+      <div className="header-cart">
+        <p>
+          ¿Qué vamos a hacer hoy?
+        </p>
+        </div>
     </header>
   );
 };

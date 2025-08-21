@@ -10,7 +10,7 @@ function App() {
 
   return (
     <>
-      <Header clinicName="Clinica XYZ" />
+      <Header clinicName="Portal Clinica Sana" />
     </>
   )
 }
