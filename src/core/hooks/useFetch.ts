@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
 
+interface Persona {
+  nombre: string;
+  apellido: string;
+  edad: number;
+}
+
 interface UseFetchResult<T> { // T is the type of data being fetched
   data: T | null;
   loading: boolean;

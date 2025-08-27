@@ -8,6 +8,7 @@
   background: #dcfceb;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   min-height: 147px;
+  z-index: 11;
 }
 
 .header-logo,
@@ -80,25 +81,35 @@
 .button:active {
   background-color: #87dbd0;
 }
-.header-cart {
+.header-box-wrapper {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   top: 147px;
-  /* igual a min-height del header */
   width: 600px;
-  /* ajusta el ancho según tu diseño */
-  height: 36px;
-  /* ajusta la altura según tu diseño */
-  background: #fff;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
-  border: 1px solid #000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-top: none;
   z-index: 10;
 }
 
+/* Caja base */
+
+/* Caja superpuesta (invisible hasta que la muestres) */
+.header-mistey-box {
+  position: absolute;
+  bottom: 35px;
+  /* se alinea arriba de cart */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* misma altura que cart */
+  background: #fff;
+  border: 1px solid #000;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  /* se superpone */
+}
 .header-cart p {
   margin: 0;
   padding: 8px 15px;
