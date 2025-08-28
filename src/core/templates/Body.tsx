@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import './Body.css'
 import Container from '../components/container'
-import { animate, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import {useBoxContext} from '../context/misteryBoxContext'
 
 const Body: React.FC = () => {
-    const [showBox,setShowBox] = useState(false)
+    const { showBox,setShowBox } = useBoxContext();
     const handleSolicitarTurno = () => {
         setShowBox((prev) => !prev);
-        if (showBox) {
-            console.log("Turno Solicitado");
-        }
-    }
-    
+    };
     return (
         <main className="main">
             <motion.div
