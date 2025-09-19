@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import './Body.css'
 import Container from '../components/container'
 import { motion } from 'framer-motion';
