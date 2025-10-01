@@ -1,33 +1,88 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './login.css';
+import { authService } from '../services/authService';
+import React from 'react';
 
 interface LoginFormData {
-  id: string;
+  dni: string; // Opcional, dependiendo de si se necesita
   password: string;
+  role: string; // Opcional, dependiendo de si se necesita
 }
 
 const ClinicaLogin: React.FC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  
+  // Estado para manejar mensajes de error
+  // ← AQUÍ CREAS setError
+  const [error, setError] = useState<string>('');
+  
+  // Opcional: Estado para mensajes de éxito
+  const [success, setSuccess] = useState<string>('');
+
   const [formData, setFormData] = useState<LoginFormData>({
-    id: '',
-    password: ''
+    dni: '',
+    password: '',
+    role: 'Administrative'
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+// Cambié la firma de lo que puede recibir la función para que acepte otro tipo de enventos
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+    if (error) setError(''); // Limpiar error al cambiar input
   };
 
-  const handleLogin = () => {
-    console.log('Login attempt:', formData);
-    // Aquí iría la lógica de autenticación
+  const handleLogin = async () => {
+    if (!formData.dni || !formData.password) {
+      setError('Por favor completa todos los campos'); // ← USO DE setError
+      return;
+    }
+
+    if (formData.dni.length < 7) {
+      setError('El DNI debe tener al menos 7 dígitos');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(''); // Limpiar errores previos
+    setSuccess(''); // Limpiar mensajes de éxito previos
+    try{
+      const response = await authService.login(formData); // FormData tiene que ser igual a login credentials
+      if (response.success){
+        setSuccess('Inicio de sesión exitoso');
+        setTimeout(() => {
+          window.location.href = '/dashboard'; // Redirigir al dashboard
+        }, 1000);
+      }else{
+        setError(response.message || 'Error en el inicio de sesión');
+      }
+    }catch(err: any){
+      setError(err.message || 'Error en el inicio de sesión');
+      console.error('Login error:', err);
+    }finally{
+      setIsLoading(false); // Siempre desactiva el loading al final
+    }
   };
 
   const handleCreateAccount = () => {
     console.log('Navigate to create account');
     // Aquí iría la navegación a crear cuenta
+  };
+
+
+  //Permitir login con Enter
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
   };
 
   return (
@@ -46,16 +101,62 @@ const ClinicaLogin: React.FC = () => {
             Inicio de Sesión
           </h2>
 
+            {error && (
+            <div style={{
+              padding: '12px',
+              marginBottom: '15px',
+              backgroundColor: '#ffebee',
+              color: '#c62828',
+              borderRadius: '8px',
+              fontSize: '14px',
+              border: '1px solid #ef5350'
+            }}>
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div style={{
+              padding: '12px',
+              marginBottom: '15px',
+              backgroundColor: '#e8f5e9',
+              color: '#2e7d32',
+              borderRadius: '8px',
+              fontSize: '14px',
+              border: '1px solid #66bb6a'
+            }}>
+              {success}
+            </div>
+          )}
+
           <div className="form-inputs">
             {/* ID Input */}
             <div>
-              <input
-                type="text"
-                name="id"
-                placeholder="Ingrese su Id"
-                value={formData.id}
+              <select
+                name="role"
+                value={formData.role}
                 onChange={handleInputChange}
                 className="form-input"
+                disabled={isLoading}
+              >
+                <option value="Administrative">Administrativo</option>
+                <option value="Medic">Médico</option>
+                <option value="Patient">Paciente</option>
+              </select>
+            </div>
+
+            {/* DNI Input */}
+            <div>
+              <input
+                type="text"
+                name="dni"
+                placeholder="Ingrese su DNI"
+                value={formData.dni}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                className="form-input"
+                disabled={isLoading}
+                autoComplete="username"
               />
             </div>
 
@@ -68,6 +169,9 @@ const ClinicaLogin: React.FC = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 className="form-input"
+                disabled={isLoading}
+                onKeyDown={handleKeyPress}
+                autoComplete="current-password"
               />
             </div>
 
@@ -76,8 +180,11 @@ const ClinicaLogin: React.FC = () => {
               <button
                 onClick={handleLogin}
                 className="form-button"
+                disabled={isLoading} // Deshabilitar mientras carga
+                style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
               >
-                Iniciar Sesion
+                {isLoading? 'Iniciando...' : 'Iniciar Sesión'}
+                {!isLoading && (
                 <svg 
                   className="button-icon" 
                   fill="none" 
@@ -86,11 +193,13 @@ const ClinicaLogin: React.FC = () => {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
+              )}
               </button>
               
               <button
                 onClick={handleCreateAccount}
                 className="form-button"
+                disabled={isLoading}
               >
                 Crear Cuenta
                 <svg 
@@ -117,4 +226,4 @@ const ClinicaLogin: React.FC = () => {
   );
 };
 
-export default ClinicaLogin;
+export default ClinicaLogin
