@@ -2,27 +2,31 @@ import { useState } from 'react';
 import './login.css';
 import { authService } from '../services/authService';
 import React from 'react';
+import { Validator } from '../services/validator.ts';
 
 interface LoginFormData {
-  dni: string; // Opcional, dependiendo de si se necesita
+  input: string; // Opcional, dependiendo de si se necesita
+  dni?: string; // Opcional, dependiendo de si se necesita
+  email?: string;
   password: string;
-  role: string; // Opcional, dependiendo de si se necesita
+  role?: string; // Opcional, dependiendo de si se necesita
 }
 
 const ClinicaLogin: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Estado para manejar mensajes de error
-  // ← AQUÍ CREAS setError
   const [error, setError] = useState<string>('');
   
   // Opcional: Estado para mensajes de éxito
   const [success, setSuccess] = useState<string>('');
 
   const [formData, setFormData] = useState<LoginFormData>({
+    input: '',
     dni: '',
+    email: '',
     password: '',
-    role: 'Administrative'
+    role: ''
   });
 
 // Cambié la firma de lo que puede recibir la función para que acepte otro tipo de enventos
@@ -36,38 +40,57 @@ const ClinicaLogin: React.FC = () => {
   };
 
   const handleLogin = async () => {
-    if (!formData.dni || !formData.password) {
+    if (!formData.input || !formData.password) {
       setError('Por favor completa todos los campos'); // ← USO DE setError
       return;
     }
+    // Validar si el input es email o DNI
+    const isEmail = formData.input.includes('@');
 
-    if (formData.dni.length < 7) {
-      setError('El DNI debe tener al menos 7 dígitos');
+    //Es valido el input?
+    if (isEmail && Validator.validateEmail(formData.input) === false) {
+      setError('Por favor ingresa un email válido'); // ← USO DE setError
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
+    if (!isEmail && !Validator.validateDNI(formData.input)) {
+        setError('Por favor ingresa un DNI válido'); // ← USO DE setError
+        return;
+    }
+
+    //Asigno el input al campo correspondiente para mandar al backend
+    if(isEmail) formData.email = formData.input;
+    else formData.dni = formData.input;
+
+    if (!Validator.validatePassword(formData.password)) {
+      setError('La contraseña debe tener al menos 6 caracteres'); // ← USO DE setError
       return;
     }
 
+    // Si todo es válido, procedo con el login
     setIsLoading(true);
-    setError(''); // Limpiar errores previos
-    setSuccess(''); // Limpiar mensajes de éxito previos
+    setError(''); 
+    setSuccess('');
+
     try{
+      //Mando al backend
+      console.log(formData)
       const response = await authService.login(formData); // FormData tiene que ser igual a login credentials
+      
       if (response.success){
         setSuccess('Inicio de sesión exitoso');
         setTimeout(() => {
           window.location.href = '/dashboard'; // Redirigir al dashboard
         }, 1000);
-      }else{
+      }
+      else {
         setError(response.message || 'Error en el inicio de sesión');
       }
-    }catch(err: any){
-      setError(err.message || 'Error en el inicio de sesión');
+    } catch(err: unknown){
+      const errorMessage = err instanceof Error ? err.message : 'Error en el inicio de sesión';
+      setError(errorMessage);
       console.error('Login error:', err);
-    }finally{
+    } finally{
       setIsLoading(false); // Siempre desactiva el loading al final
     }
   };
@@ -90,8 +113,8 @@ const ClinicaLogin: React.FC = () => {
       <div className="login-card">
         {/* Header */}
         <div className="login-header">
-          <h1 className="login-title">Portal Clinica Sana</h1>
-          <p className="login-subtitle">Bienvenido a la página de Portal Clinica Sana</p>
+          <h1 className="login-title">Portal Clínica Sana</h1>
+          <p className="login-subtitle">Bienvenido a la página de Portal Clínica Sana</p>
           <div className="login-divider"></div>
         </div>
 
@@ -131,27 +154,14 @@ const ClinicaLogin: React.FC = () => {
 
           <div className="form-inputs">
             {/* ID Input */}
-            <div>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleInputChange}
-                className="form-input"
-                disabled={isLoading}
-              >
-                <option value="Administrative">Administrativo</option>
-                <option value="Medic">Médico</option>
-                <option value="Patient">Paciente</option>
-              </select>
-            </div>
 
             {/* DNI Input */}
             <div>
               <input
                 type="text"
-                name="dni"
-                placeholder="Ingrese su DNI"
-                value={formData.dni}
+                name="input"
+                placeholder="Ingrese su Email o DNI"
+                value={formData.input}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyPress}
                 className="form-input"

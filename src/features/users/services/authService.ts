@@ -1,9 +1,10 @@
 import {apiClient} from './api';
 
 export interface LoginCredentials {
-  dni: string; // Tu frontend usa DNI
+  dni?: string;
+  email?: string;
   password: string;
-  role: string; // IMPORTANTE: Tu API necesita el role
+  role?: string
 }
 
 export interface RegisterData {
@@ -33,6 +34,7 @@ export const authService = {
     try{
         const response = await apiClient.post('auth/login',{
             dni: credentials.dni,
+            email: credentials.email,
             password: credentials.password,
             role: credentials.role // Asegúrate de enviar el role
         });
