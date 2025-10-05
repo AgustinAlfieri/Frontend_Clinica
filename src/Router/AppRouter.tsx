@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ClinicaLogin from '../features/users/components/login'
 import AppointmentForm from '../features/appointment/components/form'
+import RegisterMedic from '../features/users/medic/components/RegisterMedic'
 import RegisterPatient from '../features/users/patients/components/RegisterPatient'
+import RegisterAdministrative from '../features/users/administrative/components/RegisterAdministrative'
 //import ClinicaRegister from '../features/Users/components/register'
 
 const AppRouter = () => {
@@ -12,6 +14,8 @@ const AppRouter = () => {
         <Route path="/login" element= {<ClinicaLogin />} />
         <Route path="/appointment" element= {<AppointmentForm />} />
         <Route path="/register" element= {<RegisterPatient/>} />
+        <Route path="/registermedic" element= {<RegisterMedic/>} />
+        <Route path="/registeradministrative" element= {<RegisterAdministrative/>} />
       </Routes>
     </Router>
     )
