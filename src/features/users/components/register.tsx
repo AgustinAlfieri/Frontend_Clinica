@@ -1,176 +1,246 @@
-import {motion} from 'framer-motion'
-import {useState} from 'react'
-import Input from '../../../core/components/input'
-/*
-// Interfaz base para todos los tipos de usuario
+﻿import { useState } from 'react';
+import './register.css';
+import React from 'react';
+import { Validator } from '../services/validator.ts';
+import type UserType from '../UserType';
+
+// Interface para los datos básicos del usuario
 export interface BaseUserData {
   dni: string;
   name: string;
   email: string;
   password: string;
   telephone: string;
-  surname: string;
+  role: string; // Se asigna automáticamente según userType
 }
 
-// Handlers para el manejo de estado
-export interface RegisterHandlers {
-  onDniChange: (value: string) => void;
-  onNameChange: (value: string) => void;
-  onSurnameChange: (value: string) => void;
-  onEmailChange: (value: string) => void;
-  onPasswordChange: (value: string) => void;
-  onTelephoneChange: (value: string) => void;
-}
-
-export interface ValidationErrors {
-  dni?: string;
-  name?: string;
-  surname?: string;
-  email?: string;
-  password?: string;
-  telephone?: string;
-}
-
+// Interface para las props del componente Register
 interface RegisterProps {
-  userData: BaseUserData;
-  handlers: RegisterHandlers;
-  errors?: ValidationErrors;
-  isLoading?: boolean;
-  children?: React.ReactNode;
+  userType: 'patient' | 'administrative' | 'medic'; // Ahora es obligatorio y tipado
+  children?: React.ReactNode; // Solo para campos adicionales específicos
+  onSubmit: (data: UserType) => Promise<void>; // Callback para manejar el submit de cada register
 }
 
-// Variantes de animación reutilizables
-const containerVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.4,
-      staggerChildren: 0.1
-    }
+export const validateBaseUserData = (data: UserType): string | null => {
+  if (!data.dni || !data.name || !data.email || !data.password || !data.telephone) {
+    return 'Por favor completa todos los campos';
   }
+
+  if (!Validator.validateDNI(data.dni)) {
+    return 'Por favor ingresa un DNI válido';
+  }
+
+  if (!Validator.validateEmail(data.email)) {
+    return 'Por favor ingresa un email válido';
+  }
+
+  if (!Validator.validatePassword(data.password)) {
+    return 'La contraseña debe tener al menos 6 caracteres';
+  }
+
+  return null; // Sin errores
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0 }
-};
+const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
 
-const Register: React.FC<RegisterProps> = ({ 
-  userData, 
-  handlers, 
-  errors = {},
-  isLoading = false,
-  children 
-}) => {
-    // Estados para cada campo
-  const [dni, setDni] = useState("");
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [telephone, setTelephone] = useState("");
+  const [formData, setFormData] = useState<UserType>({
+    id: '',
+    dni: '',
+    name: '',
+    email: '',
+    password: '',
+    telephone: '',
+    role: userType // Asignación automática del role según userType
+  });
 
-  // Handlers = funciones que manejan los cambios
-  const handleDniChange = (value: string) => {
-    setDni(value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (error) setError('');
   };
 
-  const handleNameChange = (value: string) => {
-    setName(value);
+  const handleRegister = async () => {
+    const validationError = validateBaseUserData(formData);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      // TODO: Implementar servicio de registro
+      console.log('Datos a registrar:', formData);
+      await onSubmit(formData);
+      setSuccess('Registro exitoso');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Error en el registro';
+      setError(errorMessage);
+      console.error('Register error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSurnameChange = (value: string) => {
-    setSurname(value);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleRegister();
+    }
   };
 
-  const handleEmailChange = (value: string) => {
-    setEmail(value);
+  const getTitle = () => {
+    switch (userType) {
+      case 'patient':
+        return 'Registro de Paciente';
+      case 'administrative':
+        return 'Registro de Administrativo';
+      case 'medic':
+        return 'Registro de Médico';
+      default:
+        return 'Registro de Usuario';
+    }
   };
 
-  const handlePasswordChange = (value: string) => {
-    setPassword(value);
-  };
-
-  const handleTelephoneChange = (value: string) => {
-    setTelephone(value);
-  };
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <section className="register-section">
-        <motion.h2 variants={itemVariants}>Register</motion.h2>
-        
-        <motion.div className="user-info" variants={itemVariants}>
-          <Input 
-            label="Name" 
-            value={userData.name}
-            onChange={handlers.onNameChange}
-            error={errors.name}
-            disabled={isLoading}
-            required
-          />
-          <Input 
-            label="Surname" 
-            value={userData.surname}
-            onChange={handlers.onSurnameChange}
-            error={errors.surname}
-            disabled={isLoading}
-            required
-          />
-          <Input 
-            label="DNI" 
-            value={userData.dni}
-            onChange={handlers.onDniChange}
-            error={errors.dni}
-            disabled={isLoading}
-            placeholder="12345678"
-            maxLength={8}
-            required
-          />
-          <Input 
-            label="Telephone" 
-            value={userData.telephone}
-            onChange={handlers.onTelephoneChange}
-            error={errors.telephone}
-            disabled={isLoading}
-            placeholder="+54 11 1234-5678"
-          />
-        </motion.div>
+    <div className="register-container">
+      <div className="register-card">
+        <div className="register-header">
+          <h1 className="register-title">Portal Clínica Sana</h1>
+          <p className="register-subtitle">Bienvenido a la página de Portal Clínica Sana</p>
+          <div className="register-divider"></div>
+        </div>
 
-        <motion.div className="user-login-info" variants={itemVariants}>
-          <Input 
-            label="Email" 
-            type="email"
-            value={userData.email}
-            onChange={handlers.onEmailChange}
-            error={errors.email}
-            disabled={isLoading}
-            required
-          />
-          <Input 
-            label="Password" 
-            type="password" 
-            value={userData.password}
-            onChange={handlers.onPasswordChange}
-            error={errors.password}
-            disabled={isLoading}
-            minLength={8}
-            required
-          />
-        </motion.div>
+        <div className="register-form-section">
+          <h2 className="form-title">{getTitle()}</h2>
 
-        {children && (
-          <motion.div className="children-container" variants={itemVariants}>
-            {children}
-          </motion.div>
-        )}
-      </section>
-    </motion.div>
+          {error && (
+            <div style={{
+              padding: '12px',
+              marginBottom: '15px',
+              backgroundColor: '#ffebee',
+              color: '#c62828',
+              borderRadius: '8px',
+              fontSize: '14px',
+              border: '1px solid #ef5350'
+            }}>
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div style={{
+              padding: '12px',
+              marginBottom: '15px',
+              backgroundColor: '#e8f5e9',
+              color: '#2e7d32',
+              borderRadius: '8px',
+              fontSize: '14px',
+              border: '1px solid #66bb6a'
+            }}>
+              {success}
+            </div>
+          )}
+
+          <div className="form-group">
+            <label className="form-label">DNI</label>
+            <input
+              type="text"
+              name="dni"
+              className="form-input"
+              placeholder="Ingresa tu DNI"
+              value={formData.dni}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Nombre Completo</label>
+            <input
+              type="text"
+              name="name"
+              className="form-input"
+              placeholder="Ingresa tu nombre completo"
+              value={formData.name}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Correo Electrónico</label>
+            <input
+              type="email"
+              name="email"
+              className="form-input"
+              placeholder="tu@email.com"
+              value={formData.email}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              className="form-input"
+              placeholder="Ingresa tu contraseña"
+              value={formData.password}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Teléfono</label>
+            <input
+              type="tel"
+              name="telephone"
+              className="form-input"
+              placeholder="Ingresa tu teléfono"
+              value={formData.telephone}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+              disabled={isLoading}
+            />
+          </div>
+
+          {children}
+
+          <button
+            className="form-button"
+            onClick={handleRegister}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Registrando...' : 'Registrar'}
+          </button>
+
+          <div className="form-footer">
+            <p className="footer-text">
+              ¿Ya tienes una cuenta?{' '}
+              <a href="/login" className="footer-link">
+                Inicia sesión aquí
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
-*/
+
+export default Register;

@@ -1,4 +1,5 @@
 import {apiClient} from './api';
+import type UserType from "../UserType";
 
 export interface LoginCredentials {
   dni?: string;
@@ -7,16 +8,7 @@ export interface LoginCredentials {
   role?: string
 }
 
-export interface RegisterData {
-  dni: string;
-  name: string;
-  email: string;
-  password: string;
-  telephone?: string;
-  role: string; // Debe enviarse el role
-}
-
-export interface AuthResponse {
+export default interface AuthResponse {
   success: boolean;
   token?: string;
   user?: {
