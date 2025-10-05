@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ClinicaLogin from '../features/users/components/login'
-import AppointmentForm from '../features/appointment/components/form'
+import AppointmentForm from '../features/appointment/components/appointment'
 import RegisterMedic from '../features/users/medic/components/RegisterMedic'
 import RegisterPatient from '../features/users/patients/components/RegisterPatient'
 import RegisterAdministrative from '../features/users/administrative/components/RegisterAdministrative'

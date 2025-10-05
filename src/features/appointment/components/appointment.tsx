@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import React from 'react';
-import './form.css';
+import './appointment.css';
+import { AppointmentService } from '../service/appointmentService';
 
 interface AppointmentFormData {
     patient_id: string;
@@ -58,27 +59,23 @@ const AppointmentForm: React.FC = () => {
         // fetchPractices().then(data => setPractices(data));
         // fetchSchedules().then(data => setSchedules(data));
         
-        // Datos de ejemplo para testing
-        setSpecialties([
-            { id: '1', name: 'Cardiología' },
-            { id: '2', name: 'Dermatología' },
-            { id: '3', name: 'Odontología' }
-        ]);
-        setMedics([
-            { id: '1', name: 'Dr. Juan Pérez' },
-            { id: '2', name: 'Dra. María González' },
-            { id: '3', name: 'Dr. Carlos Rodríguez' }
-        ]);
-        setPractices([
-            { id: '1', name: 'Consulta General' },
-            { id: '2', name: 'Revisión' },
-            { id: '3', name: 'Tratamiento' }
-        ]);
-        setSchedules([
-            { id: '1', datetime: '2025-10-15 09:00' },
-            { id: '2', datetime: '2025-10-15 10:00' },
-            { id: '3', datetime: '2025-10-15 11:00' }
-        ]);
+        ///// FETCH A SPECIALTIES
+        const fetchSpecialties = async () => {
+            console.log('te las traigo')
+            setIsLoading(true);
+            try {
+                const specialties = await AppointmentService.getSpecialties();
+                setSpecialties(specialties);
+            }catch (error){
+                console.error('Error fetching specialties:', error);
+            }finally{
+                setIsLoading(false);
+            }
+        };
+
+        fetchSpecialties();
+        console.log(specialties);
+
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
