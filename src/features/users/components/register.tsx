@@ -16,7 +16,7 @@ export interface BaseUserData {
 
 // Interface para las props del componente Register
 interface RegisterProps {
-  userType: 'patient' | 'administrative' | 'medic'; // Ahora es obligatorio y tipado
+  userType: 'Patient' | 'Administrative' | 'Medic'; // Ahora es obligatorio y tipado
   children?: React.ReactNode; // Solo para campos adicionales específicos
   onSubmit: (data: UserType) => Promise<void>; // Callback para manejar el submit de cada register
 }
@@ -98,11 +98,11 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
 
   const getTitle = () => {
     switch (userType) {
-      case 'patient':
+      case 'Patient':
         return 'Registro de Paciente';
-      case 'administrative':
+      case 'Administrative':
         return 'Registro de Administrativo';
-      case 'medic':
+      case 'Medic':
         return 'Registro de Médico';
       default:
         return 'Registro de Usuario';

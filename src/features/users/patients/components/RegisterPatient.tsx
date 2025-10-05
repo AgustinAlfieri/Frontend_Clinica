@@ -1,14 +1,34 @@
-﻿import { useState } from 'react';
+﻿import { useState, useEffect } from 'react';
 import React from 'react';
 import Register from '../../components/register';
 import type UserType  from "../../UserType";
 import {patientService} from '../services/PatientService'
+import type MedicalInsurance from '../services/PatientService';
 
 
 
 const RegisterPatient: React.FC = () => {
   const [coverage, setCoverage] = useState<string>('');
   const [insuranceNumber, setInsuranceNumber] = useState<string>('');
+  const [medicalInsurances, setMedicalInsurances] = useState<MedicalInsurance[]>([]);
+  const [isLoadingInsurances, setIsLoadingInsurances] = useState<boolean>(false);
+
+  // Cargar las coberturas médicas al montar el componente
+  useEffect(() => {
+    const fetchMedicalInsurances = async () => {
+      setIsLoadingInsurances(true);
+      try {
+        const insurances = await patientService.getMedicalInsurances();
+        setMedicalInsurances(insurances);
+      } catch (error) {
+        console.error('Error al cargar las coberturas médicas:', error);
+      } finally {
+        setIsLoadingInsurances(false);
+      }
+    };
+
+    fetchMedicalInsurances();
+  }, []);
 
   const handleCoverageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
@@ -42,7 +62,7 @@ const RegisterPatient: React.FC = () => {
   }
 
   return (
-    <Register userType="patient" onSubmit={handleRegisterPatient}>
+    <Register userType="Patient" onSubmit={handleRegisterPatient}>
       <div className="form-group">
         <label className="form-label">Cobertura</label>
         <select
@@ -50,15 +70,16 @@ const RegisterPatient: React.FC = () => {
           className="form-input"
           value={coverage}
           onChange={handleCoverageChange}
+          disabled={isLoadingInsurances}
         >
-          <option value="">Selecciona una cobertura</option>
-          <option value="particular">Particular</option>
-          <option value="osde">OSDE</option>
-          <option value="swiss_medical">Swiss Medical</option>
-          <option value="galeno">Galeno</option>
-          <option value="medicus">Medicus</option>
-          <option value="omint">OMINT</option>
-          <option value="otra">Otra</option>
+          <option value="">
+            {isLoadingInsurances ? 'Cargando coberturas...' : 'Selecciona una cobertura'}
+          </option>
+          {medicalInsurances.map((insurance) => (
+            <option key={insurance.id} value={insurance.id}>
+              {insurance.name}
+            </option>
+          ))}
         </select>
       </div>
 

@@ -7,3 +7,4 @@ export default interface UserType {
     telephone?: string;
     role: string; // 'patient', 'medic', 'admin'
 }
+

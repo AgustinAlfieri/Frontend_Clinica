@@ -16,3 +16,5 @@ export class Validator {
     return password.trim().length >= 6;
   }
 };
+
+
