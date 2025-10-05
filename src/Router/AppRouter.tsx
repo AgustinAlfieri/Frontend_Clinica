@@ -4,7 +4,7 @@ import AppointmentForm from '../features/appointment/components/form'
 import RegisterMedic from '../features/users/medic/components/RegisterMedic'
 import RegisterPatient from '../features/users/patients/components/RegisterPatient'
 import RegisterAdministrative from '../features/users/administrative/components/RegisterAdministrative'
-//import ClinicaRegister from '../features/Users/components/register'
+import Homepage from '../core/templates/Homepage';
 
 const AppRouter = () => {
     return(
@@ -16,6 +16,7 @@ const AppRouter = () => {
         <Route path="/register" element= {<RegisterPatient/>} />
         <Route path="/registermedic" element= {<RegisterMedic/>} />
         <Route path="/registeradministrative" element= {<RegisterAdministrative/>} />
+        <Route path="/homepage" element= {<Homepage clinicName="ClinicaSana"/>} />
       </Routes>
     </Router>
     )
