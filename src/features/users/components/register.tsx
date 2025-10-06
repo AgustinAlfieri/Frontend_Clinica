@@ -3,6 +3,8 @@ import './register.css';
 import React from 'react';
 import { Validator } from '../services/validator.ts';
 import type UserType from '../UserType';
+import NavBar from '../../homepage/components/NavBar';
+import logo from '../../../assets/mediviapng.png';
 
 // Interface para los datos básicos del usuario
 export interface BaseUserData {
@@ -111,11 +113,10 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
 
   return (
     <div className="register-container">
+      <NavBar />
       <div className="register-card">
         <div className="register-header">
-          <h1 className="register-title">Portal Clínica Sana</h1>
-          <p className="register-subtitle">Bienvenido a la página de Portal Clínica Sana</p>
-          <div className="register-divider"></div>
+          <img src={logo} alt="Logo MEDIVIA" className="register-logo" />
         </div>
 
         <div className="register-form-section">
@@ -149,77 +150,79 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
             </div>
           )}
 
-          <div className="form-group">
-            <label className="form-label">DNI</label>
-            <input
-              type="text"
-              name="dni"
-              className="form-input"
-              placeholder="Ingresa tu DNI"
-              value={formData.dni}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
-              disabled={isLoading}
-            />
-          </div>
+          <div className="form-inputs-grid">
+            <div className="form-group">
+              <label className="form-label">DNI</label>
+              <input
+                type="text"
+                name="dni"
+                className="form-input"
+                placeholder="Ingresa tu DNI"
+                value={formData.dni}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                disabled={isLoading}
+              />
+            </div>
 
-          <div className="form-group">
-            <label className="form-label">Nombre Completo</label>
-            <input
-              type="text"
-              name="name"
-              className="form-input"
-              placeholder="Ingresa tu nombre completo"
-              value={formData.name}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
-              disabled={isLoading}
-            />
-          </div>
+            <div className="form-group">
+              <label className="form-label">Nombre Completo</label>
+              <input
+                type="text"
+                name="name"
+                className="form-input"
+                placeholder="Ingresa tu nombre completo"
+                value={formData.name}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                disabled={isLoading}
+              />
+            </div>
 
-          <div className="form-group">
-            <label className="form-label">Correo Electrónico</label>
-            <input
-              type="email"
-              name="email"
-              className="form-input"
-              placeholder="tu@email.com"
-              value={formData.email}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
-              disabled={isLoading}
-            />
-          </div>
+            <div className="form-group">
+              <label className="form-label">Correo Electrónico</label>
+              <input
+                type="email"
+                name="email"
+                className="form-input"
+                placeholder="tu@email.com"
+                value={formData.email}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                disabled={isLoading}
+              />
+            </div>
 
-          <div className="form-group">
-            <label className="form-label">Contraseña</label>
-            <input
-              type="password"
-              name="password"
-              className="form-input"
-              placeholder="Ingresa tu contraseña"
-              value={formData.password}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
-              disabled={isLoading}
-            />
-          </div>
+            <div className="form-group">
+              <label className="form-label">Contraseña</label>
+              <input
+                type="password"
+                name="password"
+                className="form-input"
+                placeholder="Ingresa tu contraseña"
+                value={formData.password}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                disabled={isLoading}
+              />
+            </div>
 
-          <div className="form-group">
-            <label className="form-label">Teléfono</label>
-            <input
-              type="tel"
-              name="telephone"
-              className="form-input"
-              placeholder="Ingresa tu teléfono"
-              value={formData.telephone}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
-              disabled={isLoading}
-            />
-          </div>
+            <div className="form-group">
+              <label className="form-label">Teléfono</label>
+              <input
+                type="tel"
+                name="telephone"
+                className="form-input"
+                placeholder="Ingresa tu teléfono"
+                value={formData.telephone}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                disabled={isLoading}
+              />
+            </div>
 
-          {children}
+            {children}
+          </div>
 
           <button
             className="form-button"

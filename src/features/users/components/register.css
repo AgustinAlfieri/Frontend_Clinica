@@ -1,27 +1,34 @@
 ﻿/* register.css - Based on login.css structure */
 
 .register-container {
-    min-height: 100vh;
-    background-color: #a8e8e3;
+    min-height: 140vh;
+    background: url('../../../core/assets/body-wallpapper.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
+    padding: 12px 20px 40px 20px;
 }
 
 .register-card {
-    background-color: #E8F5F0;
+    background-color: white;
     border-radius: 1.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    padding: 3rem;
+    padding: 2.5rem;
     width: 100%;
-    max-width: 36rem;
+    max-width: 750px;
 }
 
 /* Header Styles */
 .register-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.register-logo {
+    width: 250px;
+    height: 75px;
 }
 
 .register-title {
@@ -47,39 +54,47 @@
 
 /* Form Section */
 .register-form-section {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-title {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 600;
     color: #374151;
     text-align: center;
-    margin: 0 0 2rem 0;
+    margin: 0 0 1.5rem 0;
+}
+
+/* Grid de 2 columnas para los inputs */
+.form-inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 
 .form-label {
     display: block;
     color: #374151;
     font-weight: 500;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
 }
 
 .form-input {
     width: 100%;
-    padding: 1.25rem 1.5rem;
+    padding: 0.875rem 1rem;
     background-color: #4a5568;
     color: black;
     border-radius: 0.75rem;
     border: none;
     outline: none;
     transition: all 0.2s ease;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     box-sizing: border-box;
 }
 
@@ -103,7 +118,7 @@
     background-color: #e2e8f0;
     color: #374151;
     font-weight: 500;
-    padding: 1rem 1.25rem;
+    padding: 0.875rem 1rem;
     border-radius: 0.75rem;
     border: none;
     cursor: pointer;
@@ -112,8 +127,8 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-size: 1rem;
-    margin-top: 1rem;
+    font-size: 0.95rem;
+    margin-top: 0.75rem;
 }
 
 .form-button:hover:not(:disabled) {
@@ -128,12 +143,12 @@
 /* Footer Styles */
 .form-footer {
     text-align: center;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
 }
 
 .footer-text {
     color: #6b7280;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     margin: 0;
 }
 
@@ -150,12 +165,59 @@
 
 /* Responsive Design */
 
-/* Mobile (up to 639px) - Base styles above */
+/* Mobile (640px and below) */
+@media (max-width: 640px) {
+    .register-container {
+        padding: 0.5rem;
+        padding-top: 80px;
+        margin: 20px;
+    }
+
+    .register-card {
+        padding: 1.5rem;
+        max-width: 28rem;
+    }
+
+    .register-logo {
+        width: 200px;
+        height: 60px;
+    }
+
+    .register-title {
+        font-size: 1.875rem;
+    }
+
+    .register-subtitle {
+        font-size: 0.875rem;
+    }
+
+    .form-title {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-input {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+
+    .form-button {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    /* Grid de 1 columna en móvil */
+    .form-inputs-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
 
 /* Small tablets (640px to 767px) */
 @media (min-width: 640px) {
     .register-card {
         padding: 2.5rem;
+        max-width: 650px;
     }
 
     .register-title {
@@ -171,12 +233,16 @@
         padding: 0.875rem 1rem;
         font-size: 0.95rem;
     }
+
+    .form-inputs-grid {
+        gap: 0.875rem;
+    }
 }
 
 /* Tablets (768px to 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
     .register-card {
-        max-width: 32rem;
+        max-width: 700px;
         padding: 2.5rem;
     }
 
@@ -193,6 +259,10 @@
         padding: 1rem 1.25rem;
         font-size: 1.1rem;
     }
+
+    .form-inputs-grid {
+        gap: 1rem;
+    }
 }
 
 /* Desktop (1024px and up) */
@@ -202,7 +272,7 @@
     }
 
     .register-card {
-        max-width: 36rem;
+        max-width: 750px;
         padding: 3rem;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
@@ -230,48 +300,78 @@
         padding: 1rem 1.25rem;
         font-size: 1rem;
     }
+
+    .form-inputs-grid {
+        gap: 1.25rem;
+    }
 }
 
 /* Large Desktop (1440px and up) */
 @media (min-width: 1440px) {
     .register-card {
-        max-width: 40rem;
-        padding: 3.5rem;
+        max-width: 700px;
+        padding: 3rem;
     }
 
-    .register-title {
-        font-size: 2.75rem;
-    }
-
-    .form-input {
-        padding: 1.5rem 1.75rem;
-        font-size: 1.15rem;
-    }
-
-    .form-button {
-        padding: 1.125rem 1.5rem;
-        font-size: 1.1rem;
-    }
-}
-
-/* Extra Large Desktop (1920px and up) */
-@media (min-width: 1920px) {
-    .register-card {
-        max-width: 44rem;
-        padding: 4rem;
+    .register-logo {
+        width: 350px;
+        height: 105px;
     }
 
     .register-title {
         font-size: 3rem;
     }
 
+    .form-title {
+        font-size: 1.75rem;
+    }
+
     .form-input {
-        padding: 1.75rem 2rem;
-        font-size: 1.25rem;
+        padding: 1.25rem 1.75rem;
+        font-size: 1.2rem;
     }
 
     .form-button {
         padding: 1.25rem 1.75rem;
-        font-size: 1.15rem;
+        font-size: 1.2rem;
+    }
+
+    .form-inputs-grid {
+        gap: 1.5rem;
+    }
+}
+
+/* Ultra-wide Desktop (1920px and up) */
+@media (min-width: 1920px) {
+    .register-card {
+        max-width: 950px;
+        padding: 4rem;
+    }
+
+    .register-logo {
+        width: 400px;
+        height: 120px;
+    }
+
+    .register-title {
+        font-size: 3.5rem;
+    }
+
+    .form-title {
+        font-size: 2rem;
+    }
+
+    .form-input {
+        padding: 1.5rem 2rem;
+        font-size: 1.3rem;
+    }
+
+    .form-button {
+        padding: 1.5rem 2rem;
+        font-size: 1.3rem;
+    }
+
+    .form-inputs-grid {
+        gap: 2rem;
     }
 }
