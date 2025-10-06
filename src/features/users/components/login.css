@@ -1,32 +1,32 @@
 /* FlexisurLogin.css */
 
 .login-container {
-    min-height: 100vh;
-    background-color: #a8e8e3;
-    /* gray-300 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
+        min-height: 100vh;
+        background: url('../../../core/assets/body-wallpapper.jpg') no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 120px;
+        margin: 40px;
 }
 
 .login-card {
-    background-color: #E8F5F0;
+    background-color: white;
     border-radius: 1.5rem;
-    /* rounded-3xl */
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    /* shadow-lg */
     padding: 3rem;
-    /* Increased base padding */
     width: 100%;
-    max-width: 36rem;
-    /* Increased base max-width for desktop */
 }
 
 /* Header Styles */
 .login-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+}
+
+.login-logo{
+    width: 300px;
+    height: 90px;
 }
 
 .login-title {
@@ -58,28 +58,26 @@
 
 /* Form Section */
 .login-form-section {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
-.form-title {
-    font-size: 1.5rem;
-    /* Increased base size */
-    font-weight: 600;
-    /* font-semibold */
-    color: #374151;
-    /* text-gray-800 */
-    text-align: center;
-    margin: 0 0 2rem 0;
-    /* Increased margin */
+.form-input {
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    /* Increased base padding */
+    background-color: #4a5568;
+    /* Lighter gray background */
+    color: black;
+    border-radius: 0.75rem;
+    /* More rounded corners */
+    border: none;
+    outline: none;
+    transition: all 0.2s ease;
+    font-size: 1.1rem;
 }
 
-.form-inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    /* Remove gap since we're using margin on inputs */
-    margin-bottom: 2rem;
-    /* Increased margin before buttons */
+.form-input:not(:last-child) {
+    margin-bottom: 0.5rem;
 }
 
 .form-input {
@@ -97,7 +95,7 @@
     font-size: 1.1rem;
     /* Increased base font size */
     box-sizing: border-box;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     /* Increased margin between inputs */
 }
 
@@ -123,14 +121,11 @@
 }
 
 .form-button {
-    flex: 1;
     background-color: #e2e8f0;
     /* Slightly lighter gray */
     color: #374151;
     /* text-gray-800 */
-    font-weight: 500;
-    /* font-medium */
-    padding: 1rem 1.25rem;
+    font-weight: 100;
     /* Increased base padding */
     border-radius: 0.75rem;
     /* More rounded to match inputs */
@@ -140,8 +135,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    font-size: 1rem;
+    font-size: small !important;
     /* Increased base font size */
 }
 
@@ -253,6 +247,7 @@
     .form-inputs {
         gap: 1.5rem;
         /* More space between inputs */
+        margin-bottom: 0.5rem;
     }
 
     .form-input {
@@ -407,6 +402,6 @@
     }
 
     .form-inputs {
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.5rem;
     }
 }

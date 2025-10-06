@@ -3,6 +3,8 @@ import './login.css';
 import { authService } from '../services/authService';
 import React from 'react';
 import { Validator } from '../services/validator.ts';
+import NavBar from '../../homepage/components/NavBar';
+import logo from '../../../assets/mediviapng.png';
 
 interface LoginFormData {
   input: string; // Opcional, dependiendo de si se necesita
@@ -110,12 +112,10 @@ const ClinicaLogin: React.FC = () => {
 
   return (
     <div className="login-container">
+      <NavBar />
       <div className="login-card">
-        {/* Header */}
         <div className="login-header">
-          <h1 className="login-title">Portal Clínica Sana</h1>
-          <p className="login-subtitle">Bienvenido a la página de Portal Clínica Sana</p>
-          <div className="login-divider"></div>
+          <img src={logo} alt="Logo" className="login-logo" />
         </div>
 
         {/* Login Form */}
