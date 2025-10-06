@@ -3,7 +3,7 @@ import './login.css';
 import { authService } from '../services/authService';
 import React from 'react';
 import { Validator } from '../services/validator.ts';
-import NavBar from '../../homepage/components/NavBar';
+import NavBar from '../../homepage/components/navBar.tsx';
 import logo from '../../../assets/mediviapng.png';
 
 interface LoginFormData {

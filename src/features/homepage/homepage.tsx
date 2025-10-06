@@ -1,4 +1,4 @@
-import NavBar from "./components/navbar.jsx";
+import NavBar from "./components/navBar.js";
 import './Homepage.css';
 
 const Homepage = () => {
