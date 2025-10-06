@@ -120,14 +120,14 @@ const ClinicaLogin: React.FC = () => {
 
         {/* Login Form */}
         <div className="login-form-section">
-          <h2 className="form-title">
+          <h2 className="login-form-title">
             Inicio de Sesión
           </h2>
 
             {error && (
             <div style={{
               padding: '12px',
-              marginBottom: '15px',
+              marginBottom: '2px',
               backgroundColor: '#ffebee',
               color: '#c62828',
               borderRadius: '8px',
@@ -152,7 +152,7 @@ const ClinicaLogin: React.FC = () => {
             </div>
           )}
 
-          <div className="form-inputs">
+          <div className="login-form-inputs">
             {/* ID Input */}
 
             {/* DNI Input */}
@@ -164,7 +164,7 @@ const ClinicaLogin: React.FC = () => {
                 value={formData.input}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyPress}
-                className="form-input"
+                className="login-form-input"
                 disabled={isLoading}
                 autoComplete="username"
               />
@@ -178,7 +178,7 @@ const ClinicaLogin: React.FC = () => {
                 placeholder="Ingrese su contraseña"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="form-input"
+                className="login-form-input"
                 disabled={isLoading}
                 onKeyDown={handleKeyPress}
                 autoComplete="current-password"
@@ -186,29 +186,24 @@ const ClinicaLogin: React.FC = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="form-buttons">
-              <button
-                onClick={handleLogin}
-                className="form-button"
-                disabled={isLoading} // Deshabilitar mientras carga
-                style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
-              >
+            <div className="login-form-buttons">
+              <button onClick={handleLogin} className="login-form-button" disabled={isLoading} 
+              style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}>
                 {isLoading? 'Iniciando...' : 'Iniciar Sesión'}
-                {!isLoading && (
-                <svg 
-                  className="button-icon" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              )}
+                
+                {
+                !isLoading && 
+                (
+                  <svg className="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                )
+                }
               </button>
               
               <button
                 onClick={handleCreateAccount}
-                className="form-button"
+                className="login-form-button"
                 disabled={isLoading}
               >
                 Crear Cuenta
