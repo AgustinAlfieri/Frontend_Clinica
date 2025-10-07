@@ -1,4 +1,4 @@
-import './navbar.css'
+import './navBar.css'
 import logo from '../../../assets/medivia1.jpg';
 
 const NavBar = () => {
