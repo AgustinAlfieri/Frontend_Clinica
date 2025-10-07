@@ -1,6 +1,6 @@
 import NavBar from "./navBar";
 import BenefitCard from "./BenefitCard";
-import './Homepage.css';
+import './homepage.css';
 
 const Homepage = () => {
 
