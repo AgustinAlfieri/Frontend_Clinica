@@ -1,8 +1,11 @@
-import NavBar from "./components/navbar.jsx";
-import BenefitCard from "./components/BenefitCard.jsx";
+import NavBar from "./navBar";
+import BenefitCard from "./BenefitCard";
 import './Homepage.css';
 
 const Homepage = () => {
+
+    // La IA me recomendó crear esta variable y luego mapearla para evitar repetir código, no sé
+    // que pensaran ustedes muchachos
     const benefitsData = [
         {
             icon: (
@@ -52,7 +55,10 @@ const Homepage = () => {
                 <div className="hero-image">
                     {/* Aquí va la imagen - placeholder por ahora */}
                     <div className="image-placeholder">
-                        <div className="image-frame"></div>
+                        <img src='src\assets\image.webp' alt="Hero" className="hero-img" />
+                        <div className="image-frame">
+
+                        </div>
                     </div>
                 </div>
             </section>
