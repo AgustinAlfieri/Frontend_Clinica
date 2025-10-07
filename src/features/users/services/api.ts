@@ -1,31 +1,31 @@
-const API_BASE_URL = "http://localhost:3000/app/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const apiClient = {
   async post(endpoint: string, data: any) {
     try {
       const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       });
       const responseData = await response.json();
       if (!response.ok) {
-        throw new Error(responseData.message || "API request failed");
+        throw new Error(responseData.message || 'API request failed');
       }
       return responseData;
     } catch (error) {
-      console.error("API Error:", error);
+      console.error('API Error:', error);
       throw error;
     }
   },
   async get(endpoint: string) {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
 
       const headers: any = {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       };
 
       // Agregar token si existe (para rutas protegidas)
@@ -34,22 +34,20 @@ export const apiClient = {
       }
 
       const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
-        method: "GET",
-        headers,
+        method: 'GET',
+        headers
       });
 
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          responseData.message || `Error HTTP: ${response.status}`
-        );
+        throw new Error(responseData.message || `Error HTTP: ${response.status}`);
       }
 
       return responseData;
     } catch (error) {
-      console.error("API GET Error:", error);
+      console.error('API GET Error:', error);
       throw error;
     }
-  },
+  }
 };

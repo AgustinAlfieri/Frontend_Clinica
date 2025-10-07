@@ -1,11 +1,11 @@
-import {apiClient} from './api';
-import type UserType from "../UserType";
+import { apiClient } from './api';
+// import type UserType from "../UserType";
 
 export interface LoginCredentials {
   dni?: string;
   email?: string;
   password: string;
-  role?: string
+  role?: string;
 }
 
 export default interface AuthResponse {
@@ -22,40 +22,39 @@ export default interface AuthResponse {
 }
 
 export const authService = {
-    async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    try{
-        const response = await apiClient.post('auth/login',{
-            dni: credentials.dni,
-            email: credentials.email,
-            password: credentials.password,
-            role: credentials.role // Asegúrate de enviar el role
-        });
+  async login(credentials: LoginCredentials): Promise<AuthResponse> {
+    try {
+      const response = await apiClient.post('auth/login', {
+        dni: credentials.dni,
+        email: credentials.email,
+        password: credentials.password,
+        role: credentials.role // Asegúrate de enviar el role
+      });
 
-        if(response.success && response.token){
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('user', JSON.stringify(response.user));
-        }
-        return response;
-    }catch(error: any){
-        throw new Error(error.message || 'Login failed');
+      if (response.success && response.token) {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+      }
+      return response;
+    } catch (error: any) {
+      throw new Error(error.message || 'Login failed');
     }
-    },
-    logout() {
+  },
+  logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    },
+  },
 
-    isAuthenticated(): boolean {
+  isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
-    },
+  },
 
-    getToken(): string | null {
+  getToken(): string | null {
     return localStorage.getItem('token');
-    },
+  },
 
-    getUser() {
+  getUser() {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
-    }
-
-}
+  }
+};

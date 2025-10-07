@@ -47,9 +47,13 @@ const AppointmentForm: React.FC = () => {
 
     // Listas para los selects (se llenarán con llamadas a la API)
     const [specialties, setSpecialties] = useState<Specialty[]>([]);
-    const [medics, setMedics] = useState<Medic[]>([]);
-    const [practices, setPractices] = useState<Practice[]>([]);
-    const [schedules, setSchedules] = useState<Schedule[]>([]);
+//    const [medics, setMedics] = useState<Medic[]>([]);
+//    const [practices, setPractices] = useState<Practice[]>([]);
+//    const [schedules, setSchedules] = useState<Schedule[]>([]);
+    const [medics] = useState<Medic[]>([]);
+    const [practices] = useState<Practice[]>([]);
+    const [schedules] = useState<Schedule[]>([]);
+
 
     useEffect(() => {
         // TODO: Aquí irían las llamadas a la API para cargar las listas
