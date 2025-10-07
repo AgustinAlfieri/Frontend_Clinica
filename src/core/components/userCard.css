@@ -1,0 +1,30 @@
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* separa el avatar del texto */
+}
+
+.user-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;    /* avatar redondo */
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* nombre arriba, dni abajo */
+}
+
+.user-info h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.user-info p {
+    margin: 0;
+    font-size: 14px;
+    color: gray;
+}
