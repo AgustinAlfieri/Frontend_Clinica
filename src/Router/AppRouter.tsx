@@ -4,7 +4,7 @@ import AppointmentForm from '../features/appointment/components/appointment'
 import RegisterMedic from '../features/users/medic/components/RegisterMedic'
 import RegisterPatient from '../features/users/patients/components/RegisterPatient'
 import RegisterAdministrative from '../features/users/administrative/components/RegisterAdministrative'
-import Homepage from '../features/homepage/homepage';
+import Homepage from '../features/homepage/components/homepage'
 
 const AppRouter = () => {
     return(

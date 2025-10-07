@@ -65,11 +65,12 @@ const AppointmentForm: React.FC = () => {
         
         ///// FETCH A SPECIALTIES
         const fetchSpecialties = async () => {
-            console.log('te las traigo')
+            console.log('Fetching specialties...')
             setIsLoading(true);
             try {
-                const specialties = await AppointmentService.getSpecialties();
-                setSpecialties(specialties);
+                const specialtiesData = await AppointmentService.getSpecialties();
+                console.log('Specialties recibidas:', specialtiesData);
+                setSpecialties(specialtiesData);
             }catch (error){
                 console.error('Error fetching specialties:', error);
             }finally{
@@ -78,9 +79,13 @@ const AppointmentForm: React.FC = () => {
         };
 
         fetchSpecialties();
-        console.log(specialties);
 
     }, []);
+
+    // useEffect separado para ver cuando cambian las specialties
+    useEffect(() => {
+        console.log('Estado specialties actualizado:', specialties);
+    }, [specialties]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
