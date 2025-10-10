@@ -50,7 +50,7 @@ const ClinicaLogin: React.FC = () => {
     const isEmail = formData.input.includes('@');
 
     //Es valido el input?
-    if (isEmail && Validator.validateEmail(formData.input) === false) {
+    if (isEmail && !Validator.validateEmail(formData.input)) {
       setError('Por favor ingresa un email válido'); // ← USO DE setError
       return;
     }

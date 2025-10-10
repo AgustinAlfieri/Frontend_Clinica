@@ -5,6 +5,7 @@ import RegisterMedic from '../features/users/medic/components/RegisterMedic'
 import RegisterPatient from '../features/users/patients/components/RegisterPatient'
 import RegisterAdministrative from '../features/users/administrative/components/RegisterAdministrative'
 import Homepage from '../features/homepage/components/homepage'
+import Dashboard from '../features/users/components/dashboard';
 
 const AppRouter = () => {
     return(
@@ -17,6 +18,7 @@ const AppRouter = () => {
         <Route path="/registermedic" element= {<RegisterMedic/>} />
         <Route path="/registeradministrative" element= {<RegisterAdministrative/>} />
         <Route path="/homepage" element= {<Homepage/>} />
+        <Route path="/dashboard" element= {<Dashboard />} />
       </Routes>
     </Router>
     )

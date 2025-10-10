@@ -1,0 +1,44 @@
+.dashboard {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #a8e8e3;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 30px;
+
+}.dashboard-logo {
+  overflow: hidden; /* Importante para que la imagen respete los bordes redondeados */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-logo img {
+  width: 50%;
+  height: 100%;
+  object-fit: cover; /* Mantiene proporción y recorta si hace falta */
+  display: block;
+  border:"50%"
+}
+
+.dashboard-header h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.dashboard-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
