@@ -55,20 +55,9 @@ const AppointmentForm: React.FC = () => {
     } = useSpecialties(() => AppointmentService.getSpecialties());
 
     // Listas para los selects (se llenarán con llamadas a la API)
-<<<<<<< Updated upstream
-    const [specialties, setSpecialties] = useState<Specialty[]>([]);
-//    const [medics, setMedics] = useState<Medic[]>([]);
-//    const [practices, setPractices] = useState<Practice[]>([]);
-//    const [schedules, setSchedules] = useState<Schedule[]>([]);
-    const [medics] = useState<Medic[]>([]);
-    const [practices] = useState<Practice[]>([]);
-    const [schedules] = useState<Schedule[]>([]);
-
-=======
     const [availableMedics, setAvailableMedics] = useState<Medic[]>([]);
     const [practices, setPractices] = useState<Practice[]>([]);
     const [schedules, setSchedules] = useState<Schedule[]>([]);
->>>>>>> Stashed changes
 
     // Efecto para actualizar los médicos disponibles cuando cambia la especialidad seleccionada
     useEffect(() => {
