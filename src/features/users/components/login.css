@@ -1,6 +1,6 @@
 .login-container {
         min-height: 100vh;
-        background:'../../../assets/back.jpg';
+        background: url('../../../assets/back.jpg') no-repeat center center;
         background-size: cover;
         display: flex;
         align-items: center;
