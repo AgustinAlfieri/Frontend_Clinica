@@ -188,6 +188,11 @@
         padding: 2.5rem;
     }
 
+    .login-logo {
+        width: 150px;
+        height: 65px;
+    }
+
     .login-title {
         font-size: 2.25rem;
         /* Larger title */
