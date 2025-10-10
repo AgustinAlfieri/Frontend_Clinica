@@ -3,7 +3,7 @@ import './register.css';
 import React from 'react';
 import { Validator } from '../services/validator.ts';
 import type UserType from '../UserType';
-import NavBar from '../../homepage/components/NavBar';
+import NavBar from '../../homepage/components/navBar';
 import logo from '../../../assets/mediviapng.png';
 
 // Interface para los datos básicos del usuario

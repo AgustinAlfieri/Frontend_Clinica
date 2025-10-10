@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import './appointment.css';
 import { AppointmentService } from '../service/appointmentService';
+import { useSpecialties } from '../../../core/hooks/useSpecialties';
 
 interface AppointmentFormData {
     patient_id: string;
@@ -11,14 +12,15 @@ interface AppointmentFormData {
     schedule_id: string;
 }
 
-interface Specialty {
-    id: string;
-    name: string;
-}
-
 interface Medic {
+    dni: string;
+    email: string;
     id: string;
+    license: string;
     name: string;
+    password: string;
+    role: string;
+    telephone: string;
 }
 
 interface Practice {
@@ -45,38 +47,49 @@ const AppointmentForm: React.FC = () => {
         schedule_id: ''
     });
 
+    // Usar el custom hook para obtener especialidades
+    const { 
+        specialties, 
+        isLoading: isLoadingSpecialties, 
+        error: specialtiesError 
+    } = useSpecialties(() => AppointmentService.getSpecialties());
+
     // Listas para los selects (se llenarán con llamadas a la API)
+<<<<<<< Updated upstream
     const [specialties, setSpecialties] = useState<Specialty[]>([]);
-    const [medics, setMedics] = useState<Medic[]>([]);
+//    const [medics, setMedics] = useState<Medic[]>([]);
+//    const [practices, setPractices] = useState<Practice[]>([]);
+//    const [schedules, setSchedules] = useState<Schedule[]>([]);
+    const [medics] = useState<Medic[]>([]);
+    const [practices] = useState<Practice[]>([]);
+    const [schedules] = useState<Schedule[]>([]);
+
+=======
+    const [availableMedics, setAvailableMedics] = useState<Medic[]>([]);
     const [practices, setPractices] = useState<Practice[]>([]);
     const [schedules, setSchedules] = useState<Schedule[]>([]);
+>>>>>>> Stashed changes
 
+    // Efecto para actualizar los médicos disponibles cuando cambia la especialidad seleccionada
     useEffect(() => {
-        // TODO: Aquí irían las llamadas a la API para cargar las listas
-        // Ejemplo:
-        // fetchSpecialties().then(data => setSpecialties(data));
-        // fetchMedics().then(data => setMedics(data));
-        // fetchPractices().then(data => setPractices(data));
-        // fetchSchedules().then(data => setSchedules(data));
-        
-        ///// FETCH A SPECIALTIES
-        const fetchSpecialties = async () => {
-            console.log('te las traigo')
-            setIsLoading(true);
-            try {
-                const specialties = await AppointmentService.getSpecialties();
-                setSpecialties(specialties);
-            }catch (error){
-                console.error('Error fetching specialties:', error);
-            }finally{
-                setIsLoading(false);
+        if (formData.specialty_id) {
+            const selectedSpecialty = specialties.find(s => s.id === formData.specialty_id);
+            if (selectedSpecialty && selectedSpecialty.medicalProfessionals) {
+                const selectedMedic = selectedSpecialty.medicalProfessionals;
+                setAvailableMedics(selectedMedic);
+            } else {
+                setAvailableMedics([]);
             }
-        };
+            // Limpiar el médico seleccionado cuando cambia la especialidad
+            setFormData(prev => ({
+                ...prev,
+                medic_id: ''
+            }));
+        } else {
+            setAvailableMedics([]);
+        }
+    }, [formData.specialty_id, specialties]);
 
-        fetchSpecialties();
-        console.log(specialties);
-
-    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -155,6 +168,20 @@ const AppointmentForm: React.FC = () => {
                         </div>
                     )}
 
+                    {specialtiesError && (
+                        <div style={{
+                            padding: '12px',
+                            marginBottom: '15px',
+                            backgroundColor: '#ffebee',
+                            color: '#c62828',
+                            borderRadius: '8px',
+                            fontSize: '14px',
+                            border: '1px solid #ef5350'
+                        }}>
+                            {specialtiesError}
+                        </div>
+                    )}
+
                     {success && (
                         <div style={{
                             padding: '12px',
@@ -178,7 +205,7 @@ const AppointmentForm: React.FC = () => {
                                 value={formData.specialty_id}
                                 onChange={handleInputChange}
                                 className="form-input"
-                                disabled={isLoading}
+                                disabled={isLoading || isLoadingSpecialties}
                             >
                                 <option value="">Seleccione una especialidad</option>
                                 {specialties.map(specialty => (
@@ -197,10 +224,16 @@ const AppointmentForm: React.FC = () => {
                                 value={formData.medic_id}
                                 onChange={handleInputChange}
                                 className="form-input"
-                                disabled={isLoading}
+                                disabled={isLoading || !formData.specialty_id}
                             >
-                                <option value="">Seleccione un médico</option>
-                                {medics.map(medic => (
+                                <option value="">
+                                    {!formData.specialty_id 
+                                        ? 'Primero selecciona una especialidad' 
+                                        : availableMedics.length === 0 
+                                            ? 'No hay médicos disponibles' 
+                                            : 'Seleccione un médico'}
+                                </option>
+                                {availableMedics.map(medic => (
                                     <option key={medic.id} value={medic.id}>
                                         {medic.name}
                                     </option>
