@@ -1,0 +1,32 @@
+.shift-panel {
+  background-color: #b9f4b0; /* color verde claro */
+  border-radius: 16px;
+  padding: 25px;
+  width: 90%;
+  max-width: 500px;
+  max-height:400px;
+  height: 100% ;
+  margin: 20px auto ;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+.shift-panel h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.shift-panel p {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.appointment-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* espacio entre cada card */
+  width: 100%; /* ocupa todo el ancho disponible */
+  padding: 0 10px; /* pequeño margen lateral opcional */
+  box-sizing: border-box;
+}
