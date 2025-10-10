@@ -1,16 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
 .dashboard {
   display: flex;
   width: 100%;
   min-height: 100vh;
-  background-color: #a8e8e3;
+  background: linear-gradient(135deg, #E8F5F0 0%, #A5D4C8 100%);
+  font-family: 'Poppins', sans-serif;
 }
 
 .dashboard-main {
   flex: 1;
-  padding: 30px;
+  padding: 40px;
+  background: transparent;
+}
 
-}.dashboard-logo {
-  overflow: hidden; /* Importante para que la imagen respete los bordes redondeados */
+.dashboard-logo {
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,26 +24,87 @@
 .dashboard-logo img {
   width: 50%;
   height: 100%;
-  object-fit: cover; /* Mantiene proporción y recorta si hace falta */
+  object-fit: cover;
   display: block;
-  border:"50%"
+  border-radius: 50%;
+}
+
+.dashboard-header {
+  margin-bottom: 40px;
 }
 
 .dashboard-header h1 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
+  font-size: 2.5rem;
+  color: #2C5F5D;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .dashboard-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
 }
 
 .dashboard-panels {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
   margin-top: 40px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .dashboard-main {
+    padding: 30px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .dashboard-panels {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .dashboard-main {
+    padding: 20px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .dashboard-panels {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-main {
+    padding: 15px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
 }
