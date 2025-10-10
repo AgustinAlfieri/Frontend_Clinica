@@ -76,7 +76,6 @@ const ClinicaLogin: React.FC = () => {
 
     try{
       //Mando al backend
-      console.log(formData)
       const response = await authService.login(formData); // FormData tiene que ser igual a login credentials
       
       if (response.success){
