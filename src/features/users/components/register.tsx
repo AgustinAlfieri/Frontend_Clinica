@@ -5,6 +5,7 @@ import { Validator } from '../services/validator.ts';
 import type UserType from '../UserType';
 import NavBar from '../../homepage/components/navBar';
 import logo from '../../../assets/mediviapng.png';
+import Alert from '../../../core/components/alert';
 
 // Interface para los datos básicos del usuario
 export interface BaseUserData {
@@ -122,33 +123,8 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
         <div className="register-form-section">
           <h2 className="form-title">{getTitle()}</h2>
 
-          {error && (
-            <div style={{
-              padding: '12px',
-              marginBottom: '15px',
-              backgroundColor: '#ffebee',
-              color: '#c62828',
-              borderRadius: '8px',
-              fontSize: '14px',
-              border: '1px solid #ef5350'
-            }}>
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div style={{
-              padding: '12px',
-              marginBottom: '15px',
-              backgroundColor: '#e8f5e9',
-              color: '#2e7d32',
-              borderRadius: '8px',
-              fontSize: '14px',
-              border: '1px solid #66bb6a'
-            }}>
-              {success}
-            </div>
-          )}
+          {error && <Alert type="error" message={error} />}
+          {success && <Alert type="success" message={success} />}
 
           <div className="form-inputs-grid">
             <div className="form-group">

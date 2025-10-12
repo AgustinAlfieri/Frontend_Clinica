@@ -3,12 +3,16 @@ import React from 'react';
 import './appointment.css';
 import { AppointmentService } from '../service/appointmentService';
 import { useSpecialties } from '../../../core/hooks/useSpecialties';
+import Alert from '../../../core/components/alert';
+import Select from '../../../core/components/select';
+import Button from '../../../core/components/button';
 
 interface AppointmentFormData {
     patient_id: string;
     specialty_id: string;
     medic_id: string;
     practice_id: string;
+    day_id: string;
     schedule_id: string;
 }
 
@@ -28,22 +32,33 @@ interface Practice {
     name: string;
 }
 
-interface Schedule {
-    id: string;
-    datetime: string;
+interface TimeSlot {
+  datetime: string;
+  available: boolean;
+}
+
+interface AvailableSchedule {
+  date: string;
+  slots: TimeSlot[];
 }
 
 const AppointmentForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [success, setSuccess] = useState<string>('');
-
+    
+    // Estados para schedule completo
+    const [fullSchedule, setFullSchedule] = useState<AvailableSchedule[]>([]);
+    const [availableDays, setAvailableDays] = useState<string[]>([]);
+    const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
+    
     // Datos del formulario
     const [formData, setFormData] = useState<AppointmentFormData>({
-        patient_id: '', // Se obtendrá de la sesión
+        patient_id: '',
         specialty_id: '',
         medic_id: '',
-        practice_id: '',
+        practice_id: 'Consulta',
+        day_id: '',
         schedule_id: ''
     });
 
@@ -52,33 +67,101 @@ const AppointmentForm: React.FC = () => {
         specialties, 
         isLoading: isLoadingSpecialties, 
         error: specialtiesError 
-    } = useSpecialties(() => AppointmentService.getSpecialties());
+    } = useSpecialties(AppointmentService.getSpecialties);
 
-    // Listas para los selects (se llenarán con llamadas a la API)
+    // Listas para los selects
     const [availableMedics, setAvailableMedics] = useState<Medic[]>([]);
     const [practices, setPractices] = useState<Practice[]>([]);
-    const [schedules, setSchedules] = useState<Schedule[]>([]);
 
-    // Efecto para actualizar los médicos disponibles cuando cambia la especialidad seleccionada
+    // Efecto para actualizar los médicos disponibles cuando cambia la especialidad
     useEffect(() => {
-        if (formData.specialty_id) {
+        if (formData.specialty_id && Array.isArray(specialties)) {
             const selectedSpecialty = specialties.find(s => s.id === formData.specialty_id);
             if (selectedSpecialty && selectedSpecialty.medicalProfessionals) {
-                const selectedMedic = selectedSpecialty.medicalProfessionals;
-                setAvailableMedics(selectedMedic);
+                setAvailableMedics(selectedSpecialty.medicalProfessionals);
             } else {
                 setAvailableMedics([]);
             }
-            // Limpiar el médico seleccionado cuando cambia la especialidad
+            // Limpiar selecciones dependientes
             setFormData(prev => ({
                 ...prev,
-                medic_id: ''
+                medic_id: '',
+                practice_id: '',
+                day_id: '',
+                schedule_id: ''
             }));
         } else {
             setAvailableMedics([]);
         }
     }, [formData.specialty_id, specialties]);
 
+    // Efecto para cargar el schedule completo cuando cambia el médico
+    useEffect(() => {
+        if (!formData.medic_id) {
+            setFullSchedule([]);
+            setAvailableDays([]);
+            setAvailableSlots([]);
+            return;
+        }
+
+        const fetchScheduleData = async () => {
+            try {
+                const scheduleData = await AppointmentService.getSlotsByMedic(formData.medic_id);
+                
+                // Guardar el schedule completo
+                setFullSchedule(scheduleData);
+                
+                // Extraer solo los días disponibles
+                const days = scheduleData.map(day => day.date);
+                setAvailableDays(days);
+                
+                console.log('Schedule loaded:', scheduleData);
+                console.log('Available days:', days);
+                
+            } catch(err) {
+                console.error('Error fetching schedule:', err);
+                setError('Error al cargar los horarios disponibles');
+            }
+        };
+
+        fetchScheduleData();
+        
+        // Limpiar día y horario seleccionados cuando cambia el médico
+        setFormData(prev => ({
+            ...prev,
+            day_id: '',
+            schedule_id: ''
+        }));
+        
+    }, [formData.medic_id]);
+
+    // Efecto para filtrar slots cuando cambia el día seleccionado
+    useEffect(() => {
+        if (!formData.day_id || fullSchedule.length === 0) {
+            setAvailableSlots([]);
+            return;
+        }
+
+        // Buscar el día seleccionado en el schedule completo
+        const selectedDay = fullSchedule.find(day => day.date === formData.day_id);
+        
+        if (selectedDay) {
+            // Filtrar solo slots disponibles
+            const availableSlotsForDay = selectedDay.slots.filter(slot => slot.available);
+            setAvailableSlots(availableSlotsForDay);
+            
+            console.log('Slots for selected day:', availableSlotsForDay);
+        } else {
+            setAvailableSlots([]);
+        }
+        
+        // Limpiar horario seleccionado cuando cambia el día
+        setFormData(prev => ({
+            ...prev,
+            schedule_id: ''
+        }));
+        
+    }, [formData.day_id, fullSchedule]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -91,20 +174,19 @@ const AppointmentForm: React.FC = () => {
 
     const handleSubmit = async () => {
         // Validaciones
-        if (!formData.specialty_id || !formData.medic_id || !formData.practice_id || !formData.schedule_id) {
+        if (!formData.specialty_id || !formData.medic_id || !formData.schedule_id) {
             setError('Por favor completa todos los campos');
             return;
         }
+        // Validaciones antes de enviar
+
+        // Validaciones antes de enviar
 
         setIsLoading(true);
         setError('');
         setSuccess('');
 
         try {
-            // TODO: Aquí iría la llamada a la API para crear el turno
-            // const response = await appointmentService.create(formData);
-            
-            // Simulación de éxito
             setTimeout(() => {
                 setSuccess('Turno creado exitosamente');
                 setIsLoading(false);
@@ -114,8 +196,13 @@ const AppointmentForm: React.FC = () => {
                     specialty_id: '',
                     medic_id: '',
                     practice_id: '',
+                    day_id: '',
                     schedule_id: ''
                 });
+                setAvailableMedics([]);
+                setFullSchedule([]);
+                setAvailableDays([]);
+                setAvailableSlots([]);
             }, 1000);
         } catch (err: any) {
             setError(err.message || 'Error al crear el turno');
@@ -125,8 +212,22 @@ const AppointmentForm: React.FC = () => {
     };
 
     const handleCancel = () => {
-        // TODO: Aquí iría la lógica para cancelar/volver
         console.log('Cancel appointment');
+        // Limpiar el formulario
+        setFormData({
+            patient_id: '',
+            specialty_id: '',
+            medic_id: '',
+            practice_id: 'Consulta',
+            day_id: '',
+            schedule_id: ''
+        });
+        setAvailableMedics([]);
+        setFullSchedule([]);
+        setAvailableDays([]);
+        setAvailableSlots([]);
+        setError('');
+        setSuccess('');
     };
 
     return (
@@ -143,168 +244,144 @@ const AppointmentForm: React.FC = () => {
                 <div className="appointment-form-section">
                     <h2 className="form-title">Información del Turno</h2>
 
-                    {error && (
-                        <div style={{
-                            padding: '12px',
-                            marginBottom: '15px',
-                            backgroundColor: '#ffebee',
-                            color: '#c62828',
-                            borderRadius: '8px',
-                            fontSize: '14px',
-                            border: '1px solid #ef5350'
-                        }}>
-                            {error}
-                        </div>
-                    )}
-
-                    {specialtiesError && (
-                        <div style={{
-                            padding: '12px',
-                            marginBottom: '15px',
-                            backgroundColor: '#ffebee',
-                            color: '#c62828',
-                            borderRadius: '8px',
-                            fontSize: '14px',
-                            border: '1px solid #ef5350'
-                        }}>
-                            {specialtiesError}
-                        </div>
-                    )}
-
-                    {success && (
-                        <div style={{
-                            padding: '12px',
-                            marginBottom: '15px',
-                            backgroundColor: '#e8f5e9',
-                            color: '#2e7d32',
-                            borderRadius: '8px',
-                            fontSize: '14px',
-                            border: '1px solid #66bb6a'
-                        }}>
-                            ✓ {success}
-                        </div>
-                    )}
+                    {error && <Alert type="error" message={error} />}
+                    {specialtiesError && <Alert type="error" message={specialtiesError} />}
+                    {success && <Alert type="success" message={success} />}
 
                     <div className="form-inputs">
                         {/* Specialty Select */}
-                        <div className="form-group">
-                            <label className="form-label">Especialidad</label>
-                            <select
-                                name="specialty_id"
-                                value={formData.specialty_id}
-                                onChange={handleInputChange}
-                                className="form-input"
-                                disabled={isLoading || isLoadingSpecialties}
-                            >
-                                <option value="">Seleccione una especialidad</option>
-                                {specialties.map(specialty => (
-                                    <option key={specialty.id} value={specialty.id}>
-                                        {specialty.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        <Select
+                            label="Especialidad"
+                            name="specialty_id"
+                            value={formData.specialty_id}
+                            onChange={handleInputChange}
+                            disabled={isLoading || isLoadingSpecialties}
+                            options={[
+                                { 
+                                    value: '', 
+                                    label: isLoadingSpecialties 
+                                        ? 'Cargando especialidades...' 
+                                        : 'Seleccione una especialidad' 
+                                },
+                                ...(Array.isArray(specialties) ? specialties.map(specialty => ({
+                                    value: specialty.id,
+                                    label: specialty.name
+                                })) : [])
+                            ]}
+                        />
 
                         {/* Medic Select */}
-                        <div className="form-group">
-                            <label className="form-label">Médico</label>
-                            <select
-                                name="medic_id"
-                                value={formData.medic_id}
-                                onChange={handleInputChange}
-                                className="form-input"
-                                disabled={isLoading || !formData.specialty_id}
-                            >
-                                <option value="">
-                                    {!formData.specialty_id 
+                        <Select
+                            label="Médico"
+                            name="medic_id"
+                            value={formData.medic_id}
+                            onChange={handleInputChange}
+                            disabled={isLoading || !formData.specialty_id}
+                            options={[
+                                {
+                                    value: '',
+                                    label: !formData.specialty_id 
                                         ? 'Primero selecciona una especialidad' 
                                         : availableMedics.length === 0 
                                             ? 'No hay médicos disponibles' 
-                                            : 'Seleccione un médico'}
-                                </option>
-                                {availableMedics.map(medic => (
-                                    <option key={medic.id} value={medic.id}>
-                                        {medic.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                                            : 'Seleccione un médico'
+                                },
+                                ...availableMedics.map(medic => ({
+                                    value: medic.id,
+                                    label: medic.name
+                                }))
+                            ]}
+                        />
 
-                        {/* Practice Select */}
-                        <div className="form-group">
-                            <label className="form-label">Práctica</label>
-                            <select
-                                name="practice_id"
-                                value={formData.practice_id}
-                                onChange={handleInputChange}
-                                className="form-input"
-                                disabled={isLoading}
-                            >
-                                <option value="">Seleccione una práctica</option>
-                                {practices.map(practice => (
-                                    <option key={practice.id} value={practice.id}>
-                                        {practice.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
 
-                        {/* Schedule Select */}
-                        <div className="form-group">
-                            <label className="form-label">Horario</label>
-                            <select
-                                name="schedule_id"
-                                value={formData.schedule_id}
-                                onChange={handleInputChange}
-                                className="form-input"
-                                disabled={isLoading}
-                            >
-                                <option value="">Seleccione un horario</option>
-                                {schedules.map(schedule => (
-                                    <option key={schedule.id} value={schedule.id}>
-                                        {schedule.datetime}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        {/* Day Select */}
+                        <Select
+                            label="Día"
+                            name="day_id"
+                            value={formData.day_id}
+                            onChange={handleInputChange}
+                            disabled={isLoading || !formData.medic_id}
+                            options={[
+                                {
+                                    value: '',
+                                    label: !formData.medic_id
+                                        ? 'Primero selecciona un médico'
+                                        : availableDays.length === 0
+                                            ? 'No hay días disponibles'
+                                            : 'Seleccione un día'
+                                },
+                                ...availableDays.map(day => ({
+                                    value: day,
+                                    label: new Date(day).toLocaleDateString('es-AR', { 
+                                        weekday: 'long',
+                                        year: 'numeric', 
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })
+                                }))
+                            ]}
+                        />
 
-                        {/* Action Buttons */}
-                        <div className="form-buttons">
-                            <button
-                                onClick={handleSubmit}
-                                className="form-button form-button-primary"
-                                disabled={isLoading}
-                                style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
-                            >
-                                {isLoading ? 'Creando...' : 'Confirmar Turno'}
-                                {!isLoading && (
-                                    <svg
-                                        className="button-icon"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                )}
-                            </button>
+                        {/* Schedule/Time Select */}
+                        <Select
+                            label="Horario"
+                            name="schedule_id"
+                            value={formData.schedule_id}
+                            onChange={handleInputChange}
+                            disabled={isLoading || !formData.day_id}
+                            options={[
+                                {
+                                    value: '',
+                                    label: !formData.day_id
+                                        ? 'Primero selecciona un día'
+                                        : availableSlots.length === 0
+                                            ? 'No hay horarios disponibles para este día'
+                                            : 'Seleccione un horario'
+                                },
+                                ...availableSlots.map(slot => ({
+                                    value: slot.datetime,
+                                    label: new Date(slot.datetime).toLocaleTimeString('es-AR', {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: false
+                                    })
+                                }))
+                            ]}
+                        />
+                    </div>
 
-                            <button
-                                onClick={handleCancel}
-                                className="form-button form-button-secondary"
-                                disabled={isLoading}
-                            >
-                                Cancelar
+                    <div className="form-buttons">
+                        <Button
+                            label={isLoading ? 'Creando...' : 'Confirmar Turno'}
+                            buttonFunction={handleSubmit}
+                            variant="primary"
+                            disabled={isLoading}
+                            icon={!isLoading ? (
                                 <svg
-                                    className="button-icon"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            ) : undefined}
+                        />
+
+                        <Button
+                            label="Cancelar"
+                            buttonFunction={handleCancel}
+                            variant="danger"
+                            disabled={isLoading}
+                            icon={
+                                <svg
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
                                 >
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
-                            </button>
-                        </div>
+                            }
+                        />
                     </div>
                 </div>
 

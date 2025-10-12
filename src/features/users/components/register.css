@@ -2,9 +2,8 @@
 
 .register-container {
     min-height: 140vh;
-    background: url('../../../core/assets/body-wallpapper.jpg') no-repeat;
+    background: url('../../../assets/back.jpg') no-repeat center center;
     background-size: cover;
-    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
