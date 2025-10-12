@@ -19,6 +19,24 @@ interface Specialty{
     }[];
 }
 
+interface AppointmentData {
+    appointmentDate: string; // ISO string
+    patientId: string;
+    medicId: string;
+    practice_id: string[];
+    administrativeIds?: string[];
+}
+
+interface TimeSlot {
+  datetime: string; // ISO string
+  available: boolean;
+}
+
+interface AvailableSchedule {
+  date: string; // YYYY-MM-DD
+  slots: TimeSlot[];
+}
+
 export const AppointmentService = {
     //get medicos
     //get paciente
@@ -32,7 +50,17 @@ export const AppointmentService = {
             throw new Error(error.message || 'Fetching specialties failed');
         }
     },
-
+    async getSlotsByMedic(medicId: string): Promise<AvailableSchedule[]>{
+        try{
+            const response = await apiClient.get(`medic/schedule/${medicId}`);
+            return response.data;
+        }catch(error: any){
+            throw new Error(error.message || 'Fetching slots failed');
+        }
+    }
+    ,
+    async createAppointment(data: AppointmentData){}
+    ,
 
     
 
