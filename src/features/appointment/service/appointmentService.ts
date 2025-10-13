@@ -59,13 +59,17 @@ export const AppointmentService = {
         }
     }
     ,
-    async createAppointment(data: AppointmentData){}
+    async createAppointment(data: AppointmentData){
+        try{
+            const response = await apiClient.post('appointment/create', data);
+            if (response.success){
+                return response;
+            }
+        }catch(error: any){
+            throw new Error(error.message || 'Creating appointment failed');
+        }
+    }
     ,
-
-    
-
-    
-    
     //Me traigo las medicos
     async getMedicsBySpecialty() : Promise<Medic[]> {
         const response = await apiClient.get('edics/specialty');

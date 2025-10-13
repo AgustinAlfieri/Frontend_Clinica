@@ -81,9 +81,6 @@ const ClinicaLogin: React.FC = () => {
       
       if (response.success){
         setSuccess('Inicio de sesión exitoso');
-        setTimeout(() => {
-          window.location.href = '/dashboard'; // Redirigir al dashboard
-        }, 1000);
       }
       else {
         setError(response.message || 'Error en el inicio de sesión');

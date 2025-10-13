@@ -42,6 +42,15 @@ interface AvailableSchedule {
   slots: TimeSlot[];
 }
 
+interface AppointmentData {
+    appointmentDate: string; // ISO string
+    patientId: string;
+    medicId: string;
+    practice_id: string[];
+    administrativeIds?: string[];
+}
+
+
 const AppointmentForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
@@ -54,13 +63,14 @@ const AppointmentForm: React.FC = () => {
     
     // Datos del formulario
     const [formData, setFormData] = useState<AppointmentFormData>({
-        patient_id: '',
+        patient_id: localStorage.getItem('userId') || '',
         specialty_id: '',
         medic_id: '',
         practice_id: 'Consulta',
         day_id: '',
         schedule_id: ''
     });
+
 
     // Usar el custom hook para obtener especialidades
     const { 
@@ -187,6 +197,26 @@ const AppointmentForm: React.FC = () => {
         setSuccess('');
 
         try {
+            const user = localStorage.getItem('user');
+            const appointmentData: AppointmentData = {
+                appointmentDate: formData.schedule_id,
+                patientId: user ? JSON.parse(user).id : '',
+                medicId: formData.medic_id,
+                practice_id: ['17603124302705Zdc2BX-jEIXg6'],
+                administrativeIds: ['17571754793588mXr-hsn_5RcQi']
+            }
+            console.log('Creating appointment with data:', appointmentData);
+            const responseAppointment = await AppointmentService.createAppointment(appointmentData);
+            
+      //      const statusData: StatusData = {
+      //          "appointment": responseAppointment.id,
+      //          "observations": "Solicitud",
+      //          "idTypeAppointmentStatus":"1760303705587yWcdh02HlZ2kPs"
+      //      }
+      //      const responseStatus = await AppointmentService.createAppointmentStatus(
+
+       //     );
+
             setTimeout(() => {
                 setSuccess('Turno creado exitosamente');
                 setIsLoading(false);
