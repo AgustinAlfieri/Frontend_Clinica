@@ -6,6 +6,7 @@ import { Validator } from '../services/validator.ts';
 import NavBar from '../../homepage/components/navBar';
 import logo from '../../../assets/mediviapng.png';
 import Alert from '../../../core/components/alert';
+import {useAuth} from '../services/useAuth';
 
 interface LoginFormData {
   input: string; // Opcional, dependiendo de si se necesita
@@ -15,9 +16,12 @@ interface LoginFormData {
   role?: string; // Opcional, dependiendo de si se necesita
 }
 
+
 const ClinicaLogin: React.FC = () => {
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
+  const {login,isAuthenticated} = useAuth();
   // Estado para manejar mensajes de error
   const [error, setError] = useState<string>('');
   
@@ -74,16 +78,15 @@ const ClinicaLogin: React.FC = () => {
     setIsLoading(true);
     setError(''); 
     setSuccess('');
-
     try{
       //Mando al backend
-      const response = await authService.login(formData); // FormData tiene que ser igual a login credentials
+      await login(formData);
       
-      if (response.success){
+      if (isAuthenticated){
         setSuccess('Inicio de sesión exitoso');
-      }
-      else {
-        setError(response.message || 'Error en el inicio de sesión');
+        setTimeout(() => {
+          window.location.href = '/dashboard'; // Redirigir al dashboard
+        }, 1000);
       }
     } catch(err: unknown){
       const errorMessage = err instanceof Error ? err.message : 'Error en el inicio de sesión';

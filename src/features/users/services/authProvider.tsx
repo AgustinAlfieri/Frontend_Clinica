@@ -23,9 +23,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Llamar al servicio para hacer login
   const login = async (credentials: LoginCredentials) => {
-    await authService.login(credentials);
+    const response = await authService.login(credentials);
     setUser(authService.getUser());
     setToken(authService.getToken());
+    return response;
   };
 
   // Logout: limpia almacenamiento y estado local
