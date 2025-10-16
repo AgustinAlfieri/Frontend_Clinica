@@ -87,8 +87,9 @@ const AppointmentForm: React.FC = () => {
     useEffect(() => {
         if (formData.specialty_id && Array.isArray(specialties)) {
             const selectedSpecialty = specialties.find(s => s.id === formData.specialty_id);
-            if (selectedSpecialty && selectedSpecialty.medicalProfessionals) {
-                setAvailableMedics(selectedSpecialty.medicalProfessionals);
+            console.log(selectedSpecialty);
+            if (selectedSpecialty && selectedSpecialty.medics) {
+                setAvailableMedics(selectedSpecialty.medics);
             } else {
                 setAvailableMedics([]);
             }
