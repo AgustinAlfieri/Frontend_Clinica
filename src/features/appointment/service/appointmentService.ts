@@ -27,6 +27,13 @@ interface AppointmentData {
   administrativeIds?: string[];
 }
 
+interface Patient {
+  id: string;
+  name: string;
+  dni: string;
+  Appointments: AppointmentData[];
+}
+
 interface TimeSlot {
   datetime: string; // ISO string
   available: boolean;
@@ -92,14 +99,14 @@ export const AppointmentService = {
     }
   },
 
-  async getAppointmentsByDni(dni: string) {
+  async getAppointmentsByDni(id: string) {
     try{
-      console.log(`Fetching appointments for DNI: ${dni} from AppointmentService`);
-      const response = await apiClient.get(`appointment/findByPatientDni/${dni}`);
+      console.log(`Fetching appointments for id: ${id} from AppointmentService`);
+      const response = await apiClient.get(`patient/findOne/${id}`);
       return response.data;
     }catch (error: any) {
-      throw new Error(error.message || 'Fetching appointments by DNI failed');
+      throw new Error(error.message || 'Fetching appointments by id failed');
     }
   },
-  
+    
 }

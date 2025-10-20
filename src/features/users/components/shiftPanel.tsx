@@ -32,18 +32,27 @@ interface ShiftPanelProps {
   text: string;
 }
 
+
+interface Patient {
+    id: string;
+    name: string;
+    dni: string;    
+    Appointments: AppointmentCardProps[];
+}
+
 const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name}) => {
   const [appointments, setAppointments] = useState<AppointmentCardProps[]>([]);
   useEffect(() => {
     const fetchAppointments = async () =>{
     try{
-      const appointments = await AppointmentService.getAppointmentsByDni(localStorage.getItem('dni') || '');
-      setAppointments(appointments);
+      const appointments : Patient = await AppointmentService.getAppointmentsByDni(localStorage.getItem('id') || '');
+      setAppointments(appointments.Appointments);
     }catch(error){
       console.error('Error fetching appointments in ShiftPanel:', error);
     }
-    fetchAppointments();
+
   }
+     fetchAppointments();
 }, []);
 
   return (
