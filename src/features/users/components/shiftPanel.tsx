@@ -1,6 +1,31 @@
 import React from "react";
-import AppointmentCard from "./appointmentCard";
+import AppointmentCard from "../../appointment/components/AppointmentCard";
 import "./shiftPanel.css";
+import { useEffect, useState } from "react";
+import { AppointmentService } from "../../appointment/service/appointmentService";
+
+interface Patient {
+    name: string;
+    dni: string;
+}
+
+interface Medic {
+    name: string;
+    specialty: string;
+}
+
+interface Practice{
+    name: string;
+    description?: string;
+}
+
+interface AppointmentCardProps {
+    appointmentDate: string;
+    appointmentStatus: string;
+    patient: Patient;
+    medic: Medic;
+    practices: Practice[];
+}
 
 interface ShiftPanelProps {
   name: string
@@ -8,11 +33,18 @@ interface ShiftPanelProps {
 }
 
 const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name}) => {
-  const appointments = [
-    { specialty: "Cardiología", professional: "Dr. Juan Pérez", hour: "10:00 AM" },
-    { specialty: "Cardiología", professional: "Dr. Juan Pérez", hour: "10:00 AM" },
-    { specialty: "Cardiología", professional: "Dr. Juan Pérez", hour: "10:00 AM" },
-  ];
+  const [appointments, setAppointments] = useState<AppointmentCardProps[]>([]);
+  useEffect(() => {
+    const fetchAppointments = async () =>{
+    try{
+      const appointments = await AppointmentService.getAppointmentsByDni(localStorage.getItem('dni') || '');
+      setAppointments(appointments);
+    }catch(error){
+      console.error('Error fetching appointments in ShiftPanel:', error);
+    }
+    fetchAppointments();
+  }
+}, []);
 
   return (
     <div className="shift-panel">
@@ -23,9 +55,11 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name}) => {
         {appointments.map((appointment, index) => (
           <AppointmentCard
             key={index}
-            specialty={appointment.specialty}
-            professional={appointment.professional}
-            hour={appointment.hour}
+            appointmentDate={appointment.appointmentDate}
+            appointmentStatus={appointment.appointmentStatus}
+            patient={appointment.patient}
+            medic={appointment.medic}
+            practices={appointment.practices}
           />
         ))}
       </div>

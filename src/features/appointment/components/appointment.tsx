@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import React from 'react';
-import './appointment.css';
+// import './appointment.css'; // ← Comentado para usar Tailwind
 import { AppointmentService } from '../service/appointmentService';
 import { useSpecialties } from '../../../core/hooks/useSpecialties';
 import Alert from '../../../core/components/alert';
@@ -262,24 +262,32 @@ const AppointmentForm: React.FC = () => {
     };
 
     return (
-        <div className="appointment-container">
-            <div className="appointment-card">
+        <div className="min-h-[120vh] bg-cover bg-center bg-no-repeat flex items-center justify-center p-8 sm:p-12 md:p-16" 
+             style={{backgroundImage: "url('/src/assets/back.jpg')"}}>
+            <div className="bg-white w-full max-w-[750px] flex flex-col p-10 sm:p-10 md:p-10 lg:p-12 xl:p-12 2xl:p-16 rounded-[1.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.15)] lg:shadow-[0_25px_50px_rgba(0,0,0,0.2)]"
+                 style={{backgroundColor: '#ffffff'}}>
                 {/* Header */}
-                <div className="appointment-header">
-                    <h1 className="appointment-title">Solicitar Turno</h1>
-                    <p className="appointment-subtitle">Complete los datos para agendar su cita</p>
-                    <div className="appointment-divider"></div>
+                <div className="text-center mb-6 w-full">
+                    <h1 className="text-[1.875rem] sm:text-4xl md:text-[2.25rem] lg:text-[2.5rem] xl:text-5xl 2xl:text-[3.5rem] font-bold text-[#2C5F5D] mb-2 lg:mb-3">
+                        Solicitar Turno
+                    </h1>
+                    <p className="text-[#4b5563] text-sm sm:text-base lg:text-base m-0">
+                        Complete los datos para agendar su cita
+                    </p>
+                    <div className="w-full h-px bg-[#d1d5db] mt-4"></div>
                 </div>
 
                 {/* Form Section */}
-                <div className="appointment-form-section">
-                    <h2 className="form-title">Información del Turno</h2>
+                <div className="w-full mb-6">
+                    <h2 className="text-xl sm:text-[1.25rem] md:text-[1.35rem] lg:text-2xl xl:text-[1.75rem] 2xl:text-[2rem] font-semibold text-[#374151] text-center mb-8 lg:mb-10 2xl:mb-12">
+                        Información del Turno
+                    </h2>
 
                     {error && <Alert type="error" message={error} />}
                     {specialtiesError && <Alert type="error" message={specialtiesError} />}
                     {success && <Alert type="success" message={success} />}
 
-                    <div className="form-inputs">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 md:gap-6 lg:gap-7 xl:gap-8 2xl:gap-10 mb-6">{/* Specialty Select */}
                         {/* Specialty Select */}
                         <Select
                             label="Especialidad"
@@ -381,7 +389,7 @@ const AppointmentForm: React.FC = () => {
                         />
                     </div>
 
-                    <div className="form-buttons">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 md:gap-6 lg:gap-7 xl:gap-8 2xl:gap-10 mt-8">
                         <Button
                             label={isLoading ? 'Creando...' : 'Confirmar Turno'}
                             buttonFunction={handleSubmit}
@@ -417,8 +425,8 @@ const AppointmentForm: React.FC = () => {
                 </div>
 
                 {/* Footer */}
-                <div className="appointment-footer">
-                    <p className="footer-copyright">
+                <div className="text-center pt-4 mt-4 border-t border-[#e2e8f0]">
+                    <p className="text-[#6b7280] text-[0.85rem] m-0">
                         © 2025 ClinicaSana. Todos los derechos reservados.
                     </p>
                 </div>

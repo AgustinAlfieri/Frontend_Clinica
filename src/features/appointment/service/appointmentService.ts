@@ -37,6 +37,14 @@ interface AvailableSchedule {
   slots: TimeSlot[];
 }
 
+interface AppointmentFilters {
+  patientId?: string;
+  medicId?: string;
+  dateFrom?: string; 
+  dateTo?: string;
+  status?: string;
+}
+
 export const AppointmentService = {
   //get medicos
   //get paciente
@@ -72,5 +80,26 @@ export const AppointmentService = {
   async getMedicsBySpecialty(): Promise<Medic[]> {
     const response = await apiClient.get('medics/specialty');
     return response.data;
-  }
-};
+  },
+
+  async getAppointments() {
+    try{
+      console.log('Fetching all appointments from AppointmentService');
+      const response = await apiClient.get('appointment/findAll')
+      return response.data;
+    }catch (error: any) {
+      throw new Error(error.message || 'Fetching appointments failed');
+    }
+  },
+
+  async getAppointmentsByDni(dni: string) {
+    try{
+      console.log(`Fetching appointments for DNI: ${dni} from AppointmentService`);
+      const response = await apiClient.get(`appointment/findByPatientDni/${dni}`);
+      return response.data;
+    }catch (error: any) {
+      throw new Error(error.message || 'Fetching appointments by DNI failed');
+    }
+  },
+  
+}
