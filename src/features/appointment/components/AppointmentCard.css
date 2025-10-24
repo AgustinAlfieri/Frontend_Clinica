@@ -1,0 +1,129 @@
+/* AppointmentCard.css - Card compacta y moderna */
+
+.appointment-card-compact {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
+    max-width: 500px;
+}
+
+.appointment-card-compact:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Header con badge de estado y fecha */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.status-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pendiente,
+.status-pending,
+.status-solicitado {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-confirmado,
+.status-confirmed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-cancelado,
+.status-cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-completado,
+.status-completed {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.appointment-date {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+/* Body con información del turno */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 0.9rem;
+}
+
+.info-row .label {
+    color: #475569;
+    font-weight: 600;
+    min-width: 100px;
+    flex-shrink: 0;
+}
+
+.info-row .value {
+    color: #1e293b;
+    text-align: right;
+    flex: 1;
+    font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .appointment-card-compact {
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .appointment-date {
+        font-size: 0.8rem;
+    }
+
+    .info-row {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .info-row .value {
+        text-align: left;
+    }
+}
+
+@media (min-width: 768px) {
+    .appointment-card-compact {
+        max-width: 600px;
+    }
+}

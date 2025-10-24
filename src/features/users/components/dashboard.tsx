@@ -8,13 +8,6 @@ import foto from "../../../assets/foto-imagen.png";
 import ShiftPanel from "./shiftPanel";
 
 
-/*
-let turnos = [];
-turnos.push( HttpGet('/api/usuario/:idUsuario/turnos',
-                    headers: {Authorization: JWT}) );
-
-*/
-
 const Dashboard: React.FC = () => {
   return (
     <div className="dashboard">
