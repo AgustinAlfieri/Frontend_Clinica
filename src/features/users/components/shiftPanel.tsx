@@ -3,6 +3,7 @@ import AppointmentCard from "../../appointment/components/AppointmentCard";
 import "./shiftPanel.css";
 import { useEffect, useState } from "react";
 import { AppointmentService } from "../../appointment/service/appointmentService";
+import {authService} from "../services/authService";
 
 interface Patient {
     name: string;
@@ -42,7 +43,24 @@ interface Patient {
 
 const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name}) => {
   const [appointments, setAppointments] = useState<AppointmentCardProps[]>([]);
+  
   useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const user = authService.getUser();
+        console.log(`Retrieved ID from localStorage: ${user.id}`);
+        const patient = await AppointmentService.getAppointmentsByDni(user.id);
+        console.log('Patient data fetched in ShiftPanel:', patient);
+        const appointments = patient.appointments; // Ajusta esto según la estructura real de los datos
+        console.log('Appointments fetched in ShiftPanel:', appointments);
+        setAppointments(appointments);
+      } catch(error) {
+        console.error('Error fetching appointments in ShiftPanel:', error);
+      }
+    };
+    
+    fetchAppointments();
+  }, []);
     const fetchAppointments = async () =>{
     try{
       const appointments : Patient = await AppointmentService.getAppointmentsByDni(localStorage.getItem('id') || '');
