@@ -1,6 +1,8 @@
 import { apiClient } from './api';
 // import type UserType from "../UserType";
+import {useAuth} from './useAuth';
 
+const {isAuthenticated} = useAuth();
 export interface LoginCredentials {
   dni?: string;
   email?: string;
@@ -35,6 +37,7 @@ export const authService = {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
+
       return response;
     } catch (error: any) {
       throw new Error(error.message || 'Login failed');

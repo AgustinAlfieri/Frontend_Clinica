@@ -2,6 +2,10 @@ import React from "react";
 import "./Sidebar.css";
 
 const Sidebar: React.FC = () => {
+  // Funcuión que trae los datos del usuario autenticado
+  const user = localStorage.getItem('user'); 
+  console.log('User data from localStorage in Sidebar:', user);
+  const name = user ? JSON.parse(user).name : 'Usuario';
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
@@ -9,7 +13,7 @@ const Sidebar: React.FC = () => {
             src="src/assets/foto-imagen.png" 
             alt="User Avatar" 
         />
-        <h2>Nombre del Usuario</h2>
+        <h2>{name} </h2>
         <p>Obra social?</p>
       </div>
 

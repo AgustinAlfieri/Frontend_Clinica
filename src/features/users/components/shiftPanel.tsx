@@ -49,11 +49,11 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name}) => {
       try {
         const user = authService.getUser();
         console.log(`Retrieved ID from localStorage: ${user.id}`);
-        const patient = await AppointmentService.getAppointmentsByDni(user.id);
+        const patient: Patient = await AppointmentService.getAppointmentsByDni(user.id);
         console.log('Patient data fetched in ShiftPanel:', patient);
-        const appointments = patient.appointments; // Ajusta esto según la estructura real de los datos
-        console.log('Appointments fetched in ShiftPanel:', appointments);
-        setAppointments(appointments);
+        const appointmentsData = patient.Appointments;
+        console.log('Appointments fetched in ShiftPanel:', appointmentsData);
+        setAppointments(appointmentsData);
       } catch(error) {
         console.error('Error fetching appointments in ShiftPanel:', error);
       }
@@ -61,17 +61,6 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name}) => {
     
     fetchAppointments();
   }, []);
-    const fetchAppointments = async () =>{
-    try{
-      const appointments : Patient = await AppointmentService.getAppointmentsByDni(localStorage.getItem('id') || '');
-      setAppointments(appointments.Appointments);
-    }catch(error){
-      console.error('Error fetching appointments in ShiftPanel:', error);
-    }
-
-  }
-     fetchAppointments();
-}, []);
 
   return (
     <div className="shift-panel">

@@ -82,6 +82,7 @@ const ClinicaLogin: React.FC = () => {
       //Mando al backend
       await login(formData);
       
+      console.log(isAuthenticated)
       if (isAuthenticated){
         setSuccess('Inicio de sesión exitoso');
         setTimeout(() => {
