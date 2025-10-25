@@ -148,5 +148,16 @@ export const AppointmentService = {
     } catch (error: any) {
       throw new Error(error.message || 'Fetching appointments by filters failed');
     }
+  },
+
+  async findTypeAppointments() {
+    try{
+      const response = await apiClient.get('typeAppointmentStatus/findAll');
+      console.log('Fetched type appointments:', response.data);
+      return response.data;
+    }catch{
+      throw new Error('Fetching type appointments failed');
+    }
   }
+  
 };
