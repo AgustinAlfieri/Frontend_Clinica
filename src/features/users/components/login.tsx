@@ -21,7 +21,7 @@ const ClinicaLogin: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
-  const {login,isAuthenticated} = useAuth();
+  const {login} = useAuth();
   // Estado para manejar mensajes de error
   const [error, setError] = useState<string>('');
   
@@ -80,14 +80,16 @@ const ClinicaLogin: React.FC = () => {
     setSuccess('');
     try{
       //Mando al backend
-      await login(formData);
+      const response = await login(formData);
       
-      console.log(isAuthenticated)
-      if (isAuthenticated){
+      // Verificar la respuesta directamente, no isAuthenticated
+      if (response && response.success) {
         setSuccess('Inicio de sesión exitoso');
         setTimeout(() => {
           window.location.href = '/dashboard'; // Redirigir al dashboard
         }, 1000);
+      } else {
+        setError('Error en el inicio de sesión');
       }
     } catch(err: unknown){
       const errorMessage = err instanceof Error ? err.message : 'Error en el inicio de sesión';

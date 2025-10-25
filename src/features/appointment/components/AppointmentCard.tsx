@@ -25,7 +25,7 @@ interface AppointmentCardProps {
 }
 
 const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: AppointmentCardProps) => {
-    // Formatear fecha
+    const [selected, setSelected] = React.useState<boolean>(false);
     const formattedDate = new Date(appointment.appointmentDate).toLocaleDateString('es-AR', {
         weekday: 'long',
         year: 'numeric',
@@ -35,7 +35,13 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
         minute: '2-digit'
     });
 
+    const handleSelect = () => {
+        setSelected(!selected);
+        console.log(`Appointment on ${appointment.appointmentDate} selected: ${!selected}`);
+    }
+
     console.log('Rendering AppointmentCard with props:', appointment);
+
 
     return(
         <div className="appointment-card-compact">
@@ -66,8 +72,24 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
                 <div className="info-row">
                     <span className="label">Práctica:</span>
                     <span className="value">
+                        {appointment.practices.length > 0 
+                            ? appointment.practices.map(p => p.name).join(', ')
+                            : 'No especificada'
+                        }
                     </span>
                 </div>
+                <div>
+                    <button className="details-button" onClick={handleSelect}>
+                        {selected?'seleccionado':'seleccionar'}
+                    </button>
+
+                    {selected && <input placeholder = 'Ingrese el estado'/>}
+                </div>
+                {selected &&
+                    <div>
+                        <button>Enviar</button>
+                    </div>
+                    }
             </div>
         </div>
     )

@@ -1,8 +1,6 @@
 import { apiClient } from './api';
 // import type UserType from "../UserType";
-import {useAuth} from './useAuth';
 
-const {isAuthenticated} = useAuth();
 export interface LoginCredentials {
   dni?: string;
   email?: string;

@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 import type { LoginCredentials } from '../services/authService';
+import type AuthResponse from '../services/authService';
 
 /* Tipo del usuario tal como lo devuelve authService.getUser() */
 export type User = {
@@ -15,7 +16,7 @@ export type AuthContextValue = {
   user: User;
   token: string | null;
   isAuthenticated: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
+  login: (credentials: LoginCredentials) => Promise<AuthResponse>;
   logout: () => void;
   refreshFromStorage: () => void;
 };
