@@ -116,10 +116,6 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
     <div className="register-container">
       <NavBar />
       <div className="register-card">
-        <div className="register-header">
-          <img src={logo} alt="Logo MEDIVIA" className="register-logo" />
-        </div>
-
         <div className="register-form-section">
           <h2 className="form-title">{getTitle()}</h2>
 

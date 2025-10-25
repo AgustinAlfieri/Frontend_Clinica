@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './login.css';
-import { authService } from '../services/authService';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Validator } from '../services/validator.ts';
 import NavBar from '../../homepage/components/navBar';
 import logo from '../../../assets/mediviapng.png';
@@ -9,11 +9,11 @@ import Alert from '../../../core/components/alert';
 import {useAuth} from '../services/useAuth';
 
 interface LoginFormData {
-  input: string; // Opcional, dependiendo de si se necesita
-  dni?: string; // Opcional, dependiendo de si se necesita
+  input: string; 
+  dni?: string;
   email?: string;
   password: string;
-  role?: string; // Opcional, dependiendo de si se necesita
+  role?: string;
 }
 
 
@@ -22,6 +22,7 @@ const ClinicaLogin: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   const {login} = useAuth();
+  const navigate = useNavigate();
   // Estado para manejar mensajes de error
   const [error, setError] = useState<string>('');
   
@@ -101,8 +102,7 @@ const ClinicaLogin: React.FC = () => {
   };
 
   const handleCreateAccount = () => {
-    console.log('Navigate to create account');
-    // Aquí iría la navegación a crear cuenta
+    navigate('/register');
   };
 
 
