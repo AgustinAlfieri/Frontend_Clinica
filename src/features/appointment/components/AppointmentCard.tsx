@@ -1,5 +1,6 @@
 import React from 'react';
 import './AppointmentCard.css';
+import { useUpdateStatus } from '../../users/administrative/context/UpdateStatusContext';
 
 interface Patient {
     name: string;
@@ -17,6 +18,7 @@ interface Practice{
 }
 
 interface AppointmentCardProps {
+    appointmentId: string; // ID único del appointment
     appointmentDate: string;
     appointmentStatus: string;
     patient: Patient;
@@ -25,7 +27,19 @@ interface AppointmentCardProps {
 }
 
 const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: AppointmentCardProps) => {
-    const [selected, setSelected] = React.useState<boolean>(false);
+    // Usar el contexto
+    const { 
+        typeAppointments, 
+        loadingTypeAppointments, 
+        selectedAppointmentId, 
+        setSelectedAppointmentId 
+    } = useUpdateStatus();
+    
+    const [selectedType, setSelectedType] = React.useState<string>('');
+    
+    // Verificar si este appointment está seleccionado
+    const isSelected = selectedAppointmentId === appointment.appointmentId;
+    
     const formattedDate = new Date(appointment.appointmentDate).toLocaleDateString('es-AR', {
         weekday: 'long',
         year: 'numeric',
@@ -36,12 +50,31 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
     });
 
     const handleSelect = () => {
-        setSelected(!selected);
-        console.log(`Appointment on ${appointment.appointmentDate} selected: ${!selected}`);
-    }
+        // Toggle selección: si ya está seleccionado, deseleccionar; si no, seleccionar
+        if (isSelected) {
+            setSelectedAppointmentId(null);
+            setSelectedType('');
+        } else {
+            setSelectedAppointmentId(appointment.appointmentId);
+        }
+        console.log(`Appointment ${appointment.appointmentId} selected: ${!isSelected}`);
+    };
 
-    console.log('Rendering AppointmentCard with props:', appointment);
+    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedType(e.target.value);
+    };
 
+    const handleSubmit = () => {
+        if (!selectedType) {
+            alert('Por favor selecciona un estado');
+            return;
+        
+        
+        
+        }
+        console.log(`Updating appointment ${appointment.appointmentId} to status: ${selectedType}`);
+        // Aquí llamarías a la API para actualizar el estado
+    };
 
     return(
         <div className="appointment-card-compact">
@@ -80,16 +113,34 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
                 </div>
                 <div>
                     <button className="details-button" onClick={handleSelect}>
-                        {selected?'seleccionado':'seleccionar'}
+                        {isSelected ? 'Seleccionado ✓' : 'Seleccionar'}
                     </button>
 
-                    {selected && <input placeholder = 'Ingrese el estado'/>}
+                    {isSelected && (
+                        <select 
+                            name="typeAppointment" 
+                            id="typeAppointment"
+                            value={selectedType}
+                            onChange={handleTypeChange}
+                        >
+                            <option value="">
+                                {loadingTypeAppointments ? 'Cargando...' : 'Seleccione un estado'}
+                            </option>
+                            {typeAppointments.map((type) => (
+                                <option key={type.id} value={type.id}>
+                                    {type.name}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                 </div>
-                {selected &&
+                {isSelected && (
                     <div>
-                        <button>Enviar</button>
+                        <button onClick={handleSubmit} disabled={!selectedType}>
+                            Enviar
+                        </button>
                     </div>
-                    }
+                )}
             </div>
         </div>
     )

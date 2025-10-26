@@ -2,6 +2,7 @@ import React from 'react';
 import AppointmentCard from '../../../appointment/components/AppointmentCard';
 import { useState } from 'react';
 import {AppointmentService} from '../../../appointment/service/appointmentService';
+import { UpdateStatusProvider } from '../context/UpdateStatusContext';
 
 // Interfaces que coinciden con la respuesta de la API
 interface Patient {
@@ -70,11 +71,9 @@ export interface AppointmentCardProps {
     practices: Practice[];
 }
 
-
-const UpdateStatus: React.FC = () => {
+const UpdateStatusContent: React.FC = () => {
     const [isLoading , setIsLoading] = useState(false);
     const [error , setError] = useState('');
-    const [success , setSuccess] = useState('');
     const [appointments , setAppointments] = useState<AppointmentCardProps[]>([]);
     
     // Estados para los filtros
@@ -84,6 +83,7 @@ const UpdateStatus: React.FC = () => {
         afterDate: undefined,
         status: ''
     });
+
 
     // Manejar cambios en los inputs de filtros
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -213,9 +213,9 @@ const UpdateStatus: React.FC = () => {
                         <p>No hay citas disponibles</p>
                     )}
                     {!isLoading && appointments.map((appointment, index) => (
-                        console.log('Rendering appointment:', appointment),
                         <AppointmentCard
                             key={index}
+                            appointmentId={appointment.appointmentDate} // Usar como ID único
                             appointmentDate={appointment.appointmentDate}
                             appointmentStatus={appointment.appointmentStatus}
                             patient={appointment.patient}
@@ -228,6 +228,14 @@ const UpdateStatus: React.FC = () => {
         </div>
     )
 }
+
+const UpdateStatus: React.FC = () => {
+    return (
+        <UpdateStatusProvider>
+            <UpdateStatusContent />
+        </UpdateStatusProvider>
+    );
+};
 
 export default UpdateStatus
 
