@@ -29,10 +29,10 @@ interface Filters {
 
 
 interface AppointmentData {
-  date: string; // ISO string,
-  appointmentStatus: string;
-  patient: string; // patient id
-  medic: string; // medic id
+  date: string; // ISO string
+  appointmentStatus?: string;
+  patientId: string; // patient id - ← Con "Id" al final
+  medicId: string; // medic id - ← Con "Id" al final
   administratives: string[]; // array of administrative ids
   practices: string[]; // array of practice ids
 }
@@ -52,6 +52,12 @@ interface TimeSlot {
 interface AvailableSchedule {
   date: string; // YYYY-MM-DD
   slots: TimeSlot[];
+}
+
+interface AppointmentStatus {
+  appointment: string;
+  typeAppointmentStatus: string;
+  date: string;
 }
 
 export const AppointmentService = {
@@ -157,6 +163,15 @@ export const AppointmentService = {
       return response.data;
     }catch{
       throw new Error('Fetching type appointments failed');
+    }
+  },
+
+  async createAppointmentStatus(data: AppointmentStatus) {
+    try{
+      const response = await apiClient.post('appointmentStatus/create' , data);
+      return response.data;
+    }catch{
+      throw new Error('Creating appointment status failed');
     }
   }
   

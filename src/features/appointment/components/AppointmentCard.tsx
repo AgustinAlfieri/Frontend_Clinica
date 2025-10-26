@@ -1,6 +1,7 @@
 import React from 'react';
 import './AppointmentCard.css';
 import { useUpdateStatus } from '../../users/administrative/context/UpdateStatusContext';
+import { AppointmentService } from '../service/appointmentService';
 
 interface Patient {
     name: string;
@@ -27,6 +28,10 @@ interface AppointmentCardProps {
 }
 
 const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: AppointmentCardProps) => {
+    console.log('AppointmentCard recibió estos props:', appointment);
+    console.log('appointmentId:', appointment.appointmentId);
+    console.log('appointmentDate:', appointment.appointmentDate);
+    
     // Usar el contexto
     const { 
         typeAppointments, 
@@ -64,16 +69,28 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
         setSelectedType(e.target.value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!selectedType) {
             alert('Por favor selecciona un estado');
             return;
-        
-        
-        
         }
-        console.log(`Updating appointment ${appointment.appointmentId} to status: ${selectedType}`);
-        // Aquí llamarías a la API para actualizar el estado
+        
+        const statusData = {
+            appointment: appointment.appointmentId,
+            typeAppointmentStatus: selectedType,
+            date: new Date().toISOString()     
+        };
+        
+        console.log('Datos que se envían al backend:', statusData);
+        
+        try {
+            await AppointmentService.createAppointmentStatus(statusData);
+            console.log(`Appointment ${appointment.appointmentId} updated to status: ${selectedType}`);
+            alert('Estado actualizado correctamente');
+        } catch (error) {
+            console.error('Error al actualizar el estado:', error);
+            alert('Error al actualizar el estado');
+        }
     };
 
     return(

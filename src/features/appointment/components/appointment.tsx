@@ -41,13 +41,13 @@ interface AvailableSchedule {
   date: string;
   slots: TimeSlot[];
 }
-
 interface AppointmentData {
-    appointmentDate: string; // ISO string
-    patientId: string;
-    medicId: string;
-    practice_id: string[];
-    administrativeIds?: string[];
+  date: string; // ISO string - ← Coincide con el backend
+  appointmentStatus?: string;
+  patientId: string; // patient id - ← Con "Id" al final
+  medicId: string; // medic id - ← Con "Id" al final
+  administratives: string[]; // array of administrative ids
+  practices: string[]; // array of practice ids
 }
 
 
@@ -200,11 +200,11 @@ const AppointmentForm: React.FC = () => {
         try {
             const user = localStorage.getItem('user');
             const appointmentData: AppointmentData = {
-                appointmentDate: formData.schedule_id,
+                date: formData.schedule_id,
                 patientId: user ? JSON.parse(user).id : '',
                 medicId: formData.medic_id,
-                practice_id: ['17603124302705Zdc2BX-jEIXg6'],
-                administrativeIds: ['17571754793588mXr-hsn_5RcQi']
+                practices: ['17603124302705Zdc2BX-jEIXg6'],
+                administratives: ['17571754793588mXr-hsn_5RcQi']
             }
             console.log('Creating appointment with data:', appointmentData);
             const responseAppointment = await AppointmentService.createAppointment(appointmentData);

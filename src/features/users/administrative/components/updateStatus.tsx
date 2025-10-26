@@ -58,6 +58,7 @@ interface Practice {
 }
 
 export interface AppointmentCardProps {
+    appointmentId: string; // ID único del appointment
     appointmentDate: string;
     appointmentStatus: string;
     patient: {
@@ -121,6 +122,7 @@ const UpdateStatusContent: React.FC = () => {
             
             // Transformar los datos de la API al formato que espera AppointmentCard
             const transformedAppointments: AppointmentCardProps[] = response.data.map((appointment) => ({
+                appointmentId: appointment.id, // ID único del appointment
                 appointmentDate: appointment.appointmentDate,
                 appointmentStatus: 'Pendiente', // Por defecto, ya que la API no devuelve status
                 patient: {
@@ -212,10 +214,10 @@ const UpdateStatusContent: React.FC = () => {
                     {!isLoading && !error && appointments.length === 0 && (
                         <p>No hay citas disponibles</p>
                     )}
-                    {!isLoading && appointments.map((appointment, index) => (
+                    {!isLoading && appointments.map((appointment) => (
                         <AppointmentCard
-                            key={index}
-                            appointmentId={appointment.appointmentDate} // Usar como ID único
+                            key={appointment.appointmentId}
+                            appointmentId={appointment.appointmentId} // ID único del appointment
                             appointmentDate={appointment.appointmentDate}
                             appointmentStatus={appointment.appointmentStatus}
                             patient={appointment.patient}
