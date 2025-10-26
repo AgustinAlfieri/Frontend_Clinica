@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
+/* Mobile First - Estilos base para móviles */
 .card {
   display: flex;
   align-items: center;
   background: #FFFFFF;
   border-radius: 1.2rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  padding: 25px 30px;
+  padding: 15px;
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
@@ -32,9 +33,9 @@
 
 .card-image {
   flex-shrink: 0;
-  margin-right: 20px;
-  width: 60px;
-  height: 60px;
+  margin-right: 15px;
+  width: 50px;
+  height: 50px;
   background: linear-gradient(135deg, #4DB8A8 0%, #3A9587 100%);
   border-radius: 12px;
   display: flex;
@@ -44,8 +45,8 @@
 }
 
 .card-image img {
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
@@ -57,7 +58,7 @@
 }
 
 .card-content h3 {
-  font-size: 1.2rem;
+  font-size: 1rem;
   margin: 0 0 5px 0;
   font-weight: 700;
   color: #2C5F5D;
@@ -66,25 +67,14 @@
 .card-content p {
   margin: 0;
   color: #5A5A5A;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 400;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Móviles grandes (min-width: 481px) */
+@media (min-width: 481px) {
   .card {
     padding: 20px;
-  }
-
-  .card-image {
-    width: 50px;
-    height: 50px;
-    margin-right: 15px;
-  }
-
-  .card-image img {
-    width: 30px;
-    height: 30px;
   }
 
   .card-content h3 {
@@ -92,16 +82,28 @@
   }
 
   .card-content p {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
   }
 }
 
-@media (max-width: 480px) {
+/* Tablets y Desktop (min-width: 769px) */
+@media (min-width: 769px) {
   .card {
-    padding: 15px;
+    padding: 25px 30px;
+  }
+
+  .card-image {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+  }
+
+  .card-image img {
+    width: 35px;
+    height: 35px;
   }
 
   .card-content h3 {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 }

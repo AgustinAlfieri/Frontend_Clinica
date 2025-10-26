@@ -1,16 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
+/* Mobile First - Estilos base para móviles pequeños */
 .dashboard {
   display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
   background: linear-gradient(135deg, #E8F5F0 0%, #A5D4C8 100%);
   font-family: 'Poppins', sans-serif;
+  padding-top: 60px;
 }
 
 .dashboard-main {
   flex: 1;
-  padding: 40px;
+  padding: 15px;
   background: transparent;
 }
 
@@ -34,7 +37,7 @@
 }
 
 .dashboard-header h1 {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   color: #2C5F5D;
   font-weight: 700;
   margin-bottom: 10px;
@@ -43,42 +46,22 @@
 
 .dashboard-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
+  grid-template-columns: 1fr;
+  gap: 15px;
   margin-bottom: 40px;
 }
 
 .dashboard-panels {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
+  grid-template-columns: 1fr;
+  gap: 25px;
+  margin-top: 30px;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .dashboard-main {
-    padding: 30px;
-  }
-
-  .dashboard-header h1 {
-    font-size: 2rem;
-  }
-
-  .dashboard-cards {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-  }
-
-  .dashboard-panels {
-    grid-template-columns: 1fr;
-    gap: 25px;
-  }
-}
-
-@media (max-width: 768px) {
+/* Tablets verticales y móviles grandes (min-width: 481px) */
+@media (min-width: 481px) {
   .dashboard {
-    flex-direction: column;
+    padding-top: 70px;
   }
 
   .dashboard-main {
@@ -88,23 +71,52 @@
   .dashboard-header h1 {
     font-size: 1.75rem;
   }
+}
 
-  .dashboard-cards {
-    grid-template-columns: 1fr;
-    gap: 15px;
+/* Tablets horizontales (min-width: 769px) */
+@media (min-width: 769px) {
+  .dashboard {
+    flex-direction: row;
   }
 
-  .dashboard-panels {
-    margin-top: 30px;
+  .dashboard-cards {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
   }
 }
 
-@media (max-width: 480px) {
+/* Tablets grandes y laptops pequeñas (min-width: 1025px) */
+@media (min-width: 1025px) {
   .dashboard-main {
-    padding: 15px;
+    padding: 30px;
   }
 
   .dashboard-header h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
+  }
+
+  .dashboard-panels {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+  }
+}
+
+/* Desktop grande (min-width: 1200px) */
+@media (min-width: 1200px) {
+  .dashboard-main {
+    padding: 40px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+  }
+
+  .dashboard-panels {
+    margin-top: 40px;
   }
 }

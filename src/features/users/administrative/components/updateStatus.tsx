@@ -3,6 +3,10 @@ import AppointmentCard from '../../../appointment/components/AppointmentCard';
 import { useState } from 'react';
 import {AppointmentService} from '../../../appointment/service/appointmentService';
 import { UpdateStatusProvider } from '../context/UpdateStatusContext';
+import NavBar from '../../../homepage/components/navBar';
+import Sidebar from '../../components/sidebar';
+import './updateStatus.css';
+import '../../components/Sidebar.css';
 
 // Interfaces que coinciden con la respuesta de la API
 interface Patient {
@@ -116,7 +120,12 @@ const UpdateStatusContent: React.FC = () => {
                 cleanFilters.status = filters.status;
             }
 
-            console.log('Sending filters to API:', cleanFilters);
+            console.log('=== UpdateStatus - Before API call ===');
+            console.log('Original filters state:', filters);
+            console.log('Clean filters being sent:', cleanFilters);
+            console.log('Clean filters type:', typeof cleanFilters);
+            console.log('Clean filters keys:', Object.keys(cleanFilters));
+            
             const response: APIResponse = await AppointmentService.findAppointmentsByFilters(cleanFilters);
             console.log('Appointments fetched in UpdateStatus component:', response);
             
@@ -148,9 +157,16 @@ const UpdateStatusContent: React.FC = () => {
     
 
     return(
-        <div>
-            <h1>Actualizar estados del paciente</h1>
-            <div className = "form-container">
+        <div className="update-status-container">
+            <NavBar />
+            <Sidebar />
+            
+            <main className="update-status-main">
+                <header className="update-status-header">
+                    <h1>Actualizar estados del paciente</h1>
+                </header>
+                
+                <div className="form-container">
                 {/*Formulario para actualizar el estado del paciente*/}
                 <div className="appointment-select-section">
                     <div className="filter-group">
@@ -226,7 +242,8 @@ const UpdateStatusContent: React.FC = () => {
                         />
                     ))}
                 </div>
-            </div> 
+            </div>
+            </main>
         </div>
     )
 }

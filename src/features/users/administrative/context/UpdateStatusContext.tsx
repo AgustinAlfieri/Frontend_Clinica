@@ -56,8 +56,6 @@ export const UpdateStatusProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
 export const useUpdateStatus = () => {
     const context = useContext(UpdateStatusContext);
-    if (!context) {
-        throw new Error('useUpdateStatus debe usarse dentro de UpdateStatusProvider');
-    }
+    // Permitir uso fuera del provider retornando undefined
     return context;
 };

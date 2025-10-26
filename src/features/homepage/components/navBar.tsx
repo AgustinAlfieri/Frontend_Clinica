@@ -12,6 +12,7 @@ export function NavBar() {
         navigate('/homepage');
     }
 
+    console.log('NavBar - isAuthenticated:', isAuthenticated);
 
     return (
     <header className="header">

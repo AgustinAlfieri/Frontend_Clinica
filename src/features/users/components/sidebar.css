@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
+/* Mobile First - Estilos base para móviles */
 .sidebar {
-  min-height: 100vh;
-  width: 280px;
+  width: 100%;
+  min-height: auto;
   background: linear-gradient(180deg, #2C5F5D 0%, #23c483 100%);
   color: white;
   display: flex;
   flex-direction: column;
-  padding: 30px 20px;
+  padding: 20px;
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
   font-family: 'Poppins', sans-serif;
 }
@@ -44,7 +45,9 @@
 
 .sidebar-menu {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
   margin-top: 10px;
 }
@@ -60,6 +63,7 @@
   display: flex;
   align-items: center;
   background: transparent;
+  flex: 1 1 45%;
 }
 
 .sidebar-menu a:hover {
@@ -78,21 +82,21 @@
   opacity: 0.8;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Tablets y Desktop (min-width: 769px) */
+@media (min-width: 769px) {
   .sidebar {
-    width: 100%;
-    min-height: auto;
-    padding: 20px;
+    min-height: 100vh;
+    width: 280px;
+    padding: 30px 20px;
   }
 
   .sidebar-menu {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
   }
 
   .sidebar-menu a {
-    flex: 1 1 45%;
+    flex: none;
   }
 }

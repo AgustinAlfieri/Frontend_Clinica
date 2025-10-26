@@ -32,15 +32,16 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
     console.log('appointmentId:', appointment.appointmentId);
     console.log('appointmentDate:', appointment.appointmentDate);
     
-    // Usar el contexto
-    const { 
-        typeAppointments, 
-        loadingTypeAppointments, 
-        selectedAppointmentId, 
-        setSelectedAppointmentId 
-    } = useUpdateStatus();
+    // Usar el contexto (puede ser undefined si no está en UpdateStatusProvider)
+    const context = useUpdateStatus();
     
     const [selectedType, setSelectedType] = React.useState<string>('');
+    
+    // Solo usar el contexto si está disponible
+    const typeAppointments = context?.typeAppointments || [];
+    const loadingTypeAppointments = context?.loadingTypeAppointments || false;
+    const selectedAppointmentId = context?.selectedAppointmentId;
+    const setSelectedAppointmentId = context?.setSelectedAppointmentId;
     
     // Verificar si este appointment está seleccionado
     const isSelected = selectedAppointmentId === appointment.appointmentId;
@@ -55,6 +56,12 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
     });
 
     const handleSelect = () => {
+        // Solo permitir selección si el contexto está disponible
+        if (!setSelectedAppointmentId) {
+            console.log('Context not available, selection disabled');
+            return;
+        }
+        
         // Toggle selección: si ya está seleccionado, deseleccionar; si no, seleccionar
         if (isSelected) {
             setSelectedAppointmentId(null);
@@ -128,34 +135,39 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
                         }
                     </span>
                 </div>
-                <div>
-                    <button className="details-button" onClick={handleSelect}>
-                        {isSelected ? 'Seleccionado ✓' : 'Seleccionar'}
-                    </button>
-
-                    {isSelected && (
-                        <select 
-                            name="typeAppointment" 
-                            id="typeAppointment"
-                            value={selectedType}
-                            onChange={handleTypeChange}
-                        >
-                            <option value="">
-                                {loadingTypeAppointments ? 'Cargando...' : 'Seleccione un estado'}
-                            </option>
-                            {typeAppointments.map((type) => (
-                                <option key={type.id} value={type.id}>
-                                    {type.name}
-                                </option>
-                            ))}
-                        </select>
-                    )}
-                </div>
-                {isSelected && (
+                
+                {/* Solo mostrar controles si está dentro del contexto (UpdateStatusProvider) */}
+                {context && (
                     <div>
-                        <button onClick={handleSubmit} disabled={!selectedType}>
-                            Enviar
+                        <button className="details-button" onClick={handleSelect}>
+                            {isSelected ? 'Seleccionado ✓' : 'Seleccionar'}
                         </button>
+
+                        {isSelected && (
+                            <select 
+                                name="typeAppointment" 
+                                id="typeAppointment"
+                                value={selectedType}
+                                onChange={handleTypeChange}
+                            >
+                                <option value="">
+                                    {loadingTypeAppointments ? 'Cargando...' : 'Seleccione un estado'}
+                                </option>
+                                {typeAppointments.map((type) => (
+                                    <option key={type.id} value={type.id}>
+                                        {type.name}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                        
+                        {isSelected && (
+                            <div>
+                                <button onClick={handleSubmit} disabled={!selectedType}>
+                                    Enviar
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

@@ -6,6 +6,7 @@ import { useSpecialties } from '../../../core/hooks/useSpecialties';
 import Alert from '../../../core/components/alert';
 import Select from '../../../core/components/select';
 import Button from '../../../core/components/button';
+import NavBar from '../../homepage/components/navBar';
 
 interface AppointmentFormData {
     patient_id: string;
@@ -262,8 +263,10 @@ const AppointmentForm: React.FC = () => {
     };
 
     return (
-        <div className="min-h-[120vh] bg-cover bg-center bg-no-repeat flex items-center justify-center p-8 sm:p-12 md:p-16" 
-             style={{backgroundImage: "url('/src/assets/back.jpg')"}}>
+        <>
+            <NavBar />
+            <div className="min-h-[120vh] bg-cover bg-center bg-no-repeat flex items-center justify-center p-8 sm:p-12 md:p-16 pt-24" 
+                 style={{backgroundImage: "url('/src/assets/back.jpg')"}}>
             <div className="bg-white w-full max-w-[750px] flex flex-col p-10 sm:p-10 md:p-10 lg:p-12 xl:p-12 2xl:p-16 rounded-[1.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.15)] lg:shadow-[0_25px_50px_rgba(0,0,0,0.2)]"
                  style={{backgroundColor: '#ffffff'}}>
                 {/* Header */}
@@ -432,6 +435,7 @@ const AppointmentForm: React.FC = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

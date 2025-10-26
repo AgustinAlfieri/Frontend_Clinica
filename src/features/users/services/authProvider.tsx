@@ -8,13 +8,15 @@ import { authService, type LoginCredentials } from '../services/authService'; //
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User>(authService.getUser());
   const [token, setToken] = useState<string | null>(authService.getToken());
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(authService.isAuthenticated());
+  
   // Sincroniza cambios de localStorage entre pestañas
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
       if (e.key === 'token' || e.key === 'user') {
         setUser(authService.getUser());
         setToken(authService.getToken());
+        setIsAuthenticated(authService.isAuthenticated());
       }
     };
     window.addEventListener('storage', onStorage);
@@ -43,12 +45,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshFromStorage = () => {
     setUser(authService.getUser());
     setToken(authService.getToken());
+    setIsAuthenticated(authService.isAuthenticated());
   };
 
   const value: AuthContextValue = {
     user,
     token,
-    isAuthenticated: isAuthenticated || false,
+    isAuthenticated,
     login,
     logout,
     refreshFromStorage
