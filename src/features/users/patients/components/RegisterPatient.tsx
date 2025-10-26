@@ -6,14 +6,12 @@ import {patientService} from '../services/PatientService'
 import type MedicalInsurance from '../services/PatientService';
 
 
-
 const RegisterPatient: React.FC = () => {
   const [coverage, setCoverage] = useState<string>('');
   const [insuranceNumber, setInsuranceNumber] = useState<string>('');
   const [medicalInsurances, setMedicalInsurances] = useState<MedicalInsurance[]>([]);
   const [isLoadingInsurances, setIsLoadingInsurances] = useState<boolean>(false);
 
-  // Cargar las coberturas médicas al montar el componente
   useEffect(() => {
     const fetchMedicalInsurances = async () => {
       setIsLoadingInsurances(true);
@@ -72,11 +70,11 @@ const RegisterPatient: React.FC = () => {
           onChange={handleCoverageChange}
           disabled={isLoadingInsurances}
         >
-          <option value="">
+          <option value="" className="form-input-coverage">
             {isLoadingInsurances ? 'Cargando coberturas...' : 'Selecciona una cobertura'}
           </option>
           {medicalInsurances.map((insurance) => (
-            <option key={insurance.id} value={insurance.id}>
+            <option key={insurance.id} value={insurance.id} className="form-input-coverage">
               {insurance.name}
             </option>
           ))}
