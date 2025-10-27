@@ -1,6 +1,7 @@
 import NavBar from "./navBar";
 import BenefitCard from "./BenefitCard";
 import './homepage.css';
+import hero from '../../../assets/image-removebg-preview.png';
 
 const Homepage = () => {
 
@@ -54,7 +55,7 @@ const Homepage = () => {
                 </div>
                 <div className="hero-image">
                     <div className="image-placeholder">
-                        <img src='src\assets\image-removebg-preview.png' alt="Hero" className="hero-img" />
+                        <img src={hero} alt="Hero" className="hero-img" />
                         <div className="image-frame">
                         </div>
                     </div>

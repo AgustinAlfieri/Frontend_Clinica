@@ -1,5 +1,6 @@
 import React from "react";
 import "./sidebar.css";
+import avatar from '../../../assets/avatar.png';
 
 const Sidebar: React.FC = () => {
   // Funcuión que trae los datos del usuario autenticado
@@ -21,7 +22,7 @@ const Sidebar: React.FC = () => {
     <aside className="sidebar">
       <div className="sidebar-header">
         <img 
-            src="src/assets/avatar.png" 
+            src={avatar} 
             alt="User Avatar" 
         />
         <h2>{name} </h2>
