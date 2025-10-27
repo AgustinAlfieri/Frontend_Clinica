@@ -43,6 +43,7 @@ interface Medic {
 interface AppointmentFromAPI {
     id: string;
     appointmentDate: string;
+    appointmentsStatus: AppointmentStatus[];
     patient: Patient;
     medic: Medic;
 }
@@ -59,6 +60,14 @@ interface APIResponse {
 interface Practice {
     name: string;
     description?: string;
+}
+interface AppointmentStatus {
+    typeAppointmentStatus: TypeAppointmentStatus,
+    observation: string
+}
+
+interface TypeAppointmentStatus {
+    name: string;
 }
 
 export interface AppointmentCardProps {
@@ -104,7 +113,7 @@ const UpdateStatusContent: React.FC = () => {
         setIsLoading(true);
         setError('');
         try{ 
-            // Construir objeto de filtros limpio (sin valores vacíos)
+            // Construir objeto de filtros limpio (  valores vacíos)
             const cleanFilters: filters = {};
             
             if (filters.dni && filters.dni.trim() !== '') {
@@ -128,12 +137,11 @@ const UpdateStatusContent: React.FC = () => {
             
             const response: APIResponse = await AppointmentService.findAppointmentsByFilters(cleanFilters);
             console.log('Appointments fetched in UpdateStatus component:', response);
-            
             // Transformar los datos de la API al formato que espera AppointmentCard
             const transformedAppointments: AppointmentCardProps[] = response.data.map((appointment) => ({
                 appointmentId: appointment.id, // ID único del appointment
                 appointmentDate: appointment.appointmentDate,
-                appointmentStatus: '', // Por defecto, ya que la API no devuelve status
+                appointmentStatus: appointment.appointmentsStatus[0].typeAppointmentStatus.name || 'NOP',
                 patient: {
                     name: appointment.patient.name,
                     dni: appointment.patient.dni

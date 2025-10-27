@@ -6,6 +6,7 @@ const Sidebar: React.FC = () => {
   const user = localStorage.getItem('user'); 
   console.log('User data from localStorage in Sidebar:', user);
   const name = user ? JSON.parse(user).name : 'Usuario';
+  const role = user ? JSON.parse(user).role : 'Rol';
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
@@ -14,6 +15,7 @@ const Sidebar: React.FC = () => {
             alt="User Avatar" 
         />
         <h2>{name} </h2>
+        <p>Tipo de Usuario: {role}</p>
       </div>
 
       <nav className="sidebar-menu">

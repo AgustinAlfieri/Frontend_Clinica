@@ -51,6 +51,13 @@ interface AppointmentData {
   practices: string[]; // array of practice ids
 }
 
+interface StatusData {
+  appointment: string;
+  typeAppointmentStatus: string;
+  observations: string;
+  date: string;
+}
+
 
 const AppointmentForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -207,16 +214,14 @@ const AppointmentForm: React.FC = () => {
             }
             console.log('Creating appointment with data:', appointmentData);
             const responseAppointment = await AppointmentService.createAppointment(appointmentData);
-            
-      //      const statusData: StatusData = {
-      //          "appointment": responseAppointment.id,
-      //          "observations": "Solicitud",
-      //          "idTypeAppointmentStatus":"1760303705587yWcdh02HlZ2kPs"
-      //      }
-      //      const responseStatus = await AppointmentService.createAppointmentStatus(
-
-       //     );
-
+            const statusData: StatusData = {
+                "appointment": responseAppointment.data.id,
+                "observations": "Solicitud",
+                "typeAppointmentStatus":'1',
+                "date": new Date().toISOString()
+            }
+            const responseStatus = await AppointmentService.createAppointmentStatus(statusData);
+            console.log(responseStatus);
             setTimeout(() => {
                 setSuccess('Turno creado exitosamente');
                 setIsLoading(false);
