@@ -161,18 +161,7 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name, buttonText, fill}) =
         <p>Not supported yet</p>
       )}
     </div>
-  )}
-
-  {userType === 'Administrative' && buttonText === true && (
-    <div>
-      <button
-        className="manage-appointments-button"
-        onClick={handleGestionClick}
-      >
-        Panel de gestión
-      </button>
-    </div>
-  )}
+  )}<br />
 </div>
 
   );
