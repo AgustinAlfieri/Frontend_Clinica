@@ -71,9 +71,10 @@ interface ShiftPanelProps {
   name: string;
   text: string;
   buttonText?: boolean;
+  fill?: boolean;
 }
 
-const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
+const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name, buttonText, fill}) => {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState<AppointmentCardProps[]>([]);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -81,45 +82,48 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const user = authService.getUser();
-        
-        // Validar que el usuario existe y tiene DNI
-        if (!user || !user.dni) {
-          return;
+          if (fill) {
+            
+            const user = authService.getUser();
+          
+            // Validar que el usuario existe y tiene DNI
+            if (!user || !user.dni) {
+              return;
+            }
+            
+            // Enviar como objeto con la estructura correcta
+            const appointments = await AppointmentService.findAppointmentsByFilters({
+              dni: user.dni
+            });
+            
+            // Validar que la respuesta tiene datos
+            if (!appointments || !appointments.data || !Array.isArray(appointments.data)) {
+              setAppointments([]);
+              return;
+            }
+            
+            const appointmentsData = appointments.data;
+            
+            // Transformar para incluir appointmentId y typeAppointmentStatus
+            const transformedAppointments: AppointmentCardProps[] = appointmentsData.map((appointment: AppointmentFromAPI) => {
+              return {
+                appointmentId: appointment.id,
+                appointmentDate: appointment.appointmentDate,
+                appointmentStatus: appointment.appointmentsStatus?.[0]?.typeAppointmentStatus?.name || 'Sin estado',
+                patient: {
+                  name: appointment.patient.name,
+                  dni: appointment.patient.dni
+                },
+                medic: {
+                  name: appointment.medic.name,
+                  specialty: '' // La API no devuelve specialty en medic
+                },
+                practices: []
+              };
+            });
+            
+            setAppointments(transformedAppointments);
         }
-        
-        // Enviar como objeto con la estructura correcta
-        const appointments = await AppointmentService.findAppointmentsByFilters({
-          dni: user.dni
-        });
-        
-        // Validar que la respuesta tiene datos
-        if (!appointments || !appointments.data || !Array.isArray(appointments.data)) {
-          setAppointments([]);
-          return;
-        }
-        
-        const appointmentsData = appointments.data;
-        
-        // Transformar para incluir appointmentId y typeAppointmentStatus
-        const transformedAppointments: AppointmentCardProps[] = appointmentsData.map((appointment: AppointmentFromAPI) => {
-          return {
-            appointmentId: appointment.id,
-            appointmentDate: appointment.appointmentDate,
-            appointmentStatus: appointment.appointmentsStatus?.[0]?.typeAppointmentStatus?.name || 'Sin estado',
-            patient: {
-              name: appointment.patient.name,
-              dni: appointment.patient.dni
-            },
-            medic: {
-              name: appointment.medic.name,
-              specialty: '' // La API no devuelve specialty en medic
-            },
-            practices: []
-          };
-        });
-        
-        setAppointments(transformedAppointments);
       } catch(error) {
         setAppointments([]); // Establecer array vacío en caso de error
       }
@@ -154,7 +158,7 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
             />
           ))
       ) : (
-        <p>No hay turnos disponibles</p>
+        <p>Not supported yet</p>
       )}
     </div>
   )}

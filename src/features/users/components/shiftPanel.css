@@ -33,7 +33,10 @@
   line-height: 1.5;
 }
 
+<<<<<<< HEAD
 .appointment-container,
+=======
+>>>>>>> 309a2bde14ce274818193746188bda39f83ecee2
 .appointments-container {
   display: flex;
   flex-direction: column;
@@ -42,26 +45,32 @@
   --appointment-card-height: 100px;
   max-height: calc(var(--appointment-card-height) * 2 + 15px);
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 10px;
   box-sizing: border-box;
   align-items: stretch;
 }
 
+<<<<<<< HEAD
 .appointment-container::-webkit-scrollbar {
+=======
+/* Scrollbar personalizado */
+.appointments-container::-webkit-scrollbar {
+>>>>>>> 309a2bde14ce274818193746188bda39f83ecee2
   width: 8px;
 }
 
-.appointment-container::-webkit-scrollbar-track {
+.appointments-container::-webkit-scrollbar-track {
   background: #E8F5F0;
   border-radius: 10px;
 }
 
-.appointment-container::-webkit-scrollbar-thumb {
+.appointments-container::-webkit-scrollbar-thumb {
   background: #4DB8A8;
   border-radius: 10px;
 }
 
-.appointment-container::-webkit-scrollbar-thumb:hover {
+.appointments-container::-webkit-scrollbar-thumb:hover {
   background: #3A9587;
 }
 
@@ -79,7 +88,7 @@
     margin-bottom: 25px;
   }
 
-  .appointment-container {
+  .appointments-container {
     max-height: 320px;
   }
 }

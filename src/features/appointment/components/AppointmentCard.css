@@ -99,7 +99,7 @@
 @media (min-width: 641px) {
     .appointment-card-compact {
         padding: 0.85rem;
-        max-width: min(420px, 100%);
+        max-width: 420px;
     }
 
     .card-header {
@@ -127,6 +127,6 @@
 
 @media (min-width: 768px) {
     .appointment-card-compact {
-        max-width: min(480px, 100%);
+        max-width: 480px;
     }
 }
