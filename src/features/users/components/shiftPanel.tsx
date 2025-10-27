@@ -4,7 +4,6 @@ import "./shiftPanel.css";
 import { useEffect, useState } from "react";
 import { AppointmentService } from "../../appointment/service/appointmentService";
 import {authService} from "../services/authService";
-import { useNavigate } from "react-router-dom";
 
 interface Patient {
     id: string;
