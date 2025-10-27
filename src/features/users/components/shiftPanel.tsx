@@ -70,12 +70,10 @@ interface AppointmentCardProps {
 interface ShiftPanelProps {
   name: string;
   text: string;
-  buttonText?: boolean;
   fill?: boolean;
 }
 
-const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name, buttonText, fill}) => {
-  const navigate = useNavigate();
+const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name, fill}) => {
   const [appointments, setAppointments] = useState<AppointmentCardProps[]>([]);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const userType = user.role || '';
@@ -131,10 +129,6 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name, buttonText, fill}) =
     
     fetchAppointments();
   }, []);
-
-  const handleGestionClick = () => {
-    navigate('/updateStatus');
-  }
 
   return (
     <div className="shift-panel">
