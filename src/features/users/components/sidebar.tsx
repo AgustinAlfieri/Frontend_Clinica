@@ -1,5 +1,5 @@
 import React from "react";
-import "./Sidebar.css";
+import "./sidebar.css";
 
 const Sidebar: React.FC = () => {
   // Funcuión que trae los datos del usuario autenticado
