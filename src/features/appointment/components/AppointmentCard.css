@@ -1,6 +1,4 @@
-/* AppointmentCard.css - Mobile First */
 
-/* Estilos base para móviles */
 .appointment-card-compact {
     background: #ffffff;
     border-radius: 10px;
@@ -10,6 +8,7 @@
     border: 1px solid #e6eef2;
     margin-bottom: 0.9rem;
     width: 100%;
+    max-width: min(480px, 100%);
     box-sizing: border-box;
     font-size: 0.95rem;
 }
@@ -97,11 +96,10 @@
     font-weight: 400;
 }
 
-/* Tablets y móviles grandes (min-width: 641px) */
 @media (min-width: 641px) {
     .appointment-card-compact {
         padding: 0.85rem;
-        max-width: 100%;
+        max-width: 420px;
     }
 
     .card-header {
@@ -127,10 +125,8 @@
     }
 }
 
-/* Desktop (min-width: 768px) */
 @media (min-width: 768px) {
     .appointment-card-compact {
-        max-width: 100%;
-        padding: 1rem;
+        max-width: 480px;
     }
 }

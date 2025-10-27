@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-/* Mobile First - Estilos base para móviles */
 .shift-panel {
   background: #FFFFFF;
   border-radius: 1.5rem;
@@ -34,20 +33,30 @@
   line-height: 1.5;
 }
 
+<<<<<<< HEAD
+.appointment-container,
+=======
+>>>>>>> 309a2bde14ce274818193746188bda39f83ecee2
 .appointments-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
   width: 100%;
-  max-height: 280px;
+  --appointment-card-height: 100px;
+  max-height: calc(var(--appointment-card-height) * 2 + 15px);
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 10px;
   box-sizing: border-box;
+  align-items: stretch;
 }
 
+<<<<<<< HEAD
+.appointment-container::-webkit-scrollbar {
+=======
 /* Scrollbar personalizado */
 .appointments-container::-webkit-scrollbar {
+>>>>>>> 309a2bde14ce274818193746188bda39f83ecee2
   width: 8px;
 }
 
@@ -65,7 +74,6 @@
   background: #3A9587;
 }
 
-/* Móviles grandes (min-width: 481px) */
 @media (min-width: 481px) {
   .shift-panel {
     padding: 20px;
@@ -85,7 +93,6 @@
   }
 }
 
-/* Tablets y Desktop (min-width: 769px) */
 @media (min-width: 769px) {
   .shift-panel {
     padding: 30px;
