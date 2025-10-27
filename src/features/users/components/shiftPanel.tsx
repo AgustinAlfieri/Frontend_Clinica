@@ -134,13 +134,15 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
 
   return (
     <div className="shift-panel">
-      <h2>{name}</h2>
-      <p>{text}</p>
+  <h2>{name}</h2>
+  <p>{text}</p>
 
-{     userType === 'Patient' && 
-      <div className="appointments-container">
-        {appointments && appointments.length > 0 ? (
-          appointments.map((appointment) => (
+  {userType === 'Patient' && (
+    <div className="appointments-container">
+      {appointments && appointments.length > 0 ? (
+        appointments
+          .slice(0, 2) 
+          .map((appointment) => (
             <AppointmentCard
               key={appointment.appointmentId}
               appointmentId={appointment.appointmentId}
@@ -151,17 +153,24 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
               practices={appointment.practices}
             />
           ))
-        ) : (
-          <p>No hay turnos disponibles</p>
-        )}
-      </div>}
-      {
-        userType === 'Administrative' && buttonText == true &&
-        <div>
-          <button className="manage-appointments-button" onClick = {handleGestionClick}>Panel de gestión</button>
-        </div>
-      }
+      ) : (
+        <p>No hay turnos disponibles</p>
+      )}
     </div>
+  )}
+
+  {userType === 'Administrative' && buttonText === true && (
+    <div>
+      <button
+        className="manage-appointments-button"
+        onClick={handleGestionClick}
+      >
+        Panel de gestión
+      </button>
+    </div>
+  )}
+</div>
+
   );
 };
 
