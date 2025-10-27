@@ -7,13 +7,26 @@ import {authService} from "../services/authService";
 import { useNavigate } from "react-router-dom";
 
 interface Patient {
+    id: string;
     name: string;
     dni: string;
+    email: string;
+    password: string;
+    telephone: string;
+    role: string;
+    insuranceNumber: string | null;
+    medicalInsurance: string | null;
 }
 
 interface Medic {
+    id: string;
+    dni: string;
     name: string;
-    specialty: string;
+    email: string;
+    password: string;
+    telephone: string;
+    role: string;
+    license: string;
 }
 
 interface Practice{
@@ -21,12 +34,36 @@ interface Practice{
     description?: string;
 }
 
+interface AppointmentStatus {
+    typeAppointmentStatus: TypeAppointmentStatus,
+    observation: string
+}
+
+interface TypeAppointmentStatus {
+    name: string;
+}
+
+// Estructura de cada appointment que viene de la API
+interface AppointmentFromAPI {
+    id: string;
+    appointmentDate: string;
+    appointmentsStatus: AppointmentStatus[];
+    patient: Patient;
+    medic: Medic;
+}
+
 interface AppointmentCardProps {
     appointmentId: string; // ID único del appointment
     appointmentDate: string;
     appointmentStatus: string;
-    patient: Patient;
-    medic: Medic;
+    patient: {
+        name: string;
+        dni: string;
+    };
+    medic: {
+        name: string;
+        specialty: string;
+    };
     practices: Practice[];
 }
 
@@ -34,15 +71,6 @@ interface ShiftPanelProps {
   name: string;
   text: string;
   buttonText?: boolean;
-
-}
-
-
-interface Patient {
-    id: string;
-    name: string;
-    dni: string;    
-    Appointments: AppointmentCardProps[];
 }
 
 const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
@@ -80,16 +108,22 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
         const appointmentsData = appointments.data;
         console.log('Appointments data array:', appointmentsData);
         
-        // Transformar para incluir appointmentId con validación
-        const transformedAppointments = appointmentsData.map((apt: any) => {
-          console.log('Transforming appointment:', apt);
+        // Transformar para incluir appointmentId y typeAppointmentStatus
+        const transformedAppointments: AppointmentCardProps[] = appointmentsData.map((appointment: AppointmentFromAPI) => {
+          console.log('Transforming appointment:', appointment);
           return {
-            appointmentId: apt.id || apt._id || `temp-${Date.now()}`,
-            appointmentDate: apt.appointmentDate || new Date().toISOString(),
-            appointmentStatus: apt.appointmentStatus || 'Pendiente',
-            patient: apt.patient || { name: 'N/A', dni: 'N/A' },
-            medic: apt.medic || { name: 'N/A', specialty: 'N/A' },
-            practices: apt.practices || []
+            appointmentId: appointment.id,
+            appointmentDate: appointment.appointmentDate,
+            appointmentStatus: appointment.appointmentsStatus?.[0]?.typeAppointmentStatus?.name || 'Sin estado',
+            patient: {
+              name: appointment.patient.name,
+              dni: appointment.patient.dni
+            },
+            medic: {
+              name: appointment.medic.name,
+              specialty: '' // La API no devuelve specialty en medic
+            },
+            practices: []
           };
         });
         
