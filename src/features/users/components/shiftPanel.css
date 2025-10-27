@@ -33,10 +33,6 @@
   line-height: 1.5;
 }
 
-<<<<<<< HEAD
-.appointment-container,
-=======
->>>>>>> 309a2bde14ce274818193746188bda39f83ecee2
 .appointments-container {
   display: flex;
   flex-direction: column;
@@ -51,12 +47,8 @@
   align-items: stretch;
 }
 
-<<<<<<< HEAD
-.appointment-container::-webkit-scrollbar {
-=======
 /* Scrollbar personalizado */
 .appointments-container::-webkit-scrollbar {
->>>>>>> 309a2bde14ce274818193746188bda39f83ecee2
   width: 8px;
 }
 
