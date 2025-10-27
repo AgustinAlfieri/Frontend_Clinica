@@ -64,7 +64,7 @@ interface Practice {
 export interface AppointmentCardProps {
     appointmentId: string; // ID único del appointment
     appointmentDate: string;
-    appointmentStatus: string;
+    appointmentStatus?: string;
     patient: {
         name: string;
         dni: string;
@@ -133,7 +133,7 @@ const UpdateStatusContent: React.FC = () => {
             const transformedAppointments: AppointmentCardProps[] = response.data.map((appointment) => ({
                 appointmentId: appointment.id, // ID único del appointment
                 appointmentDate: appointment.appointmentDate,
-                appointmentStatus: 'Pendiente', // Por defecto, ya que la API no devuelve status
+                appointmentStatus: '', // Por defecto, ya que la API no devuelve status
                 patient: {
                     name: appointment.patient.name,
                     dni: appointment.patient.dni
@@ -235,7 +235,7 @@ const UpdateStatusContent: React.FC = () => {
                             key={appointment.appointmentId}
                             appointmentId={appointment.appointmentId} // ID único del appointment
                             appointmentDate={appointment.appointmentDate}
-                            appointmentStatus={appointment.appointmentStatus}
+                            appointmentStatus={appointment.appointmentStatus || ''} 
                             patient={appointment.patient}
                             medic={appointment.medic}
                             practices={appointment.practices}

@@ -104,7 +104,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
         <div className="appointment-card-compact">
             <div className="card-header">
                 <span className={'status-badge status-'}>
-                    {appointment.appointmentStatus}
+                    {appointment.appointmentStatus == '' ? 'Sin estado' : appointment.appointmentStatus}
                 </span>
                 <span className="appointment-date">{formattedDate}</span>
             </div>
@@ -119,21 +119,8 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
                     <span className="value">{appointment.patient.dni}</span>
                 </div>
                 <div className="info-row">
-                    <span className="label">Especialidad:</span>
-                    <span className="value">{appointment.medic.specialty}</span>
-                </div>
-                <div className="info-row">
                     <span className="label">Médico:</span>
                     <span className="value">{appointment.medic.name}</span>
-                </div>
-                <div className="info-row">
-                    <span className="label">Práctica:</span>
-                    <span className="value">
-                        {appointment.practices.length > 0 
-                            ? appointment.practices.map(p => p.name).join(', ')
-                            : 'No especificada'
-                        }
-                    </span>
                 </div>
                 
                 {/* Solo mostrar controles si está dentro del contexto (UpdateStatusProvider) */}
