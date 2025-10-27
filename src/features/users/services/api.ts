@@ -39,9 +39,6 @@ export const apiClient = {
         headers.Authorization = `Bearer ${token}`;
       }
 
-      console.log('API GET Request to:', `${API_BASE_URL}/${endpoint}`);
-      console.log('With headers:', headers);
-
       const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
         method: 'GET',
         headers
@@ -55,7 +52,6 @@ export const apiClient = {
 
       return responseData;
     } catch (error) {
-      console.error('API GET Error:', error);
       throw error;
     }
   }

@@ -128,15 +128,8 @@ const UpdateStatusContent: React.FC = () => {
             if (filters.status && filters.status.trim() !== '') {
                 cleanFilters.status = filters.status;
             }
-
-            console.log('=== UpdateStatus - Before API call ===');
-            console.log('Original filters state:', filters);
-            console.log('Clean filters being sent:', cleanFilters);
-            console.log('Clean filters type:', typeof cleanFilters);
-            console.log('Clean filters keys:', Object.keys(cleanFilters));
             
             const response: APIResponse = await AppointmentService.findAppointmentsByFilters(cleanFilters);
-            console.log('Appointments fetched in UpdateStatus component:', response);
             // Transformar los datos de la API al formato que espera AppointmentCard
             const transformedAppointments: AppointmentCardProps[] = response.data.map((appointment) => ({
                 appointmentId: appointment.id, // ID único del appointment
@@ -152,11 +145,9 @@ const UpdateStatusContent: React.FC = () => {
                 },
                 practices: [] // La API no devuelve practices, tendrías que obtenerlas de otra forma
             }));
-            console.log('Transformed Appointments:', transformedAppointments);
             setAppointments(transformedAppointments);
         } catch(err) {
             setError('Error al cargar las citas');
-            console.error('Error fetching appointments:', err);
         } finally {
             setIsLoading(false);
         }

@@ -89,7 +89,6 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Error en el registro';
       setError(errorMessage);
-      console.error('Register error:', err);
     } finally {
       setIsLoading(false);
     }

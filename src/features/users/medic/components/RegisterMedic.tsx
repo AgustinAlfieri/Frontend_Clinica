@@ -47,7 +47,6 @@ const RegisterMedic: React.FC = () => {
       appointment: []
     };
 
-    console.log('Datos completos del médico a registrar:', medicData);
     await medicService.registerMedic(medicData);
   };
 

@@ -28,9 +28,7 @@ export const UpdateStatusProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 try {
                     const response = await AppointmentService.findTypeAppointments();
                     setTypeAppointments(response);
-                    console.log('Type Appointments loaded:', response);
                 } catch (error) {
-                    console.error('Error fetching type appointments:', error);
                 } finally {
                     setLoadingTypeAppointments(false);
                 }

@@ -92,11 +92,10 @@ const ClinicaLogin: React.FC = () => {
       } else {
         setError('Error en el inicio de sesión');
       }
-    } catch(err: unknown){
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Error en el inicio de sesión';
       setError(errorMessage);
-      console.error('Login error:', err);
-    } finally{
+    } finally {
       setIsLoading(false); // Siempre desactiva el loading al final
     }
   };

@@ -30,7 +30,6 @@ export const authService = {
         password: credentials.password,
         role: credentials.role // Asegúrate de enviar el role
       });
-      console.log('Login response:', response);
       if (response.success && response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));

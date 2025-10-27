@@ -4,7 +4,6 @@ import "./Sidebar.css";
 const Sidebar: React.FC = () => {
   // Funcuión que trae los datos del usuario autenticado
   const user = localStorage.getItem('user'); 
-  console.log('User data from localStorage in Sidebar:', user);
   const name = user ? JSON.parse(user).name : 'Usuario';
   let role = user ? JSON.parse(user).role : 'Rol';
   switch(role){

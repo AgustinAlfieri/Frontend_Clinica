@@ -41,13 +41,11 @@ export const useSpecialties = (fetchFunction: () => Promise<Specialty[] | ApiRes
   const [error, setError] = useState<string | null>(null);
 
   const fetchSpecialties = async () => {
-    console.log('Fetching specialties...');
     setIsLoading(true);
     setError(null);
 
     try {
       const response = await fetchFunction();
-      console.log('Data received:', response);
 
       // Verificar si la respuesta tiene la estructura de ApiResponse
       if (response && typeof response === 'object' && 'data' in response) {
@@ -65,7 +63,6 @@ export const useSpecialties = (fetchFunction: () => Promise<Specialty[] | ApiRes
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al cargar especialidades';
-      console.error('Error fetching specialties:', err);
       setError(errorMessage);
       setSpecialties([]); // Asegurar que sea un array vacío en caso de error
     } finally {
@@ -76,10 +73,6 @@ export const useSpecialties = (fetchFunction: () => Promise<Specialty[] | ApiRes
   useEffect(() => {
     fetchSpecialties();
   }, []);
-
-  useEffect(() => {
-    console.log('Specialties state updated:', specialties);
-  }, [specialties]);
 
   return {
     specialties,

@@ -28,10 +28,6 @@ interface AppointmentCardProps {
 }
 
 const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: AppointmentCardProps) => {
-    console.log('AppointmentCard recibió estos props:', appointment);
-    console.log('appointmentId:', appointment.appointmentId);
-    console.log('appointmentDate:', appointment.appointmentDate);
-    
     // Usar el contexto (puede ser undefined si no está en UpdateStatusProvider)
     const context = useUpdateStatus();
     
@@ -58,7 +54,6 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
     const handleSelect = () => {
         // Solo permitir selección si el contexto está disponible
         if (!setSelectedAppointmentId) {
-            console.log('Context not available, selection disabled');
             return;
         }
         
@@ -69,7 +64,6 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
         } else {
             setSelectedAppointmentId(appointment.appointmentId);
         }
-        console.log(`Appointment ${appointment.appointmentId} selected: ${!isSelected}`);
     };
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -88,14 +82,10 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
             date: new Date().toISOString()     
         };
         
-        console.log('Datos que se envían al backend:', statusData);
-        
         try {
             await AppointmentService.createAppointmentStatus(statusData);
-            console.log(`Appointment ${appointment.appointmentId} updated to status: ${selectedType}`);
             alert('Estado actualizado correctamente');
         } catch (error) {
-            console.error('Error al actualizar el estado:', error);
             alert('Error al actualizar el estado');
         }
     };

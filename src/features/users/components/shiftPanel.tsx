@@ -85,32 +85,24 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
         
         // Validar que el usuario existe y tiene DNI
         if (!user || !user.dni) {
-          console.log('No user or DNI found, skipping appointment fetch');
           return;
         }
-        
-        console.log(`Retrieved user from localStorage:`, user);
         
         // Enviar como objeto con la estructura correcta
         const appointments = await AppointmentService.findAppointmentsByFilters({
           dni: user.dni
         });
         
-        console.log('API Response:', appointments);
-        
         // Validar que la respuesta tiene datos
         if (!appointments || !appointments.data || !Array.isArray(appointments.data)) {
-          console.log('No appointments data in response');
           setAppointments([]);
           return;
         }
         
         const appointmentsData = appointments.data;
-        console.log('Appointments data array:', appointmentsData);
         
         // Transformar para incluir appointmentId y typeAppointmentStatus
         const transformedAppointments: AppointmentCardProps[] = appointmentsData.map((appointment: AppointmentFromAPI) => {
-          console.log('Transforming appointment:', appointment);
           return {
             appointmentId: appointment.id,
             appointmentDate: appointment.appointmentDate,
@@ -127,10 +119,8 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
           };
         });
         
-        console.log('Transformed appointments:', transformedAppointments);
         setAppointments(transformedAppointments);
       } catch(error) {
-        console.error('Error fetching appointments in ShiftPanel:', error);
         setAppointments([]); // Establecer array vacío en caso de error
       }
     };

@@ -27,7 +27,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (credentials: LoginCredentials) => {
     const response = await authService.login(credentials);
     setIsAuthenticated(true);
-    console.log('isAuthenticated', isAuthenticated)
     setUser(authService.getUser());
     setToken(authService.getToken());
     return response;

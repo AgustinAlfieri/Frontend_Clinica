@@ -19,7 +19,7 @@ const RegisterPatient: React.FC = () => {
         const insurances = await patientService.getMedicalInsurances();
         setMedicalInsurances(insurances);
       } catch (error) {
-        console.error('Error al cargar las coberturas médicas:', error);
+        // Error silencioso
       } finally {
         setIsLoadingInsurances(false);
       }
@@ -53,7 +53,6 @@ const RegisterPatient: React.FC = () => {
       numberOfMember: coverage !== 'particular' ? insuranceNumber : undefined
     };
     // Llamada al servicio para registrar el paciente
-    console.log('Datos completos del paciente a registrar:', patientData);
     await patientService.registerPatient(patientData);
     
 
@@ -81,7 +80,7 @@ const RegisterPatient: React.FC = () => {
         </select>
       </div>
 
-      {coverage && coverage !== 'particular' && (
+      {coverage && coverage !== 'Particular' && (
         <div className="form-group">
           <label className="form-label">Número de Obra Social</label>
           <input

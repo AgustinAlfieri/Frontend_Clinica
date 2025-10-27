@@ -93,7 +93,6 @@ const AppointmentForm: React.FC = () => {
     useEffect(() => {
         if (formData.specialty_id && Array.isArray(specialties)) {
             const selectedSpecialty = specialties.find(s => s.id === formData.specialty_id);
-            console.log(selectedSpecialty);
             if (selectedSpecialty && selectedSpecialty.medics) {
                 setAvailableMedics(selectedSpecialty.medics);
             } else {
@@ -132,11 +131,7 @@ const AppointmentForm: React.FC = () => {
                 const days = scheduleData.map(day => day.date);
                 setAvailableDays(days);
                 
-                console.log('Schedule loaded:', scheduleData);
-                console.log('Available days:', days);
-                
             } catch(err) {
-                console.error('Error fetching schedule:', err);
                 setError('Error al cargar los horarios disponibles');
             }
         };
@@ -166,8 +161,6 @@ const AppointmentForm: React.FC = () => {
             // Filtrar solo slots disponibles
             const availableSlotsForDay = selectedDay.slots.filter(slot => slot.available);
             setAvailableSlots(availableSlotsForDay);
-            
-            console.log('Slots for selected day:', availableSlotsForDay);
         } else {
             setAvailableSlots([]);
         }
@@ -212,7 +205,6 @@ const AppointmentForm: React.FC = () => {
                 practices: ['17603124302705Zdc2BX-jEIXg6'],
                 administratives: ['17571754793588mXr-hsn_5RcQi']
             }
-            console.log('Creating appointment with data:', appointmentData);
             const responseAppointment = await AppointmentService.createAppointment(appointmentData);
             const statusData: StatusData = {
                 "appointment": responseAppointment.data.id,
@@ -221,7 +213,6 @@ const AppointmentForm: React.FC = () => {
                 "date": new Date().toISOString()
             }
             const responseStatus = await AppointmentService.createAppointmentStatus(statusData);
-            console.log(responseStatus);
             setTimeout(() => {
                 setSuccess('Turno creado exitosamente');
                 setIsLoading(false);
@@ -241,13 +232,11 @@ const AppointmentForm: React.FC = () => {
             }, 1000);
         } catch (err: any) {
             setError(err.message || 'Error al crear el turno');
-            console.error('Create appointment error:', err);
             setIsLoading(false);
         }
     };
 
     const handleCancel = () => {
-        console.log('Cancel appointment');
         // Limpiar el formulario
         setFormData({
             patient_id: '',

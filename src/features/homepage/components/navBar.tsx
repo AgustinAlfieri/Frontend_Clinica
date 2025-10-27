@@ -12,8 +12,6 @@ export function NavBar() {
         navigate('/homepage');
     }
 
-    console.log('NavBar - isAuthenticated:', isAuthenticated);
-
     return (
     <header className="header">
         <img src={logo} alt="Logo" className="logo" style={{ cursor: 'pointer' }} onClick={handleLogoClick} />

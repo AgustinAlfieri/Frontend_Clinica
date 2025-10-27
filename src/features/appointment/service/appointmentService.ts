@@ -97,21 +97,19 @@ export const AppointmentService = {
   },
 
   async getAppointments() {
-    try {
-      console.log('Fetching all appointments from AppointmentService');
-      const response = await apiClient.get('appointment/findAll');
+    try{
+      const response = await apiClient.get('appointment/findAll')
       return response.data;
-    } catch (error: any) {
+    }catch (error: any) {
       throw new Error(error.message || 'Fetching appointments failed');
     }
   },
 
   async getAppointmentsByDni(id: string) {
-    try {
-      console.log(`Fetching appointments for DNI: ${id} from AppointmentService`);
+    try{
       const response = await apiClient.get(`patient/findOne/${id}`);
       return response.data;
-    } catch (error: any) {
+    }catch (error: any) {
       throw new Error(error.message || 'Fetching appointments by DNI failed');
     }
   },
@@ -134,44 +132,34 @@ export const AppointmentService = {
       if (filters.beforeDate) {
         // Formato ISO: 2026-01-16T09:30
         const beforeDateStr = filters.beforeDate.toISOString().slice(0, 16);
-        console.log('Adding beforeDate filter:', beforeDateStr);
         queryParts.push(`beforeDate=${encodeURIComponent(beforeDateStr)}`);
       }
-
+      
       if (filters.afterDate) {
         // Formato ISO: 2026-01-12T09:30
         const afterDateStr = filters.afterDate.toISOString().slice(0, 16);
-        console.log('Adding afterDate filter:', afterDateStr);
         queryParts.push(`afterDate=${encodeURIComponent(afterDateStr)}`);
       }
-
+      
       if (filters.status) {
-        console.log('Adding status filter:', filters.status);
         queryParts.push(`typeAppointmentStatus=${encodeURIComponent(filters.status)}`);
       }
-
-      console.log('Query parts array:', queryParts);
-
+      
       // Construir URL completa con query params
       const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
       const endpoint = `appointment/findAppointmentByFilter${queryString}`;
-
-      console.log('Final endpoint:', endpoint);
-      console.log('Query string:', queryString);
-      const response = await apiClient.get(endpoint);
-
-      return response;
+      
+      const response = await apiClient.get(endpoint);      return response;
     } catch (error: any) {
       throw new Error(error.message || 'Fetching appointments by filters failed');
     }
   },
 
   async findTypeAppointments() {
-    try {
+    try{
       const response = await apiClient.get('typeAppointmentStatus/findAll');
-      console.log('Fetched type appointments:', response.data);
       return response.data;
-    } catch {
+    }catch{
       throw new Error('Fetching type appointments failed');
     }
   },
