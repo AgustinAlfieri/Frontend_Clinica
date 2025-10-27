@@ -40,15 +40,13 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
     const context = useUpdateStatus();
     
     const [selectedType, setSelectedType] = React.useState<string>('');
+    const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
     
     // Solo usar el contexto si está disponible
     const typeAppointments = context?.typeAppointments || [];
     const loadingTypeAppointments = context?.loadingTypeAppointments || false;
-    const selectedAppointmentId = context?.selectedAppointmentId;
     const setSelectedAppointmentId = context?.setSelectedAppointmentId;
     
-    // Verificar si este appointment está seleccionado
-    const isSelected = selectedAppointmentId === appointment.appointmentId;
     const [observations, setObservations] = React.useState<Record<string, string>>({});
 
 
@@ -79,13 +77,16 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
             return;
         }
         
-        // Toggle selección: si ya está seleccionado, deseleccionar; si no, seleccionar
-        if (isSelected) {
-            setSelectedAppointmentId(null);
-            setSelectedType('');
-        } else {
-            setSelectedAppointmentId(appointment.appointmentId);
-        }
+        // Abrir el modal y seleccionar el appointment
+        setSelectedAppointmentId(appointment.appointmentId);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedAppointmentId?.(null);
+        setSelectedType('');
+        setObservations({});
     };
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -104,83 +105,126 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
             observations: observations.observations ||'',
             date: new Date().toISOString()     
         };
-
-        console.log(statusData);
         
         try {
             await AppointmentService.createAppointmentStatus(statusData);
             alert('Estado actualizado correctamente');
+            handleCloseModal();
         } catch (error) {
             alert('Error al actualizar el estado');
         }
     };
 
     return(
-        <div className="appointment-card-compact">
-            <div className="card-header">
-                <span className={'status-badge status-'}>
-                    {appointment.appointmentStatus == '' ? 'Sin estado' : appointment.appointmentStatus}
-                </span>
-                <span className="appointment-date">{formattedDate}</span>
-            </div>
+        <>
+            <div className="appointment-card-compact">
+                <div className="card-header">
+                    <span className={'status-badge status-'}>
+                        {appointment.appointmentStatus == '' ? 'Sin estado' : appointment.appointmentStatus}
+                    </span>
+                    <span className="appointment-date">{formattedDate}</span>
+                </div>
 
-            <div className="card-body">
-                <div className="info-row">
-                    <span className="label">Paciente:</span>
-                    <span className="value">{appointment.patient.name}</span>
-                </div>
-                <div className="info-row">
-                    <span className="label">DNI:</span>
-                    <span className="value">{appointment.patient.dni}</span>
-                </div>
-                <div className="info-row">
-                    <span className="label">Médico:</span>
-                    <span className="value">{appointment.medic.name}</span>
-                </div>
-                
-                {/* Solo mostrar controles si está dentro del contexto (UpdateStatusProvider) */}
-                {context && (
-                    <div>
-                        <button className="details-button" onClick={handleSelect}>
-                            {isSelected ? 'Seleccionado ✓' : 'Seleccionar'}
-                        </button>
-
-                        {isSelected && (
-                            <select 
-                                name="typeAppointment" 
-                                id="typeAppointment"
-                                value={selectedType}
-                                onChange={handleTypeChange}
-                            >
-                                <option value="">
-                                    {loadingTypeAppointments ? 'Cargando...' : 'Seleccione un estado'}
-                                </option>
-                                {typeAppointments.map((type) => (
-                                    <option key={type.id} value={type.id}>
-                                        {type.name}
-                                    </option>
-                                ))}
-                            </select>
-                            
-                        )}
-                        {isSelected && (
-                            <div>
-                                <input type="text" name="observations" id="observations" placeholder='Observaciones'
-                                onChange={handleObservations}/>
-                            </div>
-                        )}
-                        
-                        {isSelected && (
-                            <div>
-                                <button onClick={handleSubmit} disabled={!selectedType}>
-                                    Enviar
-                                </button>
-                            </div>
-                        )}
+                <div className="card-body">
+                    <div className="info-row">
+                        <span className="label">Paciente:</span>
+                        <span className="value">{appointment.patient.name}</span>
                     </div>
-                )}
+                    <div className="info-row">
+                        <span className="label">DNI:</span>
+                        <span className="value">{appointment.patient.dni}</span>
+                    </div>
+                    <div className="info-row">
+                        <span className="label">Médico:</span>
+                        <span className="value">{appointment.medic.name}</span>
+                    </div>
+                    
+                    {/* Solo mostrar controles si está dentro del contexto (UpdateStatusProvider) */}
+                    {context && (
+                        <button className="details-button" onClick={handleSelect}>
+                            Seleccionar
+                        </button>
+                    )}
+                </div>
             </div>
-        </div>
+
+            {/* Modal para actualizar estado */}
+            {isModalOpen && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>Actualizar Estado del Turno</h2>
+                            <button className="modal-close" onClick={handleCloseModal}>×</button>
+                        </div>
+
+                        <div className="modal-body">
+                            <div className="info-row">
+                                <span className="label">Paciente:</span>
+                                <span className="value">{appointment.patient.name}</span>
+                            </div>
+                            <div className="info-row">
+                                <span className="label">DNI:</span>
+                                <span className="value">{appointment.patient.dni}</span>
+                            </div>
+                            <div className="info-row">
+                                <span className="label">Médico:</span>
+                                <span className="value">{appointment.medic.name}</span>
+                            </div>
+                            <div className="info-row">
+                                <span className="label">Fecha:</span>
+                                <span className="value">{formattedDate}</span>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="typeAppointment">Estado del Turno:</label>
+                                <select 
+                                    name="typeAppointment" 
+                                    id="typeAppointment"
+                                    value={selectedType}
+                                    onChange={handleTypeChange}
+                                    className="modal-select"
+                                >
+                                    <option value="">
+                                        {loadingTypeAppointments ? 'Cargando...' : 'Seleccione un estado'}
+                                    </option>
+                                    {typeAppointments.map((type) => (
+                                        <option key={type.id} value={type.id}>
+                                            {type.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="observations">Observaciones:</label>
+                                <input 
+                                    type="text" 
+                                    name="observations" 
+                                    id="observations" 
+                                    placeholder='Ingrese observaciones (opcional)'
+                                    onChange={handleObservations}
+                                    value={observations.observations || ''}
+                                    className="modal-input"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="modal-footer">
+                            <button className="modal-button cancel" onClick={handleCloseModal}>
+                                Cancelar
+                            </button>
+                            <button 
+                                className="modal-button submit" 
+                                onClick={handleSubmit} 
+                                disabled={!selectedType}
+                            >
+                                Actualizar Estado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
 
