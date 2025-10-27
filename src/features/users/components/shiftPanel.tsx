@@ -4,7 +4,6 @@ import "./shiftPanel.css";
 import { useEffect, useState } from "react";
 import { AppointmentService } from "../../appointment/service/appointmentService";
 import {authService} from "../services/authService";
-import { useNavigate } from "react-router-dom";
 
 interface Patient {
     id: string;
@@ -70,56 +69,58 @@ interface AppointmentCardProps {
 interface ShiftPanelProps {
   name: string;
   text: string;
-  buttonText?: boolean;
+  fill?: boolean;
 }
 
-const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
-  const navigate = useNavigate();
+const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name, fill}) => {
   const [appointments, setAppointments] = useState<AppointmentCardProps[]>([]);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const userType = user.role || '';
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const user = authService.getUser();
-        
-        // Validar que el usuario existe y tiene DNI
-        if (!user || !user.dni) {
-          return;
+          if (fill) {
+            
+            const user = authService.getUser();
+          
+            // Validar que el usuario existe y tiene DNI
+            if (!user || !user.dni) {
+              return;
+            }
+            
+            // Enviar como objeto con la estructura correcta
+            const appointments = await AppointmentService.findAppointmentsByFilters({
+              dni: user.dni
+            });
+            
+            // Validar que la respuesta tiene datos
+            if (!appointments || !appointments.data || !Array.isArray(appointments.data)) {
+              setAppointments([]);
+              return;
+            }
+            
+            const appointmentsData = appointments.data;
+            
+            // Transformar para incluir appointmentId y typeAppointmentStatus
+            const transformedAppointments: AppointmentCardProps[] = appointmentsData.map((appointment: AppointmentFromAPI) => {
+              return {
+                appointmentId: appointment.id,
+                appointmentDate: appointment.appointmentDate,
+                appointmentStatus: appointment.appointmentsStatus?.[0]?.typeAppointmentStatus?.name || 'Sin estado',
+                patient: {
+                  name: appointment.patient.name,
+                  dni: appointment.patient.dni
+                },
+                medic: {
+                  name: appointment.medic.name,
+                  specialty: '' // La API no devuelve specialty en medic
+                },
+                practices: []
+              };
+            });
+            
+            setAppointments(transformedAppointments);
         }
-        
-        // Enviar como objeto con la estructura correcta
-        const appointments = await AppointmentService.findAppointmentsByFilters({
-          dni: user.dni
-        });
-        
-        // Validar que la respuesta tiene datos
-        if (!appointments || !appointments.data || !Array.isArray(appointments.data)) {
-          setAppointments([]);
-          return;
-        }
-        
-        const appointmentsData = appointments.data;
-        
-        // Transformar para incluir appointmentId y typeAppointmentStatus
-        const transformedAppointments: AppointmentCardProps[] = appointmentsData.map((appointment: AppointmentFromAPI) => {
-          return {
-            appointmentId: appointment.id,
-            appointmentDate: appointment.appointmentDate,
-            appointmentStatus: appointment.appointmentsStatus?.[0]?.typeAppointmentStatus?.name || 'Sin estado',
-            patient: {
-              name: appointment.patient.name,
-              dni: appointment.patient.dni
-            },
-            medic: {
-              name: appointment.medic.name,
-              specialty: '' // La API no devuelve specialty en medic
-            },
-            practices: []
-          };
-        });
-        
-        setAppointments(transformedAppointments);
       } catch(error) {
         setAppointments([]); // Establecer array vacío en caso de error
       }
@@ -127,10 +128,6 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
     
     fetchAppointments();
   }, []);
-
-  const handleGestionClick = () => {
-    navigate('/updateStatus');
-  }
 
   return (
     <div className="shift-panel">
@@ -154,21 +151,10 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name,buttonText}) => {
             />
           ))
       ) : (
-        <p>No hay turnos disponibles</p>
+        <p>Not supported yet</p>
       )}
     </div>
-  )}
-
-  {userType === 'Administrative' && buttonText === true && (
-    <div>
-      <button
-        className="manage-appointments-button"
-        onClick={handleGestionClick}
-      >
-        Panel de gestión
-      </button>
-    </div>
-  )}
+  )}<br />
 </div>
 
   );

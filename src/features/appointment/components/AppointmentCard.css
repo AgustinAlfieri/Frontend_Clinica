@@ -1,16 +1,15 @@
-/* AppointmentCard.css - Mobile First */
 
-/* Estilos base para móviles */
 .appointment-card-compact {
     background: #ffffff;
     border-radius: 10px;
-    padding: 0.65rem; /* reducido */
+    padding: 0.65rem;
     box-shadow: 0 1.5px 6px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border: 1px solid #e6eef2;
     margin-bottom: 0.9rem;
     width: 100%;
-    max-width: 320px; /* más contenido y compacto */
+    max-width: min(480px, 100%);
+    box-sizing: border-box;
     font-size: 0.95rem;
 }
 
@@ -97,7 +96,32 @@
     font-weight: 400;
 }
 
-/* Tablets y móviles grandes (min-width: 641px) */
+/* Button Styles */
+.details-button {
+    margin-top: 0.5rem;
+    padding: 0.7rem 1.25rem;
+    background-color: #4DB8A8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.details-button:hover {
+    background-color: #3da295;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(77, 184, 168, 0.3);
+}
+
+.details-button:active {
+    transform: translateY(0);
+}
+
 @media (min-width: 641px) {
     .appointment-card-compact {
         padding: 0.85rem;
@@ -127,9 +151,208 @@
     }
 }
 
-/* Desktop (min-width: 768px) */
 @media (min-width: 768px) {
     .appointment-card-compact {
         max-width: 480px;
+    }
+}
+
+/* Modal Styles - Mobile First */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e6eef2;
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2C5F5D;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #1e293b;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-group label {
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.modal-select,
+.modal-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #f8fafc;
+    color: #1e293b;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    outline: none;
+    transition: all 0.2s ease;
+    font-size: 0.88rem;
+    box-sizing: border-box;
+}
+
+.modal-select:focus,
+.modal-input:focus {
+    border-color: #4DB8A8;
+    background-color: #E8F5F0;
+    box-shadow: 0 0 0 3px rgba(77, 184, 168, 0.1);
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e6eef2;
+}
+
+.modal-button {
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-button.cancel {
+    background-color: #f1f5f9;
+    color: #475569;
+}
+
+.modal-button.cancel:hover {
+    background-color: #e2e8f0;
+}
+
+.modal-button.submit {
+    background-color: #4DB8A8;
+    color: white;
+}
+
+.modal-button.submit:hover {
+    background-color: #3da295;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(77, 184, 168, 0.3);
+}
+
+.modal-button.submit:disabled {
+    background-color: #cbd5e0;
+    color: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Responsive - Modal */
+@media (min-width: 481px) {
+    .modal-content {
+        padding: 1.75rem;
+        max-width: 480px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .modal-footer {
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    .modal-button {
+        width: auto;
+        min-width: 120px;
+    }
+}
+
+@media (min-width: 641px) {
+    .modal-content {
+        padding: 2rem;
+        max-width: 550px;
+    }
+
+    .modal-select,
+    .modal-input {
+        padding: 0.875rem 1.125rem;
+        font-size: 0.95rem;
     }
 }

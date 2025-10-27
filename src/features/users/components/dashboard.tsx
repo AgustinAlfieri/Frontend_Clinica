@@ -29,9 +29,13 @@ const Dashboard: React.FC = () => {
         </section>
 
         <section className="dashboard-panels">
-            {userType == 'Patient'&&<ShiftPanel name="Turnos" text="Aquí podrás consultar y gestionar tus turnos."/>}
-            {userType == 'Administrative'&&<ShiftPanel name="Gestión de Turnos" text="Aquí podrás gestionar los turnos de los pacientes." buttonText ={true} />}
-            <ShiftPanel name="Estudios / Historial" text="Aquí podrás observar tu historial de turnos."/>
+            {userType == 'Patient'&&<ShiftPanel fill={true} name="Turnos" text="Aquí podrás consultar y gestionar tus turnos."/>}
+            {userType == 'Administrative' && 
+                  <a href = "/updateStatus" style={{ textDecoration: 'none' }}>
+                    <ShiftPanel fill= {true} name="Gestión de Turnos" text="Aquí podrás gestionar los turnos de los pacientes." />
+                  </a>
+            }
+            <ShiftPanel name="Estudios / Historial (Beta)" text="Aquí podrás observar tu historial de turnos." fill={false}/>
         </section>
       </main>
     </div>

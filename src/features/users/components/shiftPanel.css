@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-/* Mobile First - Estilos base para móviles */
 .shift-panel {
   background: #FFFFFF;
   border-radius: 1.5rem;
@@ -34,37 +33,39 @@
   line-height: 1.5;
 }
 
-.appointment-container {
+.appointments-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
   width: 100%;
-  max-height: 280px;
+  --appointment-card-height: 100px;
+  max-height: calc(var(--appointment-card-height) * 2 + 15px);
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 10px;
   box-sizing: border-box;
+  align-items: stretch;
 }
 
 /* Scrollbar personalizado */
-.appointment-container::-webkit-scrollbar {
+.appointments-container::-webkit-scrollbar {
   width: 8px;
 }
 
-.appointment-container::-webkit-scrollbar-track {
+.appointments-container::-webkit-scrollbar-track {
   background: #E8F5F0;
   border-radius: 10px;
 }
 
-.appointment-container::-webkit-scrollbar-thumb {
+.appointments-container::-webkit-scrollbar-thumb {
   background: #4DB8A8;
   border-radius: 10px;
 }
 
-.appointment-container::-webkit-scrollbar-thumb:hover {
+.appointments-container::-webkit-scrollbar-thumb:hover {
   background: #3A9587;
 }
 
-/* Móviles grandes (min-width: 481px) */
 @media (min-width: 481px) {
   .shift-panel {
     padding: 20px;
@@ -79,12 +80,11 @@
     margin-bottom: 25px;
   }
 
-  .appointment-container {
+  .appointments-container {
     max-height: 320px;
   }
 }
 
-/* Tablets y Desktop (min-width: 769px) */
 @media (min-width: 769px) {
   .shift-panel {
     padding: 30px;
