@@ -7,6 +7,7 @@ import Alert from '../../../core/components/alert';
 import Select from '../../../core/components/select';
 import Button from '../../../core/components/button';
 import NavBar from '../../homepage/components/navBar';
+import { useNavigate } from 'react-router-dom';
 
 interface AppointmentFormData {
     patient_id: string;
@@ -68,6 +69,7 @@ const AppointmentForm: React.FC = () => {
     const [fullSchedule, setFullSchedule] = useState<AvailableSchedule[]>([]);
     const [availableDays, setAvailableDays] = useState<string[]>([]);
     const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
+    const navigate = useNavigate();
     
     // Datos del formulario
     const [formData, setFormData] = useState<AppointmentFormData>({
@@ -239,6 +241,7 @@ const AppointmentForm: React.FC = () => {
                 setAvailableDays([]);
                 setAvailableSlots([]);
             }, 1000);
+            navigate('/dashboard');
         } catch (err: any) {
             setError(err.message || 'Error al crear el turno');
             console.error('Create appointment error:', err);

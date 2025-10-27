@@ -49,14 +49,19 @@ const RegisterPatient: React.FC = () => {
       throw new Error('Por favor selecciona una cobertura');
     }
     
-    if (!insuranceNumber) {
+    // Buscar el nombre de la cobertura seleccionada
+    const selectedInsurance = medicalInsurances.find(ins => ins.id === coverage);
+    const insuranceName = selectedInsurance?.name || '';
+    
+    // Si NO es particular Y no hay número, lanzar error
+    if (!insuranceName.toLowerCase().includes('particular') && !insuranceNumber) {
       throw new Error('Por favor ingresa tu número de obra social');
     }
     
     const patientData: UserType & { medicalInsurance: string; numberOfMember?: string } = {
       ...baseData,
       medicalInsurance: coverage,
-      numberOfMember: coverage !== 'particular' ? insuranceNumber : undefined
+      numberOfMember: !insuranceName.toLowerCase().includes('particular') ? insuranceNumber : undefined
     };
     // Llamada al servicio para registrar el paciente
     console.log('Datos completos del paciente a registrar:', patientData);
