@@ -21,11 +21,11 @@ const Sidebar: React.FC = () => {
     <aside className="sidebar">
       <div className="sidebar-header">
         <img 
-            src="src/assets/foto-imagen.png" 
+            src="src/assets/avatar.png" 
             alt="User Avatar" 
         />
         <h2>{name} </h2>
-        <p>Tipo de Usuario: {role}</p>
+        <p>{role}</p>
       </div>
 
       <nav className="sidebar-menu">
