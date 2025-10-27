@@ -12,7 +12,7 @@ const Card: React.FC<CardProps> = ({ title, subtitle, color, image }) => {
   return (
     <div
       className="card"
-      style={{ color: '#ffffffff' }}
+      style={{ color: color || '#ffffffff' }}
     >
       {image && (
         <div className="card-image">

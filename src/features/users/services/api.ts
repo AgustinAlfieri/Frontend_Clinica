@@ -1,5 +1,4 @@
-const API_BASE_URL = "http://localhost:3000/app/v1"; 
-
+const API_BASE_URL = 'http://localhost:3000/app/v1';
 
 export const apiClient = {
   async post(endpoint: string, data: any) {
@@ -27,32 +26,28 @@ export const apiClient = {
     }
   },
   async get(endpoint: string) {
-    try {
-      const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-      const headers: any = {
-        'Content-Type': 'application/json'
-      };
+    const headers: any = {
+      'Content-Type': 'application/json'
+    };
 
-      // Agregar token si existe (para rutas protegidas)
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
-
-      const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
-        method: 'GET',
-        headers
-      });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message || `Error HTTP: ${response.status}`);
-      }
-
-      return responseData;
-    } catch (error) {
-      throw error;
+    // Agregar token si existe (para rutas protegidas)
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
     }
+
+    const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
+      method: 'GET',
+      headers
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw new Error(responseData.message || `Error HTTP: ${response.status}`);
+    }
+
+    return responseData;
   }
 };

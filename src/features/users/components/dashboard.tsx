@@ -5,8 +5,6 @@ import NavBar from "../../homepage/components/navBar";
 import "./Dashboard.css";
 import "./Sidebar.css";
 import "./card.css";
-import turnoImg from "../../../assets/turno.png";
-import foto from "../../../assets/foto-imagen.png";
 import ShiftPanel from "./shiftPanel";
 
 
