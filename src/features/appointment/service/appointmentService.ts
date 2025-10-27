@@ -1,4 +1,4 @@
-import { apiClient } from '../../users/services/api.ts';
+import { apiClient } from '../../users/services/api';
 
 interface Medic {
   //todos los datos del medico
