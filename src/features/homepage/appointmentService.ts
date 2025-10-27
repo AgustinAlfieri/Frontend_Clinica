@@ -1,4 +1,4 @@
-import { apiClient } from '../../users/services/api';
+import { apiClient } from '../../features/users/services/api';
 
 interface Medic {
   //todos los datos del medico
