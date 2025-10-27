@@ -6,7 +6,7 @@ import { UpdateStatusProvider } from '../context/UpdateStatusContext';
 import NavBar from '../../../homepage/components/navBar';
 import Sidebar from '../../components/sidebar';
 import './updateStatus.css';
-import '../../components/Sidebar.css';
+import '../../components/sidebar.css';
 
 // Interfaces que coinciden con la respuesta de la API
 interface Patient {
