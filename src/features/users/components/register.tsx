@@ -5,6 +5,7 @@ import { Validator } from '../services/validator.ts';
 import type UserType from '../UserType';
 import NavBar from '../../homepage/components/navBar';
 import Alert from '../../../core/components/alert';
+import { useNavigate } from 'react-router-dom';
 
 // Interface para los datos básicos del usuario
 export interface BaseUserData {
@@ -47,6 +48,7 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<UserType>({
     id: '',
@@ -79,10 +81,11 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
     setSuccess('');
 
     try {
-      // TODO: Implementar servicio de registro
-      console.log('Datos a registrar:', formData);
-      await onSubmit(formData);
-      setSuccess('Registro exitoso');
+        await onSubmit(formData);
+
+        setSuccess('Registro exitoso');
+        
+        navigate('/login');
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Error en el registro';
       setError(errorMessage);

@@ -123,10 +123,11 @@
 }
 
 /* Button Styling (from register.css) */
+.form-button,
 .button {
     width: 100%;
     background-color: #e2e8f0;
-    color: #374151;
+    color: #6b7280;
     font-weight: 500;
     padding: 0.875rem 1rem;
     border-radius: 0.75rem;
@@ -137,34 +138,36 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
+.form-button:hover:not(:disabled),
 .button:hover:not(:disabled) {
     background-color: #cbd5e0;
 }
 
+.form-button:disabled,
 .button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
 .button-primary {
-    background-color: #3b82f6;
-    color: white;
+    background-color: #e2e8f0;
+    color: #6b7280;
 }
 
 .button-primary:hover:not(:disabled) {
-    background-color: #2563eb;
+    background-color: #cbd5e0;
 }
 
 .button-danger {
-    background-color: #ef4444;
-    color: white;
+    background-color: #e2e8f0;
+    color: #6b7280;
 }
 
 .button-danger:hover:not(:disabled) {
-    background-color: #dc2626;
+    background-color: #cbd5e0;
 }
 
 /* Footer Styles */

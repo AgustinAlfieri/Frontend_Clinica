@@ -9,6 +9,7 @@
   background: linear-gradient(135deg, #E8F5F0 0%, #A5D4C8 100%);
   font-family: 'Poppins', sans-serif;
   padding-top: 60px;
+  text-decoration: none;
 }
 
 .dashboard-main {
@@ -49,6 +50,10 @@
   grid-template-columns: 1fr;
   gap: 15px;
   margin-bottom: 40px;
+}
+
+.dashboard-cards a {
+  text-decoration: none;
 }
 
 .dashboard-panels {

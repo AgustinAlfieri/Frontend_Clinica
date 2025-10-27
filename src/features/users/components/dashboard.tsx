@@ -4,6 +4,7 @@ import Card from "../components/card";
 import NavBar from "../../homepage/components/navBar";
 import "./Dashboard.css";
 import "./Sidebar.css";
+import "./card.css";
 import turnoImg from "../../../assets/turno.png";
 import foto from "../../../assets/foto-imagen.png";
 import ShiftPanel from "./shiftPanel";
@@ -24,10 +25,9 @@ const Dashboard: React.FC = () => {
 
         <section className="dashboard-cards">
           <a href ="/appointment">
-          <Card title="Nuevo turno" subtitle="Agenda tu cita" color="#28a745" image={turnoImg}/>
+            <Card title="Nuevo turno" subtitle="Agenda tu cita" color="#4DB8A8"/>
           </a>
-          <Card title="Completar Perfil" subtitle="Actualiza tus datos" color="#0f5491ff" image={foto}/>
-
+          <Card title="Completar Perfil" subtitle="Actualiza tus datos" color="#4DB8A8"/>
         </section>
 
         <section className="dashboard-panels">

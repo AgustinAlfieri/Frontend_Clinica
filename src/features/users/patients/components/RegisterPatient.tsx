@@ -31,7 +31,11 @@ const RegisterPatient: React.FC = () => {
   const handleCoverageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     setCoverage(value);
-    if (value === 'particular') {
+
+    const selectedInsurance = medicalInsurances.find(ins => ins.id === value);
+    const insuranceName = selectedInsurance?.name || '';
+    
+    if (insuranceName.toLowerCase().includes('particular')) {
       setInsuranceNumber('');
     }
   };
@@ -44,13 +48,20 @@ const RegisterPatient: React.FC = () => {
     if (!coverage){
       throw new Error('Por favor selecciona una cobertura');
     }
-    if (coverage !== 'particular' && !insuranceNumber) {
+    
+    // Buscar el nombre de la cobertura seleccionada
+    const selectedInsurance = medicalInsurances.find(ins => ins.id === coverage);
+    const insuranceName = selectedInsurance?.name || '';
+    
+    // Si NO es particular Y no hay número, lanzar error
+    if (!insuranceName.toLowerCase().includes('particular') && !insuranceNumber) {
       throw new Error('Por favor ingresa tu número de obra social');
     }
+    
     const patientData: UserType & { medicalInsurance: string; numberOfMember?: string } = {
       ...baseData,
       medicalInsurance: coverage,
-      numberOfMember: coverage !== 'particular' ? insuranceNumber : undefined
+      numberOfMember: !insuranceName.toLowerCase().includes('particular') ? insuranceNumber : undefined
     };
     // Llamada al servicio para registrar el paciente
     console.log('Datos completos del paciente a registrar:', patientData);
@@ -81,7 +92,11 @@ const RegisterPatient: React.FC = () => {
         </select>
       </div>
 
-      {coverage && coverage !== 'particular' && (
+      {coverage && (() => {
+        const selectedInsurance = medicalInsurances.find(ins => ins.id === coverage);
+        const insuranceName = selectedInsurance?.name || '';
+        return !insuranceName.toLowerCase().includes('particular');
+      })() && (
         <div className="form-group">
           <label className="form-label">Número de Obra Social</label>
           <input

@@ -9,11 +9,11 @@
     border: none;
     border-radius: 0.75rem;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
     background-color: #e2e8f0;
-    color: #374151;
+    color: #6b7280;
 }
 
 .button:hover:not(:disabled) {
@@ -26,30 +26,30 @@
 }
 
 .button-primary {
-    background-color: #3b82f6;
-    color: white;
+    background-color: #e2e8f0;
+    color: #6b7280;
 }
 
 .button-primary:hover:not(:disabled) {
-    background-color: #2563eb;
+    background-color: #cbd5e0;
 }
 
 .button-secondary {
-    background-color: #64748b;
-    color: white;
+    background-color: #e2e8f0;
+    color: #6b7280;
 }
 
 .button-secondary:hover:not(:disabled) {
-    background-color: #475569;
+    background-color: #cbd5e0;
 }
 
 .button-danger {
-    background-color: #ef4444;
-    color: white;
+    background-color: #e2e8f0;
+    color: #6b7280;
 }
 
 .button-danger:hover:not(:disabled) {
-    background-color: #dc2626;
+    background-color: #cbd5e0;
 }
 
 .button-icon-wrapper {
