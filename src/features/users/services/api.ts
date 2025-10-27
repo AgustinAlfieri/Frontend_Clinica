@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:3000/app/v1';
+//const API_BASE_URL = 'http://localhost:3000/app/v1';
+//Traigo la URL de la API desde el .env
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const apiClient = {
   async post(endpoint: string, data: any) {
