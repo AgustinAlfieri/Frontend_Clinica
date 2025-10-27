@@ -34,15 +34,20 @@
   line-height: 1.5;
 }
 
-.appointment-container {
+.appointment-container,
+.appointments-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
   width: 100%;
-  max-height: 280px;
+  /* altura estimada por cada card dentro del panel (ajustar si tus cards son más altas) */
+  --appointment-card-height: 100px;
+  /* mostrar hasta 2 cards; si hay más, aparece scrollbar dentro del panel */
+  max-height: calc(var(--appointment-card-height) * 2 + 15px);
   overflow-y: auto;
   padding-right: 10px;
   box-sizing: border-box;
+  align-items: stretch;
 }
 
 /* Scrollbar personalizado */

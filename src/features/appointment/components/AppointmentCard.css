@@ -10,7 +10,8 @@
     border: 1px solid #e6eef2;
     margin-bottom: 0.9rem;
     width: 100%;
-    max-width: 320px; /* más contenido y compacto */
+    max-width: min(480px, 100%); /* evita overflow en contenedores estrechos */
+    box-sizing: border-box; /* incluye padding en el ancho */
     font-size: 0.95rem;
 }
 
@@ -101,7 +102,7 @@
 @media (min-width: 641px) {
     .appointment-card-compact {
         padding: 0.85rem;
-        max-width: 420px;
+        max-width: min(420px, 100%);
     }
 
     .card-header {
@@ -130,6 +131,6 @@
 /* Desktop (min-width: 768px) */
 @media (min-width: 768px) {
     .appointment-card-compact {
-        max-width: 480px;
+        max-width: min(480px, 100%);
     }
 }
