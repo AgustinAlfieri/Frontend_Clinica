@@ -1,17 +1,15 @@
-/* AppointmentCard.css - Mobile First */
 
-/* Estilos base para móviles */
 .appointment-card-compact {
     background: #ffffff;
     border-radius: 10px;
-    padding: 0.65rem; /* reducido */
+    padding: 0.65rem;
     box-shadow: 0 1.5px 6px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border: 1px solid #e6eef2;
     margin-bottom: 0.9rem;
     width: 100%;
-    max-width: min(480px, 100%); /* evita overflow en contenedores estrechos */
-    box-sizing: border-box; /* incluye padding en el ancho */
+    max-width: min(480px, 100%);
+    box-sizing: border-box;
     font-size: 0.95rem;
 }
 
@@ -98,7 +96,6 @@
     font-weight: 400;
 }
 
-/* Tablets y móviles grandes (min-width: 641px) */
 @media (min-width: 641px) {
     .appointment-card-compact {
         padding: 0.85rem;
@@ -128,7 +125,6 @@
     }
 }
 
-/* Desktop (min-width: 768px) */
 @media (min-width: 768px) {
     .appointment-card-compact {
         max-width: min(480px, 100%);

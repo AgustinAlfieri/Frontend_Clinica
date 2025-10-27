@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-/* Mobile First - Estilos base para móviles */
 .shift-panel {
   background: #FFFFFF;
   border-radius: 1.5rem;
@@ -40,9 +39,7 @@
   flex-direction: column;
   gap: 15px;
   width: 100%;
-  /* altura estimada por cada card dentro del panel (ajustar si tus cards son más altas) */
   --appointment-card-height: 100px;
-  /* mostrar hasta 2 cards; si hay más, aparece scrollbar dentro del panel */
   max-height: calc(var(--appointment-card-height) * 2 + 15px);
   overflow-y: auto;
   padding-right: 10px;
@@ -50,7 +47,6 @@
   align-items: stretch;
 }
 
-/* Scrollbar personalizado */
 .appointment-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -69,7 +65,6 @@
   background: #3A9587;
 }
 
-/* Móviles grandes (min-width: 481px) */
 @media (min-width: 481px) {
   .shift-panel {
     padding: 20px;
@@ -89,7 +84,6 @@
   }
 }
 
-/* Tablets y Desktop (min-width: 769px) */
 @media (min-width: 769px) {
   .shift-panel {
     padding: 30px;
