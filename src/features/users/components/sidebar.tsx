@@ -14,7 +14,6 @@ const Sidebar: React.FC = () => {
             alt="User Avatar" 
         />
         <h2>{name} </h2>
-        <p>Obra social?</p>
       </div>
 
       <nav className="sidebar-menu">

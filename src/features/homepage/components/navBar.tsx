@@ -19,9 +19,6 @@ export function NavBar() {
         <img src={logo} alt="Logo" className="logo" style={{ cursor: 'pointer' }} onClick={handleLogoClick} />
         <nav className="navbar">
         <div>
-            {/* Enlace siempre visible */}
-            <a href="/">Inicio</a>
-
             {/* Cuando NO está autenticado mostramos Login y Registro */}
             {!isAuthenticated && (
             <>

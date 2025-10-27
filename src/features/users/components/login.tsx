@@ -201,7 +201,7 @@ const ClinicaLogin: React.FC = () => {
         {/* Footer */}
         <div className="login-footer">
           <p className="footer-copyright">
-            © 2025 ClinicaSana. Todos los derechos reservados.
+            © 2025 Medivia. Todos los derechos reservados.
           </p>
         </div>
       </div>

@@ -6,7 +6,7 @@
   align-items: center;
   background: #FFFFFF;
   border-radius: 1.2rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #4DB8A8;
   padding: 15px;
   transition: all 0.3s ease;
   cursor: pointer;
