@@ -1,0 +1,135 @@
+/* AppointmentCard.css - Mobile First */
+
+/* Estilos base para móviles */
+.appointment-card-compact {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 0.65rem; /* reducido */
+    box-shadow: 0 1.5px 6px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e6eef2;
+    margin-bottom: 0.9rem;
+    width: 100%;
+    max-width: 320px; /* más contenido y compacto */
+    font-size: 0.95rem;
+}
+
+.appointment-card-compact:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+    transform: translateY(-4px);
+}
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid #f3f7f9;
+}
+
+.status-badge {
+    padding: 0.28rem 0.6rem;
+    border-radius: 16px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.status-pendiente,
+.status-pending,
+.status-solicitado {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-confirmado,
+.status-confirmed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-cancelado,
+.status-cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-completado,
+.status-completed {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.appointment-date {
+    font-size: 0.78rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.22rem;
+    font-size: 0.88rem;
+}
+
+.info-row .label {
+    color: #475569;
+    font-weight: 600;
+    min-width: 90px;
+    flex-shrink: 0;
+}
+
+.info-row .value {
+    color: #1e293b;
+    text-align: left;
+    flex: 1;
+    font-weight: 400;
+}
+
+/* Tablets y móviles grandes (min-width: 641px) */
+@media (min-width: 641px) {
+    .appointment-card-compact {
+        padding: 0.85rem;
+        max-width: 420px;
+    }
+
+    .card-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0;
+    }
+
+    .appointment-date {
+        font-size: 0.85rem;
+    }
+
+    .info-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .info-row .value {
+        text-align: right;
+    }
+}
+
+/* Desktop (min-width: 768px) */
+@media (min-width: 768px) {
+    .appointment-card-compact {
+        max-width: 480px;
+    }
+}

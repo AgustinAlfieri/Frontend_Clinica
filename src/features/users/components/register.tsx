@@ -4,7 +4,8 @@ import React from 'react';
 import { Validator } from '../services/validator.ts';
 import type UserType from '../UserType';
 import NavBar from '../../homepage/components/navBar';
-import logo from '../../../assets/mediviapng.png';
+import Alert from '../../../core/components/alert';
+import { useNavigate } from 'react-router-dom';
 
 // Interface para los datos básicos del usuario
 export interface BaseUserData {
@@ -47,6 +48,7 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<UserType>({
     id: '',
@@ -79,14 +81,14 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
     setSuccess('');
 
     try {
-      // TODO: Implementar servicio de registro
-      console.log('Datos a registrar:', formData);
-      await onSubmit(formData);
-      setSuccess('Registro exitoso');
+        await onSubmit(formData);
+
+        setSuccess('Registro exitoso');
+        
+        navigate('/login');
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Error en el registro';
       setError(errorMessage);
-      console.error('Register error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -115,40 +117,11 @@ const Register: React.FC<RegisterProps> = ({ userType, children,onSubmit }) => {
     <div className="register-container">
       <NavBar />
       <div className="register-card">
-        <div className="register-header">
-          <img src={logo} alt="Logo MEDIVIA" className="register-logo" />
-        </div>
-
         <div className="register-form-section">
           <h2 className="form-title">{getTitle()}</h2>
 
-          {error && (
-            <div style={{
-              padding: '12px',
-              marginBottom: '15px',
-              backgroundColor: '#ffebee',
-              color: '#c62828',
-              borderRadius: '8px',
-              fontSize: '14px',
-              border: '1px solid #ef5350'
-            }}>
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div style={{
-              padding: '12px',
-              marginBottom: '15px',
-              backgroundColor: '#e8f5e9',
-              color: '#2e7d32',
-              borderRadius: '8px',
-              fontSize: '14px',
-              border: '1px solid #66bb6a'
-            }}>
-              {success}
-            </div>
-          )}
+          {error && <Alert type="error" message={error} />}
+          {success && <Alert type="success" message={success} />}
 
           <div className="form-inputs-grid">
             <div className="form-group">

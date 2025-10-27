@@ -6,10 +6,10 @@ export interface RegisterAdministrativeData extends UserType {
     appointment: [];
 }
 
+
 export const administrativeService = {
     async registerAdministrative(data: RegisterAdministrativeData): Promise<AuthResponse> {
         try {
-            console.log('Registering administrative with data:', data);
             const response = await apiClient.post("auth/register", {
                 id: data.id,
                 dni: data.dni,
@@ -29,5 +29,5 @@ export const administrativeService = {
         } catch (error: any) {
             throw new Error(error.message || 'Administrative registration failed');
         }
-    }
+    },
 }

@@ -1,22 +1,28 @@
 import { useState } from 'react';
 import './login.css';
-import { authService } from '../services/authService';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Validator } from '../services/validator.ts';
 import NavBar from '../../homepage/components/navBar';
 import logo from '../../../assets/mediviapng.png';
+import Alert from '../../../core/components/alert';
+import {useAuth} from '../services/useAuth';
 
 interface LoginFormData {
-  input: string; // Opcional, dependiendo de si se necesita
-  dni?: string; // Opcional, dependiendo de si se necesita
+  input: string; 
+  dni?: string;
   email?: string;
   password: string;
-  role?: string; // Opcional, dependiendo de si se necesita
+  role?: string;
 }
 
+
 const ClinicaLogin: React.FC = () => {
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
+  const {login} = useAuth();
+  const navigate = useNavigate();
   // Estado para manejar mensajes de error
   const [error, setError] = useState<string>('');
   
@@ -50,7 +56,7 @@ const ClinicaLogin: React.FC = () => {
     const isEmail = formData.input.includes('@');
 
     //Es valido el input?
-    if (isEmail && Validator.validateEmail(formData.input) === false) {
+    if (isEmail && !Validator.validateEmail(formData.input)) {
       setError('Por favor ingresa un email válido'); // ← USO DE setError
       return;
     }
@@ -73,33 +79,29 @@ const ClinicaLogin: React.FC = () => {
     setIsLoading(true);
     setError(''); 
     setSuccess('');
-
     try{
       //Mando al backend
-      console.log(formData)
-      const response = await authService.login(formData); // FormData tiene que ser igual a login credentials
+      const response = await login(formData);
       
-      if (response.success){
+      // Verificar la respuesta directamente, no isAuthenticated
+      if (response && response.success) {
         setSuccess('Inicio de sesión exitoso');
         setTimeout(() => {
           window.location.href = '/dashboard'; // Redirigir al dashboard
         }, 1000);
+      } else {
+        setError('Error en el inicio de sesión');
       }
-      else {
-        setError(response.message || 'Error en el inicio de sesión');
-      }
-    } catch(err: unknown){
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Error en el inicio de sesión';
       setError(errorMessage);
-      console.error('Login error:', err);
-    } finally{
+    } finally {
       setIsLoading(false); // Siempre desactiva el loading al final
     }
   };
 
   const handleCreateAccount = () => {
-    console.log('Navigate to create account');
-    // Aquí iría la navegación a crear cuenta
+    navigate('/register');
   };
 
 
@@ -124,33 +126,8 @@ const ClinicaLogin: React.FC = () => {
             Inicio de Sesión
           </h2>
 
-            {error && (
-            <div style={{
-              padding: '12px',
-              marginBottom: '2px',
-              backgroundColor: '#ffebee',
-              color: '#c62828',
-              borderRadius: '8px',
-              fontSize: '14px',
-              border: '1px solid #ef5350'
-            }}>
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div style={{
-              padding: '12px',
-              marginBottom: '15px',
-              backgroundColor: '#e8f5e9',
-              color: '#2e7d32',
-              borderRadius: '8px',
-              fontSize: '14px',
-              border: '1px solid #66bb6a'
-            }}>
-              {success}
-            </div>
-          )}
+            {error && <Alert type="error" message={error} />}
+            {success && <Alert type="success" message={success} />}
 
           <div className="login-form-inputs">
             {/* ID Input */}
@@ -223,7 +200,7 @@ const ClinicaLogin: React.FC = () => {
         {/* Footer */}
         <div className="login-footer">
           <p className="footer-copyright">
-            © 2025 ClinicaSana. Todos los derechos reservados.
+            © 2025 Medivia. Todos los derechos reservados.
           </p>
         </div>
       </div>

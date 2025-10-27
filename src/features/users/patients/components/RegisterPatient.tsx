@@ -6,14 +6,12 @@ import {patientService} from '../services/PatientService'
 import type MedicalInsurance from '../services/PatientService';
 
 
-
 const RegisterPatient: React.FC = () => {
   const [coverage, setCoverage] = useState<string>('');
   const [insuranceNumber, setInsuranceNumber] = useState<string>('');
   const [medicalInsurances, setMedicalInsurances] = useState<MedicalInsurance[]>([]);
   const [isLoadingInsurances, setIsLoadingInsurances] = useState<boolean>(false);
 
-  // Cargar las coberturas médicas al montar el componente
   useEffect(() => {
     const fetchMedicalInsurances = async () => {
       setIsLoadingInsurances(true);
@@ -21,7 +19,7 @@ const RegisterPatient: React.FC = () => {
         const insurances = await patientService.getMedicalInsurances();
         setMedicalInsurances(insurances);
       } catch (error) {
-        console.error('Error al cargar las coberturas médicas:', error);
+        // Error silencioso
       } finally {
         setIsLoadingInsurances(false);
       }
@@ -33,7 +31,11 @@ const RegisterPatient: React.FC = () => {
   const handleCoverageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     setCoverage(value);
-    if (value === 'particular') {
+
+    const selectedInsurance = medicalInsurances.find(ins => ins.id === value);
+    const insuranceName = selectedInsurance?.name || '';
+    
+    if (insuranceName.toLowerCase().includes('particular')) {
       setInsuranceNumber('');
     }
   };
@@ -46,16 +48,22 @@ const RegisterPatient: React.FC = () => {
     if (!coverage){
       throw new Error('Por favor selecciona una cobertura');
     }
-    if (coverage !== 'particular' && !insuranceNumber) {
+    
+    // Buscar el nombre de la cobertura seleccionada
+    const selectedInsurance = medicalInsurances.find(ins => ins.id === coverage);
+    const insuranceName = selectedInsurance?.name || '';
+    
+    // Si NO es particular Y no hay número, lanzar error
+    if (!insuranceName.toLowerCase().includes('particular') && !insuranceNumber) {
       throw new Error('Por favor ingresa tu número de obra social');
     }
+    
     const patientData: UserType & { medicalInsurance: string; numberOfMember?: string } = {
       ...baseData,
       medicalInsurance: coverage,
-      numberOfMember: coverage !== 'particular' ? insuranceNumber : undefined
+      numberOfMember: !insuranceName.toLowerCase().includes('particular') ? insuranceNumber : undefined
     };
     // Llamada al servicio para registrar el paciente
-    console.log('Datos completos del paciente a registrar:', patientData);
     await patientService.registerPatient(patientData);
     
 
@@ -72,18 +80,22 @@ const RegisterPatient: React.FC = () => {
           onChange={handleCoverageChange}
           disabled={isLoadingInsurances}
         >
-          <option value="">
+          <option value="" className="form-input-coverage">
             {isLoadingInsurances ? 'Cargando coberturas...' : 'Selecciona una cobertura'}
           </option>
           {medicalInsurances.map((insurance) => (
-            <option key={insurance.id} value={insurance.id}>
+            <option key={insurance.id} value={insurance.id} className="form-input-coverage">
               {insurance.name}
             </option>
           ))}
         </select>
       </div>
 
-      {coverage && coverage !== 'particular' && (
+      {coverage && (() => {
+        const selectedInsurance = medicalInsurances.find(ins => ins.id === coverage);
+        const insuranceName = selectedInsurance?.name || '';
+        return !insuranceName.toLowerCase().includes('particular');
+      })() && (
         <div className="form-group">
           <label className="form-label">Número de Obra Social</label>
           <input

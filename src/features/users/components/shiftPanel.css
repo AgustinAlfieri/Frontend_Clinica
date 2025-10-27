@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/* Mobile First - Estilos base para móviles */
+.shift-panel {
+  background: #FFFFFF;
+  border-radius: 1.5rem;
+  padding: 15px;
+  width: 100%;
+  max-height: 450px;
+  height: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  border-top: 5px solid #4DB8A8;
+}
+
+.shift-panel:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.shift-panel h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #2C5F5D;
+}
+
+.shift-panel p {
+  margin-bottom: 20px;
+  color: #5A5A5A;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.appointment-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 10px;
+  box-sizing: border-box;
+}
+
+/* Scrollbar personalizado */
+.appointment-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.appointment-container::-webkit-scrollbar-track {
+  background: #E8F5F0;
+  border-radius: 10px;
+}
+
+.appointment-container::-webkit-scrollbar-thumb {
+  background: #4DB8A8;
+  border-radius: 10px;
+}
+
+.appointment-container::-webkit-scrollbar-thumb:hover {
+  background: #3A9587;
+}
+
+/* Móviles grandes (min-width: 481px) */
+@media (min-width: 481px) {
+  .shift-panel {
+    padding: 20px;
+  }
+
+  .shift-panel h2 {
+    font-size: 1.5rem;
+  }
+
+  .shift-panel p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+
+  .appointment-container {
+    max-height: 320px;
+  }
+}
+
+/* Tablets y Desktop (min-width: 769px) */
+@media (min-width: 769px) {
+  .shift-panel {
+    padding: 30px;
+    max-height: 500px;
+  }
+
+  .shift-panel h2 {
+    font-size: 1.75rem;
+  }
+}

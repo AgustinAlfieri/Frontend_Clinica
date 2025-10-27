@@ -1,8 +1,7 @@
-/* FlexisurLogin.css */
-
 .login-container {
         min-height: 100vh;
-        background: url('../../../core/assets/body-wallpapper.jpg') no-repeat;
+        background: url('../../../assets/back.jpg') no-repeat center center;
+        background-size: cover;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -186,6 +185,11 @@
         max-width: 32rem;
         /* Slightly larger for tablets */
         padding: 2.5rem;
+    }
+
+    .login-logo {
+        width: 150px;
+        height: 65px;
     }
 
     .login-title {

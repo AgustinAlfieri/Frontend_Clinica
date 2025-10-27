@@ -2,90 +2,178 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import './appointment.css';
 import { AppointmentService } from '../service/appointmentService';
+import { useSpecialties } from '../../../core/hooks/useSpecialties';
+import Alert from '../../../core/components/alert';
+import Select from '../../../core/components/select';
+import Button from '../../../core/components/button';
+import NavBar from '../../homepage/components/navBar';
+import { useNavigate } from 'react-router-dom';
 
 interface AppointmentFormData {
     patient_id: string;
     specialty_id: string;
     medic_id: string;
     practice_id: string;
+    day_id: string;
     schedule_id: string;
 }
 
-interface Specialty {
-    id: string;
-    name: string;
-}
-
 interface Medic {
+    dni: string;
+    email: string;
     id: string;
+    license: string;
     name: string;
+    password: string;
+    role: string;
+    telephone: string;
 }
 
-interface Practice {
+/*interface Practice {
     id: string;
     name: string;
+}*/
+
+interface TimeSlot {
+  datetime: string;
+  available: boolean;
 }
 
-interface Schedule {
-    id: string;
-    datetime: string;
+interface AvailableSchedule {
+  date: string;
+  slots: TimeSlot[];
 }
+interface AppointmentData {
+  date: string; // ISO string - ← Coincide con el backend
+  appointmentStatus?: string;
+  patient: string; // patient id - ← Con "Id" al final
+  medic: string; // medic id - ← Con "Id" al final
+  administratives: string[]; // array of administrative ids
+  practices: string[]; // array of practice ids
+}
+
+interface StatusData {
+  appointment: string;
+  typeAppointmentStatus: string;
+  observations: string;
+  date: string;
+}
+
 
 const AppointmentForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [success, setSuccess] = useState<string>('');
-
+    
+    // Estados para schedule completo
+    const [fullSchedule, setFullSchedule] = useState<AvailableSchedule[]>([]);
+    const [availableDays, setAvailableDays] = useState<string[]>([]);
+    const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
+    const navigate = useNavigate();
+    
     // Datos del formulario
     const [formData, setFormData] = useState<AppointmentFormData>({
-        patient_id: '', // Se obtendrá de la sesión
+        patient_id: localStorage.getItem('userId') || '',
         specialty_id: '',
         medic_id: '',
-        practice_id: '',
+        practice_id: 'Consulta',
+        day_id: '',
         schedule_id: ''
     });
 
-    // Listas para los selects (se llenarán con llamadas a la API)
-    const [specialties, setSpecialties] = useState<Specialty[]>([]);
-//    const [medics, setMedics] = useState<Medic[]>([]);
-//    const [practices, setPractices] = useState<Practice[]>([]);
-//    const [schedules, setSchedules] = useState<Schedule[]>([]);
-    const [medics] = useState<Medic[]>([]);
-    const [practices] = useState<Practice[]>([]);
-    const [schedules] = useState<Schedule[]>([]);
 
+    // Usar el custom hook para obtener especialidades
+    const { 
+        specialties, 
+        isLoading: isLoadingSpecialties, 
+        error: specialtiesError 
+    } = useSpecialties(AppointmentService.getSpecialties);
 
+    // Listas para los selects
+    const [availableMedics, setAvailableMedics] = useState<Medic[]>([]);
+    // Efecto para actualizar los médicos disponibles cuando cambia la especialidad
     useEffect(() => {
-        // TODO: Aquí irían las llamadas a la API para cargar las listas
-        // Ejemplo:
-        // fetchSpecialties().then(data => setSpecialties(data));
-        // fetchMedics().then(data => setMedics(data));
-        // fetchPractices().then(data => setPractices(data));
-        // fetchSchedules().then(data => setSchedules(data));
-        
-        ///// FETCH A SPECIALTIES
-        const fetchSpecialties = async () => {
-            console.log('Fetching specialties...')
-            setIsLoading(true);
+        if (formData.specialty_id && Array.isArray(specialties)) {
+            const selectedSpecialty = specialties.find(s => s.id === formData.specialty_id);
+            if (selectedSpecialty && selectedSpecialty.medics) {
+                setAvailableMedics(selectedSpecialty.medics);
+            } else {
+                setAvailableMedics([]);
+            }
+            // Limpiar selecciones dependientes
+            setFormData(prev => ({
+                ...prev,
+                medic_id: '',
+                practice_id: '',
+                day_id: '',
+                schedule_id: ''
+            }));
+        } else {
+            setAvailableMedics([]);
+        }
+    }, [formData.specialty_id, specialties]);
+
+    // Efecto para cargar el schedule completo cuando cambia el médico
+    useEffect(() => {
+        if (!formData.medic_id) {
+            setFullSchedule([]);
+            setAvailableDays([]);
+            setAvailableSlots([]);
+            return;
+        }
+
+        const fetchScheduleData = async () => {
             try {
-                const specialtiesData = await AppointmentService.getSpecialties();
-                console.log('Specialties recibidas:', specialtiesData);
-                setSpecialties(specialtiesData);
-            }catch (error){
-                console.error('Error fetching specialties:', error);
-            }finally{
-                setIsLoading(false);
+                const scheduleData = await AppointmentService.getSlotsByMedic(formData.medic_id);
+                
+                // Guardar el schedule completo
+                setFullSchedule(scheduleData);
+                
+                // Extraer solo los días disponibles
+                const days = scheduleData.map(day => day.date);
+                setAvailableDays(days);
+                
+            } catch(err) {
+                setError('Error al cargar los horarios disponibles');
             }
         };
 
-        fetchSpecialties();
+        fetchScheduleData();
+        
+        // Limpiar día y horario seleccionados cuando cambia el médico
+        setFormData(prev => ({
+            ...prev,
+            day_id: '',
+            schedule_id: ''
+        }));
+        
+    }, [formData.medic_id]);
 
-    }, []);
-
-    // useEffect separado para ver cuando cambian las specialties
+    // Efecto para filtrar slots cuando cambia el día seleccionado
     useEffect(() => {
-        console.log('Estado specialties actualizado:', specialties);
-    }, [specialties]);
+        if (!formData.day_id || fullSchedule.length === 0) {
+            setAvailableSlots([]);
+            return;
+        }
+
+        // Buscar el día seleccionado en el schedule completo
+        const selectedDay = fullSchedule.find(day => day.date === formData.day_id);
+        
+        if (selectedDay) {
+            // Filtrar solo slots disponibles
+            const availableSlotsForDay = selectedDay.slots.filter(slot => slot.available);
+            setAvailableSlots(availableSlotsForDay);
+        } else {
+            setAvailableSlots([]);
+        }
+        
+        // Limpiar horario seleccionado cuando cambia el día
+        setFormData(prev => ({
+            ...prev,
+            schedule_id: ''
+        }));
+        
+    }, [formData.day_id, fullSchedule]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -98,20 +186,35 @@ const AppointmentForm: React.FC = () => {
 
     const handleSubmit = async () => {
         // Validaciones
-        if (!formData.specialty_id || !formData.medic_id || !formData.practice_id || !formData.schedule_id) {
+        if (!formData.specialty_id || !formData.medic_id || !formData.schedule_id) {
             setError('Por favor completa todos los campos');
             return;
         }
+        // Validaciones antes de enviar
+
+        // Validaciones antes de enviar
 
         setIsLoading(true);
         setError('');
         setSuccess('');
 
         try {
-            // TODO: Aquí iría la llamada a la API para crear el turno
-            // const response = await appointmentService.create(formData);
-            
-            // Simulación de éxito
+            const user = localStorage.getItem('user');
+            const appointmentData: AppointmentData = {
+                date: formData.schedule_id,
+                patient: user ? JSON.parse(user).id : '',
+                medic: formData.medic_id,
+                practices: ['17603124302705Zdc2BX-jEIXg6'],
+                administratives: ['17571754793588mXr-hsn_5RcQi']
+            }
+            const responseAppointment = await AppointmentService.createAppointment(appointmentData);
+            const statusData: StatusData = {
+                "appointment": responseAppointment.data.id,
+                "observations": "Solicitud",
+                "typeAppointmentStatus":'1',
+                "date": new Date().toISOString()
+            }
+            await AppointmentService.createAppointmentStatus(statusData);
             setTimeout(() => {
                 setSuccess('Turno creado exitosamente');
                 setIsLoading(false);
@@ -121,188 +224,210 @@ const AppointmentForm: React.FC = () => {
                     specialty_id: '',
                     medic_id: '',
                     practice_id: '',
+                    day_id: '',
                     schedule_id: ''
                 });
+                setAvailableMedics([]);
+                setFullSchedule([]);
+                setAvailableDays([]);
+                setAvailableSlots([]);
             }, 1000);
+            navigate('/dashboard');
         } catch (err: any) {
             setError(err.message || 'Error al crear el turno');
-            console.error('Create appointment error:', err);
             setIsLoading(false);
         }
     };
 
     const handleCancel = () => {
-        // TODO: Aquí iría la lógica para cancelar/volver
-        console.log('Cancel appointment');
+        // Limpiar el formulario
+        setFormData({
+            patient_id: '',
+            specialty_id: '',
+            medic_id: '',
+            practice_id: 'Consulta',
+            day_id: '',
+            schedule_id: ''
+        });
+        setAvailableMedics([]);
+        setFullSchedule([]);
+        setAvailableDays([]);
+        setAvailableSlots([]);
+        setError('');
+        setSuccess('');
     };
 
     return (
-        <div className="appointment-container">
-            <div className="appointment-card">
-                {/* Header */}
-                <div className="appointment-header">
-                    <h1 className="appointment-title">Solicitar Turno</h1>
-                    <p className="appointment-subtitle">Complete los datos para agendar su cita</p>
-                    <div className="appointment-divider"></div>
-                </div>
+        <>
+            <NavBar />
+            <div className="appointment-container">
+                <div className="appointment-card">
+                    {/* Header */}
+                    <div className="appointment-header">
+                        <h1 className="appointment-title">
+                            Solicitar Turno
+                        </h1>
+                        <p className="appointment-subtitle">
+                            Complete los datos para agendar su cita
+                        </p>
+                        <div className="appointment-divider"></div>
+                    </div>
 
-                {/* Form Section */}
-                <div className="appointment-form-section">
-                    <h2 className="form-title">Información del Turno</h2>
+                    {/* Form Section */}
+                    <div className="appointment-form-section">
+                        <h2 className="form-title">
+                            Información del Turno
+                        </h2>
 
-                    {error && (
-                        <div style={{
-                            padding: '12px',
-                            marginBottom: '15px',
-                            backgroundColor: '#ffebee',
-                            color: '#c62828',
-                            borderRadius: '8px',
-                            fontSize: '14px',
-                            border: '1px solid #ef5350'
-                        }}>
-                            {error}
-                        </div>
-                    )}
+                        {error && <Alert type="error" message={error} />}
+                        {specialtiesError && <Alert type="error" message={specialtiesError} />}
+                        {success && <Alert type="success" message={success} />}
 
-                    {success && (
-                        <div style={{
-                            padding: '12px',
-                            marginBottom: '15px',
-                            backgroundColor: '#e8f5e9',
-                            color: '#2e7d32',
-                            borderRadius: '8px',
-                            fontSize: '14px',
-                            border: '1px solid #66bb6a'
-                        }}>
-                            ✓ {success}
-                        </div>
-                    )}
-
-                    <div className="form-inputs">
-                        {/* Specialty Select */}
-                        <div className="form-group">
-                            <label className="form-label">Especialidad</label>
-                            <select
+                        <div className="form-inputs">{/* Specialty Select */}
+                            {/* Specialty Select */}
+                            <Select
+                                label="Especialidad"
                                 name="specialty_id"
                                 value={formData.specialty_id}
                                 onChange={handleInputChange}
-                                className="form-input"
-                                disabled={isLoading}
-                            >
-                                <option value="">Seleccione una especialidad</option>
-                                {specialties.map(specialty => (
-                                    <option key={specialty.id} value={specialty.id}>
-                                        {specialty.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                                disabled={isLoading || isLoadingSpecialties}
+                                options={[
+                                    { 
+                                        value: '', 
+                                        label: isLoadingSpecialties 
+                                            ? 'Cargando especialidades...' 
+                                            : 'Seleccione una especialidad' 
+                                    },
+                                    ...(Array.isArray(specialties) ? specialties.map(specialty => ({
+                                        value: specialty.id,
+                                        label: specialty.name
+                                    })) : [])
+                                ]}
+                            />
 
-                        {/* Medic Select */}
-                        <div className="form-group">
-                            <label className="form-label">Médico</label>
-                            <select
+                            {/* Medic Select */}
+                            <Select
+                                label="Médico"
                                 name="medic_id"
                                 value={formData.medic_id}
                                 onChange={handleInputChange}
-                                className="form-input"
-                                disabled={isLoading}
-                            >
-                                <option value="">Seleccione un médico</option>
-                                {medics.map(medic => (
-                                    <option key={medic.id} value={medic.id}>
-                                        {medic.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                                disabled={isLoading || !formData.specialty_id}
+                                options={[
+                                    {
+                                        value: '',
+                                        label: !formData.specialty_id 
+                                            ? 'Primero selecciona una especialidad' 
+                                            : availableMedics.length === 0 
+                                                ? 'No hay médicos disponibles' 
+                                                : 'Seleccione un médico'
+                                    },
+                                    ...availableMedics.map(medic => ({
+                                        value: medic.id,
+                                        label: medic.name
+                                    }))
+                                ]}
+                            />
 
-                        {/* Practice Select */}
-                        <div className="form-group">
-                            <label className="form-label">Práctica</label>
-                            <select
-                                name="practice_id"
-                                value={formData.practice_id}
+                            {/* Day Select */}
+                            <Select
+                                label="Día"
+                                name="day_id"
+                                value={formData.day_id}
                                 onChange={handleInputChange}
-                                className="form-input"
-                                disabled={isLoading}
-                            >
-                                <option value="">Seleccione una práctica</option>
-                                {practices.map(practice => (
-                                    <option key={practice.id} value={practice.id}>
-                                        {practice.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                                disabled={isLoading || !formData.medic_id}
+                                options={[
+                                    {
+                                        value: '',
+                                        label: !formData.medic_id
+                                            ? 'Primero selecciona un médico'
+                                            : availableDays.length === 0
+                                                ? 'No hay días disponibles'
+                                                : 'Seleccione un día'
+                                    },
+                                    ...availableDays.map(day => ({
+                                        value: day,
+                                        label: new Date(day).toLocaleDateString('es-AR', { 
+                                            weekday: 'long',
+                                            year: 'numeric', 
+                                            month: 'long',
+                                            day: 'numeric'
+                                        })
+                                    }))
+                                ]}
+                            />
 
-                        {/* Schedule Select */}
-                        <div className="form-group">
-                            <label className="form-label">Horario</label>
-                            <select
+                            {/* Schedule/Time Select */}
+                            <Select
+                                label="Horario"
                                 name="schedule_id"
                                 value={formData.schedule_id}
                                 onChange={handleInputChange}
-                                className="form-input"
-                                disabled={isLoading}
-                            >
-                                <option value="">Seleccione un horario</option>
-                                {schedules.map(schedule => (
-                                    <option key={schedule.id} value={schedule.id}>
-                                        {schedule.datetime}
-                                    </option>
-                                ))}
-                            </select>
+                                disabled={isLoading || !formData.day_id}
+                                options={[
+                                    {
+                                        value: '',
+                                        label: !formData.day_id
+                                            ? 'Primero selecciona un día'
+                                            : availableSlots.length === 0
+                                                ? 'No hay horarios disponibles para este día'
+                                                : 'Seleccione un horario'
+                                    },
+                                    ...availableSlots.map(slot => ({
+                                        value: slot.datetime,
+                                        label: new Date(slot.datetime).toLocaleTimeString('es-AR', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            hour12: false
+                                        })
+                                    }))
+                                ]}
+                            />
                         </div>
 
-                        {/* Action Buttons */}
                         <div className="form-buttons">
-                            <button
-                                onClick={handleSubmit}
-                                className="form-button form-button-primary"
+                            <Button
+                                label={isLoading ? 'Creando...' : 'Confirmar Turno'}
+                                buttonFunction={handleSubmit}
+                                variant="primary"
                                 disabled={isLoading}
-                                style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
-                            >
-                                {isLoading ? 'Creando...' : 'Confirmar Turno'}
-                                {!isLoading && (
+                                icon={!isLoading ? (
                                     <svg
-                                        className="button-icon"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     </svg>
-                                )}
-                            </button>
+                                ) : undefined}
+                            />
 
-                            <button
-                                onClick={handleCancel}
-                                className="form-button form-button-secondary"
+                            <Button
+                                label="Cancelar"
+                                buttonFunction={handleCancel}
+                                variant="danger"
                                 disabled={isLoading}
-                            >
-                                Cancelar
-                                <svg
-                                    className="button-icon"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+                                icon={
+                                    <svg
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                }
+                            />
                         </div>
                     </div>
-                </div>
 
-                {/* Footer */}
-                <div className="appointment-footer">
-                    <p className="footer-copyright">
-                        © 2025 ClinicaSana. Todos los derechos reservados.
-                    </p>
+                    {/* Footer */}
+                    <div className="appointment-footer">
+                        <p className="footer-copyright">
+                            © 2025 ClinicaSana. Todos los derechos reservados.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

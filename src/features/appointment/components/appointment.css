@@ -1,402 +1,348 @@
-/* Appointment Form Styles - Based on project color palette */
+/* appointment.css - Similar styling to register.css */
 
 .appointment-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #a8e8e3 0%, #66AAA6 50%, #2C5F5D 100%);
-  padding: 1rem;
+    min-height: 120vh;
+    background: url('../../../assets/back.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px 40px 20px;
 }
 
 .appointment-card {
-  background-color: #E8F5F0;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  max-width: 36rem;
-  overflow: hidden;
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 750px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Header */
+/* Header Styles */
 .appointment-header {
-  background: linear-gradient(135deg, #23c483 0%, #2C5F5D 100%);
-  padding: 2.5rem 2rem;
-  text-align: center;
-  color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
 }
 
 .appointment-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2C5F5D;
+    margin: 0 0 0.5rem 0;
 }
 
 .appointment-subtitle {
-  font-size: 1rem;
-  opacity: 0.95;
-  margin: 0;
+    color: #4b5563;
+    font-size: 1rem;
+    margin: 0;
 }
 
 .appointment-divider {
-  height: 2px;
-  background: white;
-  width: 80px;
-  margin: 1.25rem auto 0;
-  border-radius: 2px;
+    width: 100%;
+    height: 1px;
+    background-color: #d1d5db;
+    margin-top: 1rem;
 }
 
 /* Form Section */
 .appointment-form-section {
-  padding: 3rem 2rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
 }
 
 .form-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #374151;
-  margin: 0 0 2rem 0;
-  text-align: center;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #374151;
+    text-align: center;
+    margin: 0 0 1.5rem 0;
 }
 
 .form-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
+.form-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Form Controls Styling (from register.css) */
 .form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 
 .form-label {
-  display: block;
-  color: #374151;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
+    display: block;
+    color: #374151;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
 }
 
-.form-input {
-  width: 100%;
-  padding: 1.25rem 1.5rem;
-  background-color: #4a5568;
-  color: black;
-  border-radius: 0.75rem;
-  border: none;
-  outline: none;
-  transition: all 0.2s ease;
-  font-size: 1.1rem;
-  box-sizing: border-box;
+.form-input,
+.select-field {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background-color: #f7fafc;
+    color: black;
+    border-radius: 0.75rem;
+    border: 1.5px solid #b2dfdb;
+    outline: none;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    box-sizing: border-box;
 }
 
-.form-input::placeholder {
-  color: #9ca3af;
+.form-input::placeholder,
+.select-field option[value=""] {
+    color: #9ca3af;
 }
 
-.form-input:focus {
-  box-shadow: 0 0 0 2px #66AAA6;
-  background-color: #E8F5F0;
+.form-input:focus,
+.select-field:focus {
+    box-shadow: 0 0 0 2px #66AAA6;
+    background-color: #E8F5F0;
+    border-color: #4fc08d;
 }
 
-.form-input:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.form-input:disabled,
+.select-field:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #f5f5f5;
 }
 
-/* Buttons */
-.form-buttons {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 1rem;
+/* Button Styling (from register.css) */
+.form-button,
+.button {
+    width: 100%;
+    background-color: #e2e8f0;
+    color: #6b7280;
+    font-weight: 500;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
 }
 
-.form-button {
-  flex: 1;
-  padding: 1rem 1.25rem;
-  border: none;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
+.form-button:hover:not(:disabled),
+.button:hover:not(:disabled) {
+    background-color: #cbd5e0;
 }
 
-.form-button-primary {
-  background: linear-gradient(135deg, #23c483 0%, #2C5F5D 100%);
-  color: white;
+.form-button:disabled,
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-.form-button-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(35, 196, 131, 0.3), 0 4px 6px -2px rgba(35, 196, 131, 0.2);
+.button-primary {
+    background-color: #e2e8f0;
+    color: #6b7280;
 }
 
-.form-button-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+.button-primary:hover:not(:disabled) {
+    background-color: #cbd5e0;
 }
 
-.form-button-secondary {
-  background-color: #e2e8f0;
-  color: #374151;
+.button-danger {
+    background-color: #e2e8f0;
+    color: #6b7280;
 }
 
-.form-button-secondary:hover:not(:disabled) {
-  background-color: #cbd5e0;
-  transform: translateY(-2px);
+.button-danger:hover:not(:disabled) {
+    background-color: #cbd5e0;
 }
 
-.button-icon {
-  width: 1rem;
-  height: 1rem;
-}
-
-/* Footer */
+/* Footer Styles */
 .appointment-footer {
-  background: #E8F5F0;
-  padding: 1.5rem 2rem;
-  text-align: center;
-  border-top: 1px solid #d1d5db;
+    text-align: center;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid #e2e8f0;
 }
 
 .footer-copyright {
-  font-size: 0.75rem;
-  color: #6b7280;
-  margin: 0;
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin: 0;
 }
 
 /* Responsive Design */
 
 /* Mobile (640px and below) */
 @media (max-width: 640px) {
-  .appointment-container {
-    padding: 0.5rem;
-  }
+    .appointment-container {
+        padding: 0.5rem;
+        padding-top: 80px;
+        margin: 20px;
+    }
 
-  .appointment-card {
-    border-radius: 1rem;
-    max-width: 100%;
-  }
+    .appointment-card {
+        padding: 1.5rem;
+        max-width: 28rem;
+    }
 
-  .appointment-header {
-    padding: 2rem 1.5rem;
-  }
+    .appointment-title {
+        font-size: 1.875rem;
+    }
 
-  .appointment-title {
-    font-size: 1.75rem;
-  }
+    .appointment-subtitle {
+        font-size: 0.875rem;
+    }
 
-  .appointment-subtitle {
-    font-size: 0.875rem;
-  }
+    .form-title {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
 
-  .appointment-form-section {
-    padding: 2rem 1.5rem;
-  }
+    /* Grid de 1 columna en móvil */
+    .form-inputs {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
 
-  .form-title {
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .form-input {
-    padding: 1rem 1.25rem;
-    font-size: 1rem;
-  }
-
-  .form-buttons {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .form-button {
-    width: 100%;
-    padding: 0.875rem 1rem;
-    font-size: 0.95rem;
-  }
-
-  .appointment-footer {
-    padding: 1rem 1.5rem;
-  }
+    .form-buttons {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
 }
 
 /* Small tablets (640px to 767px) */
-@media (min-width: 640px) and (max-width: 767px) {
-  .appointment-card {
-    max-width: 32rem;
-    padding: 0;
-  }
+@media (min-width: 640px) {
+    .appointment-card {
+        padding: 2.5rem;
+        max-width: 650px;
+    }
 
-  .appointment-header {
-    padding: 2.25rem 1.75rem;
-  }
+    .appointment-title {
+        font-size: 2rem;
+    }
 
-  .appointment-title {
-    font-size: 2rem;
-  }
+    .form-inputs {
+        gap: 0.875rem;
+    }
 
-  .appointment-form-section {
-    padding: 2.5rem 1.75rem;
-  }
-
-  .form-input {
-    padding: 1rem 1.25rem;
-    font-size: 1rem;
-  }
-
-  .form-button {
-    padding: 0.875rem 1rem;
-    font-size: 0.95rem;
-  }
+    .form-buttons {
+        gap: 0.875rem;
+    }
 }
 
 /* Tablets (768px to 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .appointment-card {
-    max-width: 32rem;
-  }
+    .appointment-card {
+        max-width: 700px;
+        padding: 2.5rem;
+    }
 
-  .appointment-header {
-    padding: 2.5rem 2rem;
-  }
+    .appointment-title {
+        font-size: 2.25rem;
+    }
 
-  .appointment-title {
-    font-size: 2.25rem;
-  }
+    .form-inputs {
+        gap: 1rem;
+    }
 
-  .appointment-form-section {
-    padding: 2.75rem 2rem;
-  }
-
-  .form-input {
-    padding: 1rem 1.25rem;
-    font-size: 1.1rem;
-  }
-
-  .form-button {
-    padding: 1rem 1.25rem;
-    font-size: 1.1rem;
-  }
+    .form-buttons {
+        gap: 1rem;
+    }
 }
 
 /* Desktop (1024px and up) */
 @media (min-width: 1024px) {
-  .appointment-container {
-    padding: 2rem;
-  }
+    .appointment-container {
+        padding: 2rem;
+    }
 
-  .appointment-card {
-    max-width: 36rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  }
+    .appointment-card {
+        max-width: 750px;
+        padding: 3rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
 
-  .appointment-header {
-    padding: 3rem 2.5rem;
-  }
+    .appointment-title {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
 
-  .appointment-title {
-    font-size: 2.5rem;
-  }
+    .appointment-subtitle {
+        font-size: 1rem;
+    }
 
-  .appointment-subtitle {
-    font-size: 1rem;
-  }
+    .form-title {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
 
-  .appointment-form-section {
-    padding: 3rem 2.5rem;
-  }
+    .form-inputs {
+        gap: 1.25rem;
+    }
 
-  .form-title {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .form-input {
-    padding: 1.25rem 1.5rem;
-    font-size: 1.1rem;
-  }
-
-  .form-button {
-    padding: 1rem 1.25rem;
-    font-size: 1rem;
-  }
-
-  .form-button-primary:hover:not(:disabled),
-  .form-button-secondary:hover:not(:disabled) {
-    transform: translateY(-3px);
-  }
+    .form-buttons {
+        gap: 1.25rem;
+    }
 }
 
 /* Large Desktop (1440px and up) */
 @media (min-width: 1440px) {
-  .appointment-card {
-    max-width: 40rem;
-  }
+    .appointment-card {
+        max-width: 700px;
+        padding: 3rem;
+    }
 
-  .appointment-header {
-    padding: 3.5rem 3rem;
-  }
+    .appointment-title {
+        font-size: 3rem;
+    }
 
-  .appointment-title {
-    font-size: 2.75rem;
-  }
+    .form-title {
+        font-size: 1.75rem;
+    }
 
-  .appointment-subtitle {
-    font-size: 1.125rem;
-  }
+    .form-inputs {
+        gap: 1.5rem;
+    }
 
-  .appointment-form-section {
-    padding: 3.5rem 3rem;
-  }
-
-  .form-input {
-    padding: 1.5rem 1.75rem;
-    font-size: 1.15rem;
-  }
-
-  .form-button {
-    padding: 1.125rem 1.5rem;
-    font-size: 1.1rem;
-  }
+    .form-buttons {
+        gap: 1.5rem;
+    }
 }
 
 /* Ultra-wide Desktop (1920px and up) */
 @media (min-width: 1920px) {
-  .appointment-card {
-    max-width: 44rem;
-  }
+    .appointment-card {
+        max-width: 950px;
+        padding: 4rem;
+    }
 
-  .appointment-header {
-    padding: 4rem 3.5rem;
-  }
+    .appointment-title {
+        font-size: 3.5rem;
+    }
 
-  .appointment-title {
-    font-size: 3rem;
-  }
+    .form-title {
+        font-size: 2rem;
+    }
 
-  .appointment-subtitle {
-    font-size: 1.25rem;
-  }
+    .form-inputs {
+        gap: 2rem;
+    }
 
-  .appointment-form-section {
-    padding: 4rem 3.5rem;
-  }
-
-  .form-input {
-    padding: 1.75rem 2rem;
-    font-size: 1.25rem;
-  }
-
-  .form-button {
-    padding: 1.25rem 1.75rem;
-    font-size: 1.15rem;
-  }
+    .form-buttons {
+        gap: 2rem;
+    }
 }

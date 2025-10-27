@@ -1,32 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import React from 'react';
 import Register from '../../components/register';
 import type UserType from "../../UserType";
 import { medicService } from '../services/MedicService';
-import type MedicalSpecialty from '../services/MedicService';
+import { useSpecialties } from '../../../../core/hooks/useSpecialties';
 
 const RegisterMedic: React.FC = () => {
   const [license, setLicense] = useState<string>('');
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
-  const [medicalSpecialties, setMedicalSpecialties] = useState<MedicalSpecialty[]>([]);
-  const [isLoadingSpecialties, setIsLoadingSpecialties] = useState<boolean>(false);
-
-  // Cargar las especialidades médicas al montar el componente
-  useEffect(() => {
-    const fetchMedicalSpecialties = async () => {
-      setIsLoadingSpecialties(true);
-      try {
-        const specialties = await medicService.getMedicalSpecialties();
-        setMedicalSpecialties(specialties);
-      } catch (error) {
-        console.error('Error al cargar las especialidades médicas:', error);
-      } finally {
-        setIsLoadingSpecialties(false);
-      }
-    };
-
-    fetchMedicalSpecialties();
-  }, []);
+  
+  // Usar el custom hook para obtener especialidades
+  const { 
+    specialties: medicalSpecialties, 
+    isLoading: isLoadingSpecialties,
+    error: specialtiesError
+  } = useSpecialties(() => medicService.getMedicalSpecialties());
 
   const handleLicenseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLicense(e.target.value);
@@ -59,7 +47,6 @@ const RegisterMedic: React.FC = () => {
       appointment: []
     };
 
-    console.log('Datos completos del médico a registrar:', medicData);
     await medicService.registerMedic(medicData);
   };
 
@@ -79,6 +66,11 @@ const RegisterMedic: React.FC = () => {
 
       <div className="form-group">
         <label className="form-label">Especialidades Médicas</label>
+        {specialtiesError && (
+          <div style={{ padding: '12px', marginBottom: '8px', color: '#c62828', backgroundColor: '#ffebee', borderRadius: '0.5rem' }}>
+            {specialtiesError}
+          </div>
+        )}
         {isLoadingSpecialties ? (
           <div style={{ padding: '12px', color: '#6b7280' }}>
             Cargando especialidades...

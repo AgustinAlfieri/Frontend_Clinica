@@ -10,7 +10,6 @@ const RegisterAdministrative: React.FC = () => {
       appointment: []
     };
 
-    console.log('Datos completos del administrativo a registrar:', administrativeData);
     await administrativeService.registerAdministrative(administrativeData);
   };
 

@@ -30,11 +30,11 @@ export const authService = {
         password: credentials.password,
         role: credentials.role // Asegúrate de enviar el role
       });
-
-      if (response.success && response.token) {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+      if (response.success && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
       }
+
       return response;
     } catch (error: any) {
       throw new Error(error.message || 'Login failed');
@@ -43,6 +43,9 @@ export const authService = {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    setTimeout(() => {
+        window.location.href = "/login"; // Redirigir al dashboard
+      }, 1000);
   },
 
   isAuthenticated(): boolean {
