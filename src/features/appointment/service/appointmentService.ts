@@ -1,4 +1,4 @@
-import { apiClient } from '../../users/services/api';
+import { apiClient } from '../../users/services/api.ts';
 
 interface Medic {
   //todos los datos del medico
@@ -35,12 +35,13 @@ interface AppointmentData {
   practices: string[]; // array of practice ids
 }
 
+/*
 interface Patient {
   id: string;
   name: string;
   dni: string;
   Appointments: AppointmentData[];
-}
+}*/
 
 interface TimeSlot {
   datetime: string; // ISO string
@@ -97,19 +98,19 @@ export const AppointmentService = {
   },
 
   async getAppointments() {
-    try{
-      const response = await apiClient.get('appointment/findAll')
+    try {
+      const response = await apiClient.get('appointment/findAll');
       return response.data;
-    }catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message || 'Fetching appointments failed');
     }
   },
 
   async getAppointmentsByDni(id: string) {
-    try{
+    try {
       const response = await apiClient.get(`patient/findOne/${id}`);
       return response.data;
-    }catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message || 'Fetching appointments by DNI failed');
     }
   },
@@ -134,32 +135,33 @@ export const AppointmentService = {
         const beforeDateStr = filters.beforeDate.toISOString().slice(0, 16);
         queryParts.push(`beforeDate=${encodeURIComponent(beforeDateStr)}`);
       }
-      
+
       if (filters.afterDate) {
         // Formato ISO: 2026-01-12T09:30
         const afterDateStr = filters.afterDate.toISOString().slice(0, 16);
         queryParts.push(`afterDate=${encodeURIComponent(afterDateStr)}`);
       }
-      
+
       if (filters.status) {
         queryParts.push(`typeAppointmentStatus=${encodeURIComponent(filters.status)}`);
       }
-      
+
       // Construir URL completa con query params
       const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
       const endpoint = `appointment/findAppointmentByFilter${queryString}`;
-      
-      const response = await apiClient.get(endpoint);      return response;
+
+      const response = await apiClient.get(endpoint);
+      return response;
     } catch (error: any) {
       throw new Error(error.message || 'Fetching appointments by filters failed');
     }
   },
 
   async findTypeAppointments() {
-    try{
+    try {
       const response = await apiClient.get('typeAppointmentStatus/findAll');
       return response.data;
-    }catch{
+    } catch {
       throw new Error('Fetching type appointments failed');
     }
   },

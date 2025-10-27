@@ -29,10 +29,10 @@ interface Medic {
     telephone: string;
 }
 
-interface Practice {
+/*interface Practice {
     id: string;
     name: string;
-}
+}*/
 
 interface TimeSlot {
   datetime: string;
@@ -214,7 +214,7 @@ const AppointmentForm: React.FC = () => {
                 "typeAppointmentStatus":'1',
                 "date": new Date().toISOString()
             }
-            const responseStatus = await AppointmentService.createAppointmentStatus(statusData);
+            await AppointmentService.createAppointmentStatus(statusData);
             setTimeout(() => {
                 setSuccess('Turno creado exitosamente');
                 setIsLoading(false);

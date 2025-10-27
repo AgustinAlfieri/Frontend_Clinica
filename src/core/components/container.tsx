@@ -11,7 +11,7 @@ interface containerProps{
 const Container: React.FC<containerProps> = ({stylecontainer,button,buttonlabel,b_function}) => {
     return(
         <div className={stylecontainer}>
-            <Button stylebutton={button}label= {buttonlabel} buttonFunction={b_function}></Button>
+            <Button className={button} label= {buttonlabel} buttonFunction={b_function}></Button>
         </div>
     )
 }
