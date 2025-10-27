@@ -2,8 +2,8 @@ import React from "react";
 import Sidebar from "../components/sidebar";
 import Card from "../components/card";
 import NavBar from "../../homepage/components/navBar";
-import "./Dashboard.css";
-import "./Sidebar.css";
+import "./dashboard.css";
+import "./sidebar.css";
 import "./card.css";
 import ShiftPanel from "./shiftPanel";
 
