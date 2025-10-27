@@ -27,6 +27,14 @@ interface AppointmentCardProps {
     practices: Practice[];
 }
 
+interface AppointmentStatus {
+  appointment: string;
+  typeAppointmentStatus: string;
+  observations: string;
+  date: string;
+}
+
+
 const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: AppointmentCardProps) => {
     // Usar el contexto (puede ser undefined si no está en UpdateStatusProvider)
     const context = useUpdateStatus();
@@ -41,7 +49,9 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
     
     // Verificar si este appointment está seleccionado
     const isSelected = selectedAppointmentId === appointment.appointmentId;
-    
+    const [observations, setObservations] = React.useState<Record<string, string>>({});
+
+
     const formattedDate = new Date(appointment.appointmentDate).toLocaleDateString('es-AR', {
         weekday: 'long',
         year: 'numeric',
@@ -50,6 +60,18 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
         hour: '2-digit',
         minute: '2-digit'
     });
+
+    const handleObservations = (e: React.ChangeEvent<HTMLInputElement>) =>{
+        const {name,value} = e.target
+        setObservations(prev => ({
+            ...prev,
+            [name]:value
+        }))
+
+
+    }
+
+
 
     const handleSelect = () => {
         // Solo permitir selección si el contexto está disponible
@@ -76,11 +98,14 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
             return;
         }
         
-        const statusData = {
+        const statusData: AppointmentStatus = {
             appointment: appointment.appointmentId,
             typeAppointmentStatus: selectedType,
+            observations: observations.observations ||'',
             date: new Date().toISOString()     
         };
+
+        console.log(statusData);
         
         try {
             await AppointmentService.createAppointmentStatus(statusData);
@@ -136,6 +161,13 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
                                     </option>
                                 ))}
                             </select>
+                            
+                        )}
+                        {isSelected && (
+                            <div>
+                                <input type="text" name="observations" id="observations" placeholder='Observaciones'
+                                onChange={handleObservations}/>
+                            </div>
                         )}
                         
                         {isSelected && (
