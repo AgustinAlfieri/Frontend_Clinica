@@ -53,11 +53,9 @@ const Homepage = () => {
                     </p>
                 </div>
                 <div className="hero-image">
-                    {/* Aquí va la imagen - placeholder por ahora */}
                     <div className="image-placeholder">
-                        <img src='src\assets\imagen_homepage.png' alt="Hero" className="hero-img" />
+                        <img src='src\assets\image-removebg-preview.png' alt="Hero" className="hero-img" />
                         <div className="image-frame">
-
                         </div>
                     </div>
                 </div>
