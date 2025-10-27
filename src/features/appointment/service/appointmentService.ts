@@ -31,8 +31,8 @@ interface Filters {
 interface AppointmentData {
   date: string; // ISO string
   appointmentStatus?: string;
-  patientId: string; // patient id - ← Con "Id" al final
-  medicId: string; // medic id - ← Con "Id" al final
+  patient: string; // patient id - ← Con "Id" al final
+  medic: string; // medic id - ← Con "Id" al final
   administratives: string[]; // array of administrative ids
   practices: string[]; // array of practice ids
 }

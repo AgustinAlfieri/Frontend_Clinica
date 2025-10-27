@@ -45,8 +45,8 @@ interface AvailableSchedule {
 interface AppointmentData {
   date: string; // ISO string - ← Coincide con el backend
   appointmentStatus?: string;
-  patientId: string; // patient id - ← Con "Id" al final
-  medicId: string; // medic id - ← Con "Id" al final
+  patient: string; // patient id - ← Con "Id" al final
+  medic: string; // medic id - ← Con "Id" al final
   administratives: string[]; // array of administrative ids
   practices: string[]; // array of practice ids
 }
@@ -82,8 +82,6 @@ const AppointmentForm: React.FC = () => {
 
     // Listas para los selects
     const [availableMedics, setAvailableMedics] = useState<Medic[]>([]);
-    const [practices, setPractices] = useState<Practice[]>([]);
-
     // Efecto para actualizar los médicos disponibles cuando cambia la especialidad
     useEffect(() => {
         if (formData.specialty_id && Array.isArray(specialties)) {
@@ -202,8 +200,8 @@ const AppointmentForm: React.FC = () => {
             const user = localStorage.getItem('user');
             const appointmentData: AppointmentData = {
                 date: formData.schedule_id,
-                patientId: user ? JSON.parse(user).id : '',
-                medicId: formData.medic_id,
+                patient: user ? JSON.parse(user).id : '',
+                medic: formData.medic_id,
                 practices: ['17603124302705Zdc2BX-jEIXg6'],
                 administratives: ['17571754793588mXr-hsn_5RcQi']
             }
