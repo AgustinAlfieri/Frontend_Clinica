@@ -147,6 +147,7 @@ const UpdateStatusContent: React.FC = () => {
             }));
             setAppointments(transformedAppointments);
         } catch(err) {
+            console.log(err);
             setError('Error al cargar las citas');
         } finally {
             setIsLoading(false);

@@ -29,20 +29,38 @@ const Dashboard: React.FC = () => {
         </section>
 
         <section className="dashboard-panels">
+            {/* Si es un paciente muestro sus turnos sin importar el estado */}
             {
-            userType == 'Patient'&&
-            <ShiftPanel fill={true} name="Turnos" text="Aquí podrás consultar y gestionar tus turnos."/>}
+              userType == 'Patient'&&
+              <ShiftPanel onlyCompleted={false} fill={true} name="Turnos" text=""/>
+            }
+
+            {/* Si es administrativo, muestro el panel de gestion de turnos*/}
             {
             userType == 'Administrative' && 
-                  <a href = "/updateStatus" style={{ textDecoration: 'none' }}>
-                    <ShiftPanel fill= {true} name="Gestión de Turnos" text="Aquí podrás gestionar los turnos de los pacientes." />
-                  </a>
+              <a href = "/updateStatus" style={{ textDecoration: 'none' }}>
+                  <ShiftPanel onlyCompleted={false} fill= {true} name="Gestión de Turnos" text=""/>
+              </a>
             }
+
+            {/* Si es un medico muestro sus turnos pendientes */}
             {
-            userType == 'Medic' && 
-            <ShiftPanel fill={true} name="Turnos" text="Aquí podrás consultar y gestionar tus turnos."/>
+              userType == 'Medic' && 
+              <ShiftPanel onlyCompleted={false}  fill={true} name="Turnos" text=""/>
             }
-            <ShiftPanel name="Estudios / Historial (Beta)" text="Aquí podrás observar tu historial de turnos." fill={false}/>
+
+            {/* Si es un medico muestro sus pacientes */}
+            {
+              userType == 'Medic' && 
+              <ShiftPanel onlyCompleted={false} fill={true} name="Pacientes" text=""/>
+            }
+
+            {/* Si es un paciente muestro solo los estudios ya completados o canceladosd*/}
+            {
+              (userType == 'Patient') ? 
+              <ShiftPanel onlyCompleted = {true} fill={true} name="Estudios / Historial (Beta)" text=""/> : 
+              <ShiftPanel onlyCompleted = {false} fill={true} name="Estudios / Historial (Beta)" text=""/>
+            }
         </section>
       </main>
     </div>

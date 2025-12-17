@@ -75,7 +75,6 @@ export const usePatientAppointments = (enabled: boolean = true) => {
                 const response = await AppointmentService.findAppointmentsByFilters({
                     dni: user.dni
                 });
-                console.log('📦 API Response:', response);
 
                 // Validar que la respuesta tiene datos
                 if (!response || !response.data || !Array.isArray(response.data)) {
@@ -104,6 +103,7 @@ export const usePatientAppointments = (enabled: boolean = true) => {
                 setAppointments(transformedAppointments);
                 setError(null);
             } catch (err) {
+                console.log(err);
                 setError('Error al cargar los turnos');
                 setAppointments([]);
             } finally {

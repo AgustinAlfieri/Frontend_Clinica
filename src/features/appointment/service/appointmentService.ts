@@ -69,16 +69,16 @@ export const AppointmentService = {
     try {
       const response = await apiClient.get('medicalSpecialty/findAll');
       return response;
-    } catch (error: any) {
-      throw new Error(error.message || 'Fetching specialties failed');
+    } catch (error) {
+      throw new Error((error as Error).message || 'Fetching specialties failed');
     }
   },
   async getSlotsByMedic(medicId: string): Promise<AvailableSchedule[]> {
     try {
       const response = await apiClient.get(`medic/schedule/${medicId}`);
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.message || 'Fetching slots failed');
+    } catch (error) {
+      throw new Error((error as Error).message || 'Fetching slots failed');
     }
   },
   async createAppointment(data: AppointmentData) {
@@ -87,8 +87,8 @@ export const AppointmentService = {
       if (response.success) {
         return response;
       }
-    } catch (error: any) {
-      throw new Error(error.message || 'Creating appointment failed');
+    } catch (error) {
+      throw new Error((error as Error).message || 'Creating appointment failed');
     }
   },
   //Me traigo las medicos
@@ -101,8 +101,8 @@ export const AppointmentService = {
     try {
       const response = await apiClient.get('appointment/findAll');
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.message || 'Fetching appointments failed');
+    } catch (error) {
+      throw new Error((error as Error).message || 'Fetching appointments failed');
     }
   },
 
@@ -110,21 +110,17 @@ export const AppointmentService = {
     try {
       const response = await apiClient.get(`patient/findOne/${id}`);
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.message || 'Fetching appointments by DNI failed');
+    } catch (error) {
+      throw new Error((error as Error).message || 'Fetching appointments by DNI failed');
     }
   },
 
   async findAppointmentsByFilters(filters: Filters) {
     try {
-      console.log('=== findAppointmentsByFilters called ===');
-      console.log('Received filters:', JSON.stringify(filters, null, 2));
-
       // Construir query params manualmente
       const queryParts: string[] = [];
 
       if (filters.dni) {
-        console.log('Adding dni filter:', filters.dni);
         queryParts.push(`patientDni=${encodeURIComponent(filters.dni)}`);
       } else {
         console.log('No dni filter provided');
@@ -152,8 +148,8 @@ export const AppointmentService = {
 
       const response = await apiClient.get(endpoint);
       return response;
-    } catch (error: any) {
-      throw new Error(error.message || 'Fetching appointments by filters failed');
+    } catch (error) {
+      throw new Error((error as Error).message || 'Fetching appointments by filters failed');
     }
   },
 

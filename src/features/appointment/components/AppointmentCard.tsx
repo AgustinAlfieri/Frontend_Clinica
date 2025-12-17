@@ -2,6 +2,7 @@ import React from 'react';
 import './AppointmentCard.css';
 import { useUpdateStatus } from '../../users/administrative/context/UpdateStatusContext';
 import { AppointmentService } from '../service/appointmentService';
+import SuccessModal from '../../../core/components/SuccessModal';
 
 interface Patient {
     name: string;
@@ -41,10 +42,11 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
     
     const [selectedType, setSelectedType] = React.useState<string>('');
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
+    const [showSuccessModal, setShowSuccessModal] = React.useState<boolean>(false);
     
     // Solo usar el contexto si está disponible
     const typeAppointments = context?.typeAppointments || [];
-    const loadingTypeAppointments = context?.loadingTypeAppointments || false;
+    //const loadingTypeAppointments = context?.loadingTypeAppointments || false;
     const setSelectedAppointmentId = context?.setSelectedAppointmentId;
     
     const [observations, setObservations] = React.useState<Record<string, string>>({});
@@ -65,10 +67,13 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
             ...prev,
             [name]:value
         }))
-
-
     }
 
+
+    const parsename = (name:string) =>{
+        // Reemplazar guiones bajos y mayúsculas por espacios y minúsculas
+        return name.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+    }
 
 
     const handleSelect = () => {
@@ -108,11 +113,16 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
         
         try {
             await AppointmentService.createAppointmentStatus(statusData);
-            alert('Estado actualizado correctamente');
             handleCloseModal();
+            setShowSuccessModal(true);
         } catch (error) {
+            console.log(error);
             alert('Error al actualizar el estado');
         }
+    };
+
+    const handleCloseSuccessModal = () => {
+        setShowSuccessModal(false);
     };
 
     return(
@@ -182,16 +192,16 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
                                     id="typeAppointment"
                                     value={selectedType}
                                     onChange={handleTypeChange}
-                                    className="modal-select"
-                                >
-                                    <option value="">
-                                        {loadingTypeAppointments ? 'Cargando...' : 'Seleccione un estado'}
-                                    </option>
-                                    {typeAppointments.map((type) => (
+                                    className="modal-select">
+                                
+                                <option value="" disabled hidden>Seleccione un estado</option>
+                                {
+                                    typeAppointments.map((type) => (
                                         <option key={type.id} value={type.id}>
-                                            {type.name}
+                                            {parsename(type.name)}
                                         </option>
-                                    ))}
+                                    ))
+                                }
                                 </select>
                             </div>
 
@@ -224,6 +234,12 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
                     </div>
                 </div>
             )}
+
+            <SuccessModal 
+                isOpen={showSuccessModal}
+                message="El estado del turno se actualizó correctamente"
+                onClose={handleCloseSuccessModal}
+            />
         </>
     )
 }
