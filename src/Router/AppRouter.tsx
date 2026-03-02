@@ -7,24 +7,26 @@ import RegisterAdministrative from '../features/users/administrative/components/
 import Homepage from '../features/homepage/components/homepage'
 import Dashboard from '../features/users/components/dashboard';
 import UpdateStatus from '../features/users/administrative/components/updateStatus'
+import MedicShiftFilter from '../features/appointment/components/MedicShiftFilter'
 
 
 const AppRouter = () => {
-    return(
+  return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/homepage" replace />} />
-        <Route path="/login" element= {<ClinicaLogin />} />
-        <Route path="/appointment" element= {<AppointmentForm />} />
-        <Route path="/register" element= {<RegisterPatient/>} />
-        <Route path="/registermedic" element= {<RegisterMedic/>} />
-        <Route path="/registeradministrative" element= {<RegisterAdministrative/>} />
-        <Route path="/homepage" element= {<Homepage/>} />
-        <Route path="/dashboard" element= {<Dashboard />} />
-        <Route path="/updateStatus" element= {<UpdateStatus />} />
+        <Route path="/login" element={<ClinicaLogin />} />
+        <Route path="/appointment" element={<AppointmentForm />} />
+        <Route path="/medicshiftfilter" element={<MedicShiftFilter />} />
+        <Route path="/register" element={<RegisterPatient />} />
+        <Route path="/registermedic" element={<RegisterMedic />} />
+        <Route path="/registeradministrative" element={<RegisterAdministrative />} />
+        <Route path="/homepage" element={<Homepage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/updateStatus" element={<UpdateStatus />} />
       </Routes>
     </Router>
-    )
+  )
 }
 
 export default AppRouter;

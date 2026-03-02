@@ -21,6 +21,7 @@ interface Specialty {
 
 interface Filters {
   dni?: string;
+  medicDni?: string;
   beforeDate?: Date;
   afterDate?: Date;
   status?: string;
@@ -122,8 +123,10 @@ export const AppointmentService = {
 
       if (filters.dni) {
         queryParts.push(`patientDni=${encodeURIComponent(filters.dni)}`);
-      } else {
-        console.log('No dni filter provided');
+      }
+
+      if (filters.medicDni) {
+        queryParts.push(`medicDni=${encodeURIComponent(filters.medicDni)}`);
       }
 
       if (filters.beforeDate) {
