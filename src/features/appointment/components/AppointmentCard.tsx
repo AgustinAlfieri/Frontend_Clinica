@@ -26,6 +26,7 @@ interface AppointmentCardProps {
     patient: Patient;
     medic: Medic;
     practices: Practice[];
+    isMedicMode?: boolean;
 }
 
 interface AppointmentStatus {
@@ -78,9 +79,12 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
 
     const handleSelect = () => {
         // Solo permitir selección si el contexto está disponible
-        if (!setSelectedAppointmentId) {
+        if (!setSelectedAppointmentId || !context?.setMedicModeAndStatus) {
             return;
         }
+        
+        // Pasar información al contexto sobre el rol y estado actual
+        context.setMedicModeAndStatus(appointment.isMedicMode || false, appointment.appointmentStatus);
         
         // Abrir el modal y seleccionar el appointment
         setSelectedAppointmentId(appointment.appointmentId);
@@ -150,10 +154,13 @@ const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: Appointmen
                     </div>
                     
                     {/* Solo mostrar controles si está dentro del contexto (UpdateStatusProvider) */}
-                    {context && (
+                    {context && (!appointment.isMedicMode || appointment.appointmentStatus === 'En_sala_de_espera') && (
                         <button className="details-button" onClick={handleSelect}>
                             Seleccionar
                         </button>
+                    )}
+                    {context && appointment.isMedicMode && appointment.appointmentStatus !== 'En_sala_de_espera' && (
+                        <span className="info-note" style={{fontSize:'0.8rem',color:'#64748b'}}>Solo se pueden editar turnos en sala de espera</span>
                     )}
                 </div>
             </div>

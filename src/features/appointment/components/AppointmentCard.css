@@ -122,6 +122,12 @@
     transform: translateY(0);
 }
 
+.info-note {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 0.4rem;
+    text-align: center;
+}
 @media (min-width: 641px) {
     .appointment-card-compact {
         padding: 0.85rem;

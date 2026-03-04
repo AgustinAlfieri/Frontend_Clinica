@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AppointmentCard from '../../../appointment/components/AppointmentCard';
-import { useState } from 'react';
 import {AppointmentService} from '../../../appointment/service/appointmentService';
 import { UpdateStatusProvider } from '../context/UpdateStatusContext';
 import NavBar from '../../../homepage/components/navBar';
@@ -23,6 +22,7 @@ interface Patient {
 
 interface filters {
     dni?: string;
+    medicDni?: string; // usado para limitar búsquedas de médicos
     beforeDate?: Date;
     afterDate?: Date;
     status?: string;
@@ -90,6 +90,10 @@ const UpdateStatusContent: React.FC = () => {
     const [error , setError] = useState('');
     const [appointments , setAppointments] = useState<AppointmentCardProps[]>([]);
     
+    // determinar rol y dni del usuario actual para ajustar comportamientos
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const isMedic = user.role === 'Medic';
+
     // Estados para los filtros
     const [filters, setFilters] = useState<filters>({
         dni: '',
@@ -97,6 +101,10 @@ const UpdateStatusContent: React.FC = () => {
         afterDate: undefined,
         status: ''
     });
+
+    // Si es médico, siempre aplicamos el filtro por su dni y ejecutamos búsqueda al montar
+    // (se moverá más abajo tras definir handleSearch)
+    
 
 
     // Manejar cambios en los inputs de filtros
@@ -118,6 +126,12 @@ const UpdateStatusContent: React.FC = () => {
             
             if (filters.dni && filters.dni.trim() !== '') {
                 cleanFilters.dni = filters.dni.trim();
+            }
+            // siempre aplicamos medicDni si corresponde
+            if (isMedic && user.dni) {
+                cleanFilters.medicDni = user.dni;
+            } else if (filters.medicDni) {
+                cleanFilters.medicDni = filters.medicDni;
             }
             if (filters.beforeDate) {
                 cleanFilters.beforeDate = filters.beforeDate;
@@ -153,6 +167,15 @@ const UpdateStatusContent: React.FC = () => {
             setIsLoading(false);
         }
     };
+
+    // efecto para aplicar filtro de médico y ejecutar búsqueda inicial
+    useEffect(() => {
+        if (isMedic && user.dni) {
+            setFilters(prev => ({ ...prev, medicDni: user.dni }));
+            handleSearch();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMedic]);
 
     
 
@@ -239,6 +262,7 @@ const UpdateStatusContent: React.FC = () => {
                             patient={appointment.patient}
                             medic={appointment.medic}
                             practices={appointment.practices}
+                            isMedicMode={isMedic}
                         />
                     ))}
                 </div>

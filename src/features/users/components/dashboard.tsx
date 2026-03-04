@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
         <section className="dashboard-cards">
           {/* Si es un medico, mostrar botón de filtro de turnos */}
           {userType === 'Medic' ? (
-            <a href="/medicshiftfilter">
+            <a href="/updateStatus">
               <Card title="Filtrar Turnos" subtitle="Busca turnos de tus pacientes" color="#4DB8A8" />
             </a>
           ) : (

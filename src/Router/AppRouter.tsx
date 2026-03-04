@@ -7,7 +7,6 @@ import RegisterAdministrative from '../features/users/administrative/components/
 import Homepage from '../features/homepage/components/homepage'
 import Dashboard from '../features/users/components/dashboard';
 import UpdateStatus from '../features/users/administrative/components/updateStatus'
-import MedicShiftFilter from '../features/appointment/components/MedicShiftFilter'
 
 
 const AppRouter = () => {
@@ -17,7 +16,6 @@ const AppRouter = () => {
         <Route path="/" element={<Navigate to="/homepage" replace />} />
         <Route path="/login" element={<ClinicaLogin />} />
         <Route path="/appointment" element={<AppointmentForm />} />
-        <Route path="/medicshiftfilter" element={<MedicShiftFilter />} />
         <Route path="/register" element={<RegisterPatient />} />
         <Route path="/registermedic" element={<RegisterMedic />} />
         <Route path="/registeradministrative" element={<RegisterAdministrative />} />
