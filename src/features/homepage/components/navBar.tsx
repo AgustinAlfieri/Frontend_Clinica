@@ -2,10 +2,12 @@ import './navBar.css'
 import logo from '../../../assets/medivia1.jpg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../users/services/useAuth.ts';
+import { useLogout } from '../../users/services/useLogout.ts';
 
 
 export function NavBar() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const logout = useLogout();
 
     const navigate = useNavigate();
     function handleLogoClick(){
@@ -46,9 +48,7 @@ export function NavBar() {
                 <a href="/medic">Reportes</a>
                 )}
                 
-                <a style={{ cursor: 'pointer' }} onClick={() => {
-                    logout();
-                    }}>
+                <a style={{ cursor: 'pointer' }} onClick={logout}>
                 Cerrar sesión
                 </a>
                 

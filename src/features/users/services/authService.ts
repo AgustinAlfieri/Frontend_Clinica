@@ -43,9 +43,6 @@ export const authService = {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setTimeout(() => {
-        window.location.href = "/login"; // Redirigir al dashboard
-      }, 1000);
   },
 
   isAuthenticated(): boolean {
