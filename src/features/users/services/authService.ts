@@ -8,29 +8,35 @@ export interface LoginCredentials {
   role?: string;
 }
 
-export default interface AuthResponse {
-  success: boolean;
-  token?: string;
-  user?: {
+interface data {
+  token: string;
+  user: {
     id: string;
     dni: string;
     name: string;
     email: string;
     role: string;
   };
+}
+
+export default interface AuthResponse {
+  success: boolean;
+  data?: data;
   message?: string;
+  statusCode?: number;
 }
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const response = await apiClient.post('auth/login', {
+      const response = await apiClient.post<AuthResponse, LoginCredentials>('auth/login', {
         dni: credentials.dni,
         email: credentials.email,
         password: credentials.password,
         role: credentials.role // Asegúrate de enviar el role
       });
-      if (response.success && response.data.token) {
+      if (response.success && response.data?.token) {
+        console.log('Login successful:', response);
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }

@@ -36,6 +36,8 @@ export const apiClient = {
 
   // <--Comentario de café-->
   // La T precede de los parámetros para declarar que estos son genéricos
+  // Tresponse es el tipo que esperamos recibir
+  // TBody es el tipo de cuerpo que se va a enviar
   async post<TResponse,TBody = unknown>(
     endpoint: string, 
     data: TBody) : Promise<TResponse> {
