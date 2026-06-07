@@ -1,124 +1,78 @@
 import { apiClient } from '../../users/services/api';
-
-interface Medic {
-  //todos los datos del medico
-  id: string;
-  name: string;
-  specialty: {
-    id: string;
-    name: string;
-  }[];
-}
-
-interface Specialty {
-  id: string;
-  name: string;
-  medic: {
-    id: string;
-    name: string;
-  }[];
-}
-
-interface Filters {
-  dni?: string;
-  medicDni?: string;
-  beforeDate?: Date;
-  afterDate?: Date;
-  status?: string;
-}
-
-interface AppointmentData {
-  date: string; // ISO string
-  appointmentStatus?: string;
-  patient: string; // patient id - ← Con "Id" al final
-  medic: string; // medic id - ← Con "Id" al final
-  administratives: string[]; // array of administrative ids
-  practices: string[]; // array of practice ids
-}
-
-/*
-interface Patient {
-  id: string;
-  name: string;
-  dni: string;
-  Appointments: AppointmentData[];
-}*/
-
-interface TimeSlot {
-  datetime: string; // ISO string
-  available: boolean;
-}
-
-interface AvailableSchedule {
-  date: string; // YYYY-MM-DD
-  slots: TimeSlot[];
-}
-
-interface AppointmentStatus {
-  appointment: string;
-  typeAppointmentStatus: string;
-  observations: string;
-  date: string;
-}
+import type {
+  ApiResponse,
+  AppointmentFilters,
+  AppointmentFromAPI,
+  AvailableSchedule,
+  CreatedAppointment,
+  CreateAppointmentRequest,
+  CreateAppointmentStatusRequest,
+  Medic,
+  Specialty,
+  TypeAppointmentStatus,
+} from '../types/appointment.types';
 
 export const AppointmentService = {
-  //get medicos
-  //get paciente
-  //obras sociales
-
   async getSpecialties(): Promise<Specialty[]> {
     try {
-      const response = await apiClient.get('medicalSpecialty/findAll');
-      return response;
+      const response = await apiClient.get<ApiResponse<Specialty[]> | Specialty[]>('medicalSpecialty/findAll');
+      return Array.isArray(response) ? response : response.data;
     } catch (error) {
       throw new Error((error as Error).message || 'Fetching specialties failed');
     }
   },
+
   async getSlotsByMedic(medicId: string): Promise<AvailableSchedule[]> {
     try {
-      const response = await apiClient.get(`medic/schedule/${medicId}`);
+      const response = await apiClient.get<ApiResponse<AvailableSchedule[]>>(`medic/schedule/${medicId}`);
       return response.data;
     } catch (error) {
       throw new Error((error as Error).message || 'Fetching slots failed');
     }
   },
-  async createAppointment(data: AppointmentData) {
+
+  async createAppointment(data: CreateAppointmentRequest): Promise<ApiResponse<CreatedAppointment>> {
     try {
-      const response = await apiClient.post('appointment/create', data);
-      if (response.success) {
-        return response;
+      const response = await apiClient.post<ApiResponse<CreatedAppointment>, CreateAppointmentRequest>(
+        'appointment/create',
+        data
+      );
+
+      if (!response.success) {
+        throw new Error(response.message || 'Creating appointment failed');
       }
+
+      return response;
     } catch (error) {
       throw new Error((error as Error).message || 'Creating appointment failed');
     }
   },
-  //Me traigo las medicos
+
   async getMedicsBySpecialty(): Promise<Medic[]> {
-    const response = await apiClient.get('medics/specialty');
+    const response = await apiClient.get<ApiResponse<Medic[]>>('medics/specialty');
     return response.data;
   },
 
-  async getAppointments() {
+  async getAppointments(): Promise<AppointmentFromAPI[]> {
     try {
-      const response = await apiClient.get('appointment/findAll');
+      const response = await apiClient.get<ApiResponse<AppointmentFromAPI[]>>('appointment/findAll');
       return response.data;
     } catch (error) {
       throw new Error((error as Error).message || 'Fetching appointments failed');
     }
   },
 
-  async getAppointmentsByDni(id: string) {
+  async getAppointmentsByDni(id: string): Promise<AppointmentFromAPI[]> {
     try {
-      const response = await apiClient.get(`patient/findOne/${id}`);
+      const response = await apiClient.get<ApiResponse<AppointmentFromAPI[]>>(`patient/findOne/${id}`);
       return response.data;
     } catch (error) {
       throw new Error((error as Error).message || 'Fetching appointments by DNI failed');
     }
   },
 
-  async findAppointmentsByFilters(filters: Filters) {
+  async findAppointmentsByFilters(filters: AppointmentFilters): Promise<ApiResponse<AppointmentFromAPI[]>> {
     try {
-      // Construir query params manualmente
       const queryParts: string[] = [];
 
       if (filters.dni) {
@@ -130,13 +84,11 @@ export const AppointmentService = {
       }
 
       if (filters.beforeDate) {
-        // Formato ISO: 2026-01-16T09:30
         const beforeDateStr = filters.beforeDate.toISOString().slice(0, 16);
         queryParts.push(`beforeDate=${encodeURIComponent(beforeDateStr)}`);
       }
 
       if (filters.afterDate) {
-        // Formato ISO: 2026-01-12T09:30
         const afterDateStr = filters.afterDate.toISOString().slice(0, 16);
         queryParts.push(`afterDate=${encodeURIComponent(afterDateStr)}`);
       }
@@ -145,32 +97,33 @@ export const AppointmentService = {
         queryParts.push(`typeAppointmentStatus=${encodeURIComponent(filters.status)}`);
       }
 
-      // Construir URL completa con query params
       const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
       const endpoint = `appointment/findAppointmentByFilter${queryString}`;
 
-      const response = await apiClient.get(endpoint);
-      return response;
+      return apiClient.get<ApiResponse<AppointmentFromAPI[]>>(endpoint);
     } catch (error) {
       throw new Error((error as Error).message || 'Fetching appointments by filters failed');
     }
   },
 
-  async findTypeAppointments() {
+  async findTypeAppointments(): Promise<TypeAppointmentStatus[]> {
     try {
-      const response = await apiClient.get('typeAppointmentStatus/findAll');
+      const response = await apiClient.get<ApiResponse<TypeAppointmentStatus[]>>('typeAppointmentStatus/findAll');
       return response.data;
     } catch {
       throw new Error('Fetching type appointments failed');
     }
   },
 
-  async createAppointmentStatus(data: AppointmentStatus) {
+  async createAppointmentStatus(data: CreateAppointmentStatusRequest): Promise<unknown> {
     try {
-      const response = await apiClient.post('appointmentStatus/create', data);
+      const response = await apiClient.post<ApiResponse<unknown>, CreateAppointmentStatusRequest>(
+        'appointmentStatus/create',
+        data
+      );
       return response.data;
     } catch {
       throw new Error('Creating appointment status failed');
     }
-  }
+  },
 };
