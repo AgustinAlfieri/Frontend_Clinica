@@ -1,56 +1,10 @@
 import { useState, useEffect } from 'react';
 import { AppointmentService } from '../../appointment/service/appointmentService';
 import { authService } from '../services/authService';
-
-interface Patient {
-    name: string;
-    dni: string;
-}
-
-interface Medic {
-    name: string;
-    specialty: string;
-}
-
-interface Practice {
-    name: string;
-    description?: string;
-}
-
-export interface AppointmentCardProps {
-    appointmentId: string;
-    appointmentDate: string;
-    appointmentStatus: string;
-    patient: Patient;
-    medic: Medic;
-    practices: Practice[];
-}
-
-interface AppointmentStatus {
-    typeAppointmentStatus: TypeAppointmentStatus;
-    observation: string;
-}
-
-interface TypeAppointmentStatus {
-    name: string;
-}
-
-interface AppointmentFromAPI {
-    id: string;
-    appointmentDate: string;
-    appointmentsStatus: AppointmentStatus[];
-    patient: {
-        name: string;
-        dni: string;
-    };
-    medic: {
-        name: string;
-        dni: string;
-    };
-}
+import type { AppointmentCardData, AppointmentFromAPI } from '../../appointment/types/appointment.types';
 
 export const useMedicAppointments = (enabled: boolean = true) => {
-    const [appointments, setAppointments] = useState<AppointmentCardProps[]>([]);
+    const [appointments, setAppointments] = useState<AppointmentCardData[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -107,7 +61,7 @@ export const useMedicAppointments = (enabled: boolean = true) => {
                 );
 
                 // Transformar datos
-                const transformedAppointments: AppointmentCardProps[] = waitingRoomAppointments.map(
+                const transformedAppointments: AppointmentCardData[] = waitingRoomAppointments.map(
                     (appointment: AppointmentFromAPI) => ({
                         appointmentId: appointment.id,
                         appointmentDate: appointment.appointmentDate,

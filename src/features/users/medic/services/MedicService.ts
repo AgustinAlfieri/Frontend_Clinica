@@ -17,7 +17,7 @@ export const medicService = {
     async registerMedic(data: RegisterMedicData): Promise<AuthResponse> {
         try {
             console.log('Registering medic with data:', data);
-            const response = await apiClient.post("auth/register", {
+            const response = await apiClient.post<AuthResponse>("auth/register", {
                 id: data.id,
                 dni: data.dni,
                 name: data.name,
@@ -29,9 +29,9 @@ export const medicService = {
                 medicalSpecialty: data.medicalSpecialty,
                 appointment: data.appointment
             });
-            if (response.success && response.token) {
-                localStorage.setItem('token', response.token);
-                localStorage.setItem('user', JSON.stringify(response.user));
+            if (response.success && response.data?.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
             }
             return response;
 
@@ -41,10 +41,11 @@ export const medicService = {
     },
     async getMedicalSpecialties(): Promise<MedicalSpecialty[]> {
         try {
-            const response = await apiClient.get('medicalSpecialty/findAll');
+            const response = await apiClient.get<MedicalSpecialty[]>('medicalSpecialty/findAll');
             return response;
         } catch (error: any) {
             throw new Error(error.message || 'Fetching medical specialties failed');
         }
     }
+
 }

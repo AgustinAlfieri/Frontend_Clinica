@@ -3,6 +3,8 @@ import AppointmentCard from "../../appointment/components/AppointmentCard";
 import "./shiftPanel.css";
 import { usePatientAppointments } from "../hooks/usePatientAppointments";
 import { useMedicAppointments } from "../hooks/useMedicAppointments";
+import { APPOINTMENT_STATUS } from "../constants/status";
+import { USER_ROLES } from "../constants/roles";
 
 interface ShiftPanelProps {
   name: string;
@@ -11,24 +13,27 @@ interface ShiftPanelProps {
   onlyCompleted: boolean;
 }
 
-const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name, onlyCompleted}) => {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const userType = user.role || '';
+const ShiftPanel: React.FC<ShiftPanelProps> = ({ text, name, onlyCompleted }) => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const userType = user.role || "";
+  const isMedic = userType === USER_ROLES.MEDIC;
 
-  // Usar los hooks condicionalmente según el tipo de usuario
-  const patientData = usePatientAppointments(userType === 'Patient');
-  const medicData = useMedicAppointments(userType === 'Medic');
+  const patientData = usePatientAppointments(userType === USER_ROLES.PATIENT);
+  const medicData = useMedicAppointments(isMedic);
+  const { appointments, loading, error } = isMedic ? medicData : patientData;
 
-  // Seleccionar los datos según el tipo de usuario
-  const { appointments, loading, error } = userType === 'Medic' ? medicData : patientData;
-
-  let filteredAppointments = appointments;
-  if(onlyCompleted){
-    // Filtrar los turnos para mostrar solo los completados o cancelados
-    filteredAppointments = appointments.filter(appointment => 
-      appointment.appointmentStatus === 'Completado' || appointment.appointmentStatus === 'Cancelado'
-    );
-  }
+  const visibleAppointments = onlyCompleted
+    ? appointments.filter(
+        (appointment) =>
+          appointment.appointmentStatus === APPOINTMENT_STATUS.COMPLETED ||
+          appointment.appointmentStatus === APPOINTMENT_STATUS.CANCELLED
+      )
+    : appointments.filter(
+        (appointment) =>
+          isMedic ||
+          (appointment.appointmentStatus !== APPOINTMENT_STATUS.COMPLETED &&
+            appointment.appointmentStatus !== APPOINTMENT_STATUS.CANCELLED)
+      );
 
   return (
     <div className="shift-panel">
@@ -40,51 +45,19 @@ const ShiftPanel: React.FC<ShiftPanelProps> = ({text, name, onlyCompleted}) => {
           <p>Cargando turnos...</p>
         ) : error ? (
           <p className="error-message">{error}</p>
-        ) :  userType == 'Medic' ? (
-                appointments
-                .slice(0, 2) 
-                .map((appointment) => 
-                (
-                  <AppointmentCard
-                    key={appointment.appointmentId}
-                    appointmentId={appointment.appointmentId}
-                    appointmentDate={appointment.appointmentDate}
-                    appointmentStatus={appointment.appointmentStatus}
-                    patient={appointment.patient}
-                    medic={appointment.medic}
-                    practices={appointment.practices}
-                  />
-                ))
-            ) : 
-            onlyCompleted ? (
-              filteredAppointments
-                .slice(0, 2) 
-                .map((filteredAppointment) => (
-                  <AppointmentCard
-                    key={filteredAppointment.appointmentId}
-                    appointmentId={filteredAppointment.appointmentId}
-                    appointmentDate={filteredAppointment.appointmentDate}
-                    appointmentStatus={filteredAppointment.appointmentStatus}
-                    patient={filteredAppointment.patient}
-                    medic={filteredAppointment.medic}
-                    practices={filteredAppointment.practices}
-                  />
-                ))
-            ) : (
-              appointments
-                .slice(0, 2) 
-                .map((appointment) => 
-                ( appointment.appointmentStatus !== 'Completado' && appointment.appointmentStatus !== 'Cancelado' &&
-                  <AppointmentCard
-                    key={appointment.appointmentId}
-                    appointmentId={appointment.appointmentId}
-                    appointmentDate={appointment.appointmentDate}
-                    appointmentStatus={appointment.appointmentStatus}
-                    patient={appointment.patient}
-                    medic={appointment.medic}
-                    practices={appointment.practices}
-                  />
-                ))
+        ) : (
+          visibleAppointments.slice(0, 2).map((appointment) => (
+            <AppointmentCard
+              key={appointment.appointmentId}
+              appointmentId={appointment.appointmentId}
+              appointmentDate={appointment.appointmentDate}
+              appointmentStatus={appointment.appointmentStatus}
+              patient={appointment.patient}
+              medic={appointment.medic}
+              practices={appointment.practices}
+              variant={isMedic ? "medic" : "patient"}
+            />
+          ))
         )}
       </div>
       <br />

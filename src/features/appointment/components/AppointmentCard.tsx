@@ -1,254 +1,86 @@
 import React from 'react';
 import './AppointmentCard.css';
-import { useUpdateStatus } from '../../users/administrative/context/UpdateStatusContext';
-import { AppointmentService } from '../service/appointmentService';
-import SuccessModal from '../../../core/components/SuccessModal';
+import type { AppointmentCardData } from '../types/appointment.types';
+import { APPOINTMENT_STATUS } from '../../users/constants/status';
 
-interface Patient {
-    name: string;
-    dni: string;
+export type AppointmentCardVariant = 'patient' | 'medic';
+
+interface AppointmentCardProps extends AppointmentCardData {
+    variant: AppointmentCardVariant;
 }
 
-interface Medic {
-    name: string;
-    specialty: string;
-}
+const STATUS_LABELS: Record<string, string> = {
+    [APPOINTMENT_STATUS.PENDING]: 'Solicitado',
+    [APPOINTMENT_STATUS.AWAITING]: 'En sala de espera',
+    [APPOINTMENT_STATUS.COMPLETED]: 'Completado',
+    [APPOINTMENT_STATUS.CANCELLED]: 'Cancelado',
+};
 
-interface Practice{
-    name: string;
-    description?: string;
-}
+const STATUS_CLASSES: Record<string, string> = {
+    [APPOINTMENT_STATUS.PENDING]: 'status-solicitado',
+    [APPOINTMENT_STATUS.AWAITING]: 'status-pending',
+    [APPOINTMENT_STATUS.COMPLETED]: 'status-completed',
+    [APPOINTMENT_STATUS.CANCELLED]: 'status-cancelled',
+};
 
-interface AppointmentCardProps {
-    appointmentId: string; // ID único del appointment
-    appointmentDate: string;
-    appointmentStatus: string;
-    patient: Patient;
-    medic: Medic;
-    practices: Practice[];
-    isMedicMode?: boolean;
-}
+const formatStatus = (status: string): string => {
+    if (!status) {
+        return 'Sin estado';
+    }
 
-interface AppointmentStatus {
-  appointment: string;
-  typeAppointmentStatus: string;
-  observations: string;
-  date: string;
-}
+    return STATUS_LABELS[status] || status.replace(/_/g, ' ');
+};
 
+const getStatusClass = (status: string): string => {
+    return STATUS_CLASSES[status] || `status-${status.toLowerCase().replace(/_/g, '-')}`;
+};
 
-const AppointmentCard: React.FC<AppointmentCardProps> = (appointment: AppointmentCardProps) => {
-    // Usar el contexto (puede ser undefined si no está en UpdateStatusProvider)
-    const context = useUpdateStatus();
-    
-    const [selectedType, setSelectedType] = React.useState<string>('');
-    const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
-    const [showSuccessModal, setShowSuccessModal] = React.useState<boolean>(false);
-    
-    // Solo usar el contexto si está disponible
-    const typeAppointments = context?.typeAppointments || [];
-    //const loadingTypeAppointments = context?.loadingTypeAppointments || false;
-    const setSelectedAppointmentId = context?.setSelectedAppointmentId;
-    
-    const [observations, setObservations] = React.useState<Record<string, string>>({});
-
-
-    const formattedDate = new Date(appointment.appointmentDate).toLocaleDateString('es-AR', {
+const AppointmentCard: React.FC<AppointmentCardProps> = ({
+    appointmentDate,
+    appointmentStatus,
+    patient,
+    medic,
+    variant,
+}) => {
+    const formattedDate = new Date(appointmentDate).toLocaleDateString('es-AR', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
     });
 
-    const handleObservations = (e: React.ChangeEvent<HTMLInputElement>) =>{
-        const {name,value} = e.target
-        setObservations(prev => ({
-            ...prev,
-            [name]:value
-        }))
-    }
-
-
-    const parsename = (name:string) =>{
-        // Reemplazar guiones bajos y mayúsculas por espacios y minúsculas
-        return name.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
-    }
-
-
-    const handleSelect = () => {
-        // Solo permitir selección si el contexto está disponible
-        if (!setSelectedAppointmentId || !context?.setMedicModeAndStatus) {
-            return;
-        }
-        
-        // Pasar información al contexto sobre el rol y estado actual
-        context.setMedicModeAndStatus(appointment.isMedicMode || false, appointment.appointmentStatus);
-        
-        // Abrir el modal y seleccionar el appointment
-        setSelectedAppointmentId(appointment.appointmentId);
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedAppointmentId?.(null);
-        setSelectedType('');
-        setObservations({});
-    };
-
-    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedType(e.target.value);
-    };
-
-    const handleSubmit = async () => {
-        if (!selectedType) {
-            alert('Por favor selecciona un estado');
-            return;
-        }
-        
-        const statusData: AppointmentStatus = {
-            appointment: appointment.appointmentId,
-            typeAppointmentStatus: selectedType,
-            observations: observations.observations ||'',
-            date: new Date().toISOString()     
-        };
-        
-        try {
-            await AppointmentService.createAppointmentStatus(statusData);
-            handleCloseModal();
-            setShowSuccessModal(true);
-        } catch (error) {
-            console.log(error);
-            alert('Error al actualizar el estado');
-        }
-    };
-
-    const handleCloseSuccessModal = () => {
-        setShowSuccessModal(false);
-    };
-
-    return(
-        <>
-            <div className="appointment-card-compact">
-                <div className="card-header">
-                    <span className={'status-badge status-'}>
-                        {appointment.appointmentStatus == '' ? 'Sin estado' : appointment.appointmentStatus}
-                    </span>
-                    <span className="appointment-date">{formattedDate}</span>
-                </div>
-
-                <div className="card-body">
-                    <div className="info-row">
-                        <span className="label">Paciente:</span>
-                        <span className="value">{appointment.patient.name}</span>
-                    </div>
-                    <div className="info-row">
-                        <span className="label">DNI:</span>
-                        <span className="value">{appointment.patient.dni}</span>
-                    </div>
-                    <div className="info-row">
-                        <span className="label">Médico:</span>
-                        <span className="value">{appointment.medic.name}</span>
-                    </div>
-                    
-                    {/* Solo mostrar controles si está dentro del contexto (UpdateStatusProvider) */}
-                    {context && (!appointment.isMedicMode || appointment.appointmentStatus === 'En_sala_de_espera') && (
-                        <button className="details-button" onClick={handleSelect}>
-                            Seleccionar
-                        </button>
-                    )}
-                    {context && appointment.isMedicMode && appointment.appointmentStatus !== 'En_sala_de_espera' && (
-                        <span className="info-note" style={{fontSize:'0.8rem',color:'#64748b'}}>Solo se pueden editar turnos en sala de espera</span>
-                    )}
-                </div>
+    return (
+        <div className="appointment-card-compact">
+            <div className="card-header">
+                <span className={`status-badge ${getStatusClass(appointmentStatus)}`}>
+                    {formatStatus(appointmentStatus)}
+                </span>
+                <span className="appointment-date">{formattedDate}</span>
             </div>
 
-            {/* Modal para actualizar estado */}
-            {isModalOpen && (
-                <div className="modal-overlay" onClick={handleCloseModal}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h2>Actualizar Estado del Turno</h2>
-                            <button className="modal-close" onClick={handleCloseModal}>×</button>
+            <div className="card-body">
+                {variant === 'patient' ? (
+                    <>
+                        <div className="info-row">
+                            <span className="label">Medico:</span>
+                            <span className="value">{medic.name}</span>
                         </div>
-
-                        <div className="modal-body">
-                            <div className="info-row">
-                                <span className="label">Paciente:</span>
-                                <span className="value">{appointment.patient.name}</span>
-                            </div>
-                            <div className="info-row">
-                                <span className="label">DNI:</span>
-                                <span className="value">{appointment.patient.dni}</span>
-                            </div>
-                            <div className="info-row">
-                                <span className="label">Médico:</span>
-                                <span className="value">{appointment.medic.name}</span>
-                            </div>
-                            <div className="info-row">
-                                <span className="label">Fecha:</span>
-                                <span className="value">{formattedDate}</span>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="typeAppointment">Estado del Turno:</label>
-                                <select 
-                                    name="typeAppointment" 
-                                    id="typeAppointment"
-                                    value={selectedType}
-                                    onChange={handleTypeChange}
-                                    className="modal-select">
-                                
-                                <option value="" disabled hidden>Seleccione un estado</option>
-                                {
-                                    typeAppointments.map((type) => (
-                                        <option key={type.id} value={type.id}>
-                                            {parsename(type.name)}
-                                        </option>
-                                    ))
-                                }
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="observations">Observaciones:</label>
-                                <input 
-                                    type="text" 
-                                    name="observations" 
-                                    id="observations" 
-                                    placeholder='Ingrese observaciones (opcional)'
-                                    onChange={handleObservations}
-                                    value={observations.observations || ''}
-                                    className="modal-input"
-                                />
-                            </div>
+                        <div className="info-row">
+                            <span className="label">Especialidad:</span>
+                            <span className="value">{medic.specialty || 'Sin especialidad'}</span>
                         </div>
-
-                        <div className="modal-footer">
-                            <button className="modal-button cancel" onClick={handleCloseModal}>
-                                Cancelar
-                            </button>
-                            <button 
-                                className="modal-button submit" 
-                                onClick={handleSubmit} 
-                                disabled={!selectedType}
-                            >
-                                Actualizar Estado
-                            </button>
-                        </div>
+                    </>
+                ) : (
+                    <div className="info-row">
+                        <span className="label">Paciente:</span>
+                        <span className="value">{patient.name}</span>
                     </div>
-                </div>
-            )}
-
-            <SuccessModal 
-                isOpen={showSuccessModal}
-                message="El estado del turno se actualizó correctamente"
-                onClose={handleCloseSuccessModal}
-            />
-        </>
-    )
-}
+                )}
+            </div>
+        </div>
+    );
+};
 
 export default AppointmentCard;
